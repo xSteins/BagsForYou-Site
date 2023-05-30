@@ -1,0 +1,22 @@
+{
+  "name": "bagsforyou",
+  "version": "0.0.1",
+  "description": "App tugas besar MIBD-PBW",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "Ralvin-Adrian",
+  "license": "ISC",
+  "dependencies": {
+    "boxicons": "^2.1.4",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "type": "module"
+}
