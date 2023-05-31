@@ -1,3 +1,17 @@
+* {
+    font-family: Poppins;
+}
+header {
+    width: 100%;
+    background-color: beige;
+}
+.flex {
+    display: flex;
+}
+.space-between {
+    justify-content: space-between;
+}
+
 .admin-container {  
     display: grid;
     grid-template-columns: 50% 50%;
