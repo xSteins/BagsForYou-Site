@@ -1,4 +1,4 @@
-import 'boxicons';
+// import 'boxicons';
 import express from 'express';
 import mysql from 'mysql';
 import path from 'path';
@@ -8,8 +8,8 @@ import crypto from 'crypto'
 import session from 'express-session';
 
 const app = express();
-const port = 8080;
-const publicPath = path.resolve('public')
+const port = 8005;
+const publicPath = path.resolve('static-path');
 
 app.use(express.static(publicPath));
 app.set('view engine', 'ejs');
@@ -35,4 +35,8 @@ app.use(
 app.listen(port, () => {
     console.log('App started');
     console.log(`Server running on http://localhost:${port}`);
+})
+
+app.get('/', (req, res) => {
+    res.render('test')
 })
