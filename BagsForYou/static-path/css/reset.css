@@ -6,19 +6,6 @@
 *::before,
 *::after {
   box-sizing: border-box;
-}
-
-/* Remove default margin */
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-figure,
-blockquote,
-dl,
-dd {
   margin: 0;
 }
 
@@ -38,12 +25,13 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   /* Might need line height adjustment later on >> */
-  line-height: 1.5;
+  /* line-height: 1.5; */
+  line-height: normal;
 }
 /* Button default styling deletion */
 button {
   box-shadow: none;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 /* text decoration deletion */
@@ -57,6 +45,8 @@ img,
 picture {
   max-width: 100%;
   display: block;
+  /* Disable dragging & inspecting*/
+  /* pointer-events: none; */
 }
 
 /* Inherit fonts for inputs and buttons */
@@ -70,9 +60,9 @@ select {
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
-   scroll-behavior: auto;
+    scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {
