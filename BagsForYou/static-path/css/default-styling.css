@@ -1,15 +1,168 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-Bold.ttf') format('truetype');
+    font-weight: bold;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-Italic.ttf') format('truetype');
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-Light.ttf') format('truetype');
+    font-weight: lighter;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-LightItalic.ttf') format('truetype');
+    font-weight: lighter;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-Medium.ttf') format('truetype');
+    font-weight: 500;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-Mediumltalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+  }
+  
+  @font-face {
+    font-family: 'Poppins';
+    src: url('Poppins-Fonts/Poppins-SemiBoldltalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+  }
+
+/* Start styling */
 * {
-    font-family: Poppins;
-}
-header {
-    width: 100%;
-    background-color: beige;
+    /* Fallback font ke Arial & Sans-serif jika error */
+    font-family: 'Poppins', Arial, sans-serif;
+    font-weight: normal;
 }
 .flex {
     display: flex;
+    align-items: center;
 }
 .space-between {
     justify-content: space-between;
+}
+.grid {
+    display: grid;
+}
+/* Jika a link tidak ada class reset warnanya jadi hitam */
+a:is([class]) {
+  color: black;
+}
+.container {
+    max-width: 80vw;
+    height: fit-content;
+    margin: 0 auto;
+}
+/* Default link color */
+a {
+    color: #0038FF;
+    margin-right: 1rem;
+}
+button,a {
+    font-weight: bold;
+}
+
+a:last-child {
+    margin: 0;
+}
+.hidden {
+    display: none;
+}
+
+header {
+    width: 100%;
+    background-color: white;
+    border-bottom: 1px solid black;
+    padding: .6rem 4rem;  
+}
+.brandName {
+    /* 24px */
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.site-nav a {
+    list-style: none;
+}
+/* Give every child the same styling */
+#main-navigation > div {
+    margin: .5rem;
+}
+#SignUpButton, #SignInButton:hover {
+    padding: .4rem;
+    color:white;
+    background-color: black;
+    border: 1px solid white;
+    border-radius: .5rem;
+}
+#SignUpButton:hover, #SignInButton {
+    padding: .4rem;
+    color:black;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: .5rem;
+}
+
+.account-container {
+    background-color: white;
+    border: 2px solid black;
+    height: 2.5rem;
+    border-radius: .5rem;
+}
+a.account-box  {
+    color: black;
+    margin: 0 1.5rem;
+}
+
+footer {
+    grid-template-columns: 20vw 80vw;
+    grid-template-rows: max-content;
+    padding: 1rem;
+    position: fixed;
+    bottom:0;
+    width: 100%;
+    background-color: #191919;
+    color: aliceblue;
+}
+
+.footer-copyright-notice {
+    margin-left: 1.5rem;
+    max-width: 850px;
+    text-align: center;
+    font-weight: lighter;
 }
 
 .admin-container {  
