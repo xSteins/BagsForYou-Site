@@ -44,3 +44,11 @@ app.get('/adminDashboard', (req, res) => {
     // res.render('home')
     res.render('adminDashboard')
 })
+app.get('/signup', (req, res) => {
+    // res.render('home')
+    res.render('signup')
+})
+app.get('/login', (req, res) => {
+    // res.render('home')
+    res.render('login')
+})
