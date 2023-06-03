@@ -1,72 +1,9 @@
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-Bold.ttf') format('truetype');
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-BoldItalic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-Italic.ttf') format('truetype');
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-Light.ttf') format('truetype');
-  font-weight: lighter;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-LightItalic.ttf') format('truetype');
-  font-weight: lighter;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-Medium.ttf') format('truetype');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-Mediumltalic.ttf') format('truetype');
-  font-weight: 500;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-Regular.ttf') format('truetype');
-  font-weight: normal;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: 'Poppins';
-  src: url('Poppins-Fonts/Poppins-SemiBoldltalic.ttf') format('truetype');
-  font-weight: 600;
-  font-style: italic;
-}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 /* Start styling */
 * {
-  /* Fallback font ke Arial & Sans-serif jika error */
-  font-family: 'Poppins', Arial, sans-serif;
-  /* font-weight: 500; havent found good looking one. revert to default.*/
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
 }
 .flex {
   display: flex;
@@ -98,7 +35,7 @@ a {
 }
 button,
 a {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 a:last-child {
@@ -121,7 +58,7 @@ header {
 .brandName {
   /* 24px */
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
 }
 .site-nav a {
   list-style: none;
