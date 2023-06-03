@@ -2,22 +2,55 @@
   display: grid;
   padding: 0 5vw;
   grid-template-columns: repeat(2, auto);
-  /* grid-template-rows: repeat(2, 30vh); */
 }
+.left-column {
+  padding-right: 1rem;
+}
+
+.main-menu {
+  border: 2px solid black;
+  border-radius: 3px;
+}
+.admin-panel {
+  padding: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 1rem;
+  padding: 1rem;
+}
+.admin-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #dcdcdc;
+  padding: 1rem 0;
+}
+
+.menu-icon {
+  height: 3rem;
+}
+.admin-button a {
+  padding-top: 1rem;
+}
+
 .recent {
   flex-direction: column;
   gap: 0.5rem;
-  padding: 0.5rem;
+}
+
+.recent h2 {
+  padding: 1rem 0;
 }
 
 .rec-bag {
-  border: 3px solid black;
-  border-radius: 0.5rem;
+  border: 1px solid black;
+  border-radius: 3px;
   padding: 1rem;
 }
 .rec-bag img {
   max-width: 8rem;
   margin-right: 0.8rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .rec-bag table {

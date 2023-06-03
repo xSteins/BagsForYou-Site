@@ -20,8 +20,12 @@
 
         <div class="main-grid-section">
             <div class="left-column">
-                <%- include('components/adminMenus/adminPanels') %>
+                <div class="main-menu">
+                    <%- include('components/adminMenus/adminPanels') %>
+                </div>
+                <div class="secondary-menu">
                     <%- include('components/stat-all') %>
+                </div>
             </div>
             <div class="right-column">
                 <%- include('components/recentBags') %>

@@ -40,3 +40,7 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.render('home')
 })
+app.get('/adminDashboard', (req, res) => {
+    // res.render('home')
+    res.render('adminDashboard')
+})
