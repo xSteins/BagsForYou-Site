@@ -1,4 +1,3 @@
-// import 'boxicons';
 import express from 'express';
 import mysql from 'mysql';
 import path from 'path';
@@ -13,6 +12,7 @@ const publicPath = path.resolve('static-path');
 
 app.use(express.static(publicPath));
 app.set('view engine', 'ejs');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL Connection

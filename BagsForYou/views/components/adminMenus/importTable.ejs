@@ -16,19 +16,23 @@
 </head>
 
 <body>
-    <%- include('components/navigation/header-admin') %>
+    <%- include('../navigation/header-admin') %>
 
         <div class="main-grid-section">
             <div class="left-column">
                 <div class="main-menu">
-                    <%- include('components/adminMenus/adminPanels') %>
+                    <div class="import-table">
+                        <h2>Import Table Here</h2>
+                        <input type="file" name="bagsData" id="importedTable">
+                        <input type="submit" value="Upload File">
+                    </div>
                 </div>
                 <div class="secondary-menu">
-                    <%- include('components/adminMenus/stat-all') %>
+                    <%- include('../adminMenus/stat-all') %>
                 </div>
             </div>
             <div class="right-column">
-                <%- include('components/adminMenus/recentBags') %>
+                <%- include('../adminMenus/recentBags') %>
             </div>
         </div>
 </body>
