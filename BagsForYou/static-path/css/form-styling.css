@@ -1,15 +1,26 @@
-.centered-container {
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
+#close-window-link {
+  display: grid;
+  width: 100%;
+  justify-content: right;
 }
 
-#close-window-link {
-  margin-left: 28vw;
-  margin-bottom: 0.5rem;
+.overlay {
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.034);
+}
+/* untuk login dan signup window */
+.external-window-container {
+  display: grid;
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
 }
 
 .window-container {
+  background-color: white;
   display: flex;
   flex-direction: column;
   border: 3px solid black;
@@ -27,7 +38,8 @@ p {
   text-align: center;
 }
 
-#loginForm {
+#loginForm,
+#formAddBagReview {
   display: grid;
   gap: 1rem;
 }
