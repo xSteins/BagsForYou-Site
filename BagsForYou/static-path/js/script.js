@@ -1,18 +1,9 @@
-const loginMenu = document.querySelector('#login');
-const signUpMenu = document.querySelector('#signup');
+// Redirect for navbar button
 
-// Display the login / signup modal
 document.getElementById('SignUpButton').addEventListener('click', function () {
-    signUpMenu.classList.remove('hidden');
+    window.location.href = '/signup';
 });
+
 document.getElementById('SignInButton').addEventListener('click', function () {
-    loginMenu.classList.remove('hidden');
+    window.location.href = '/login';
 });
-
-// Close the window button
-const windowCloseButton = document.querySelector('#close-window-link');
-
-windowCloseButton.addEventListener('click', () => {
-    signUpMenu.classList.add('hidden');
-    loginMenu.classList.add('hidden');
-})
