@@ -38,8 +38,10 @@ app.listen(port, () => {
 })
 
 app.get('/', (req, res) => {
+    res.render('home')
+})
+app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview')
-    // res.render('home')
 })
 app.get('/adminDashboard', (req, res) => {
     res.render('adminDashboard')
