@@ -10,48 +10,123 @@
     <link rel="stylesheet" href="/css/default-styling.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
+    <link rel="stylesheet" href="/css/form-styling.css">
 </head>
 
 <body>
     <%- include('../navigation/header-user') %>
-        <div id="addBagReview">
-            <div id="bagsearch">
-                <div class="searchbar-container">
-                    <input type="text" name="search" id="search-main">
-                    <button type="submit" class="boxicon-submit">
-                        <span class="material-symbols-rounded">
-                            search
-                        </span>
-                    </button>
+        <div id="addBagReview" class="centered-container">
+            <a href="/" id="close-window-link">Back</a>
+            <!-- 
+                TODO :
+                CONNECT EVENTLISTENER BAWAH KE DB UNTUK DISPLAY SEARCH RESULTS
+             -->
+            <div class="main-display-container">
+                <h2>Search your desired bag to review :</h2>
+                <div id="addBagSearch">
+                    <div class="searchbar-container">
+                        <input type="text" name="search" id="search-main">
+                        <button type="submit" class="boxicon-submit" id="seachForReviewButton">
+                            <span class="material-symbols-rounded">
+                                search
+                            </span>
+                        </button>
+                    </div>
                 </div>
+
+                <div class="results-container-review hidden" id="searchForReviewResults">
+                    <div class="result-item-forReview">
+                        <img src="https://via.placeholder.com/100">
+                        <h4>Bag1</h4>
+                        <a href="#" data-review-link="true">Review This Bag</a>
+                    </div>
+                    <div class="result-item-forReview">
+                        <img src="https://via.placeholder.com/100">
+                        <h4>Bag2</h4>
+                        <a href="#" data-review-link="true">Review This Bag</a>
+                    </div>
+                    <div class="result-item-forReview">
+                        <img src="https://via.placeholder.com/100">
+                        <h4>Bag3</h4>
+                        <a href="#" data-review-link="true">Review This Bag</a>
+                    </div>
+                    <div class="result-item-forReview">
+                        <img src="https://via.placeholder.com/100">
+                        <h4>Bag4</h4>
+                        <a href="#" data-review-link="true">Review This Bag</a>
+                    </div>
+                    <div class="result-item-forReview">
+                        <img src="https://via.placeholder.com/100">
+                        <h4>Bag5</h4>
+                        <a href="#" data-review-link="true">Review This Bag</a>
+                    </div>
+                    <div class="result-item-forReview">
+                        <img src="https://via.placeholder.com/100">
+                        <h4>Bag6</h4>
+                        <a href="#" data-review-link="true">Review This Bag</a>
+                    </div>
+                </div>
+
+
+                <form action="/addReview" method="POST" class="" id="formAddBagReview">
+                    <label for="bag-name">Bag Name :</label>
+                    <input type="text" id="bag-name" name="bag-name" disabled
+                        value="Masukin nama tas berdasarkan fetch data diatas">
+
+                    <label for="stars">Stars :</label>
+                    <div class="rate">
+                        <input type="radio" id="star5" name="rate" value="5" />
+                        <label for="star5" title="text">5 stars</label>
+                        <input type="radio" id="star4" name="rate" value="4" />
+                        <label for="star4" title="text">4 stars</label>
+                        <input type="radio" id="star3" name="rate" value="3" />
+                        <label for="star3" title="text">3 stars</label>
+                        <input type="radio" id="star2" name="rate" value="2" />
+                        <label for="star2" title="text">2 stars</label>
+                        <input type="radio" id="star1" name="rate" value="1" />
+                        <label for="star1" title="text">1 star</label>
+                    </div>
+
+                    <!-- Opsional! -->
+                    <!-- <label for=bag-image>Bag Image :</label>
+                    <input type="file" accept=".png,.jpg" id="bag-image" name="bag-image"> -->
+
+                    <label for=review-description>Review Description:</label>
+                    <textarea id=review-description" name=review-description"></textarea>
+
+                    <div class="button-container">
+                        <input type="submit" value="Submit" id="submitReview">
+                        <input type="button" value="Cancel" id="cancelReview">
+                    </div>
+                </form>
             </div>
-            <form action="/addReview" method="POST">
-                <label for="bag-name">Bag Name:</label>
-                <input type="text" id="bag-name" name="bag-name">
-
-                <label for="stars">Stars:</label>
-                <input type="radio" id="1-star" name="stars" value="1">
-                <label for="1-star">1</label>
-                <input type="radio" id="2-stars" name="stars" value="2">
-                <label for="2-stars">2</label>
-                <input type="radio" id="3-stars" name="stars" value="3">
-                <label for="3-stars">3</label>
-                <input type="radio" id="4-stars" name="stars" value="4">
-                <label for="4-stars">4</label>
-                <input type="radio" id="5-stars" name="stars" value="5">
-                <label for="5-stars">5</label>
-
-                <label for=bag-image>Bag Image:</label>
-                <input type=file" accept=".png,.jpg" id=bag-image" name=bag-image">
-
-                <label for=review-description>Review Description:</label>
-                <textarea id=review-description" name=review-description"></textarea>
-
-                <input type=submit" value=Submit">
-            </form>
         </div>
+        <script>
+            const searchButton = document.querySelector('#seachForReviewButton');
+            const resultContainer = document.querySelector('#searchForReviewResults');
+            const formReviewContainer = document.querySelector('#formAddBagReview');
+
+            searchButton.addEventListener('click', () => {
+                resultContainer.classList.remove('hidden');
+                formReviewContainer.classList.add('hidden');
+            })
+
+            const reviewLinks = document.querySelectorAll('[data-review-link="true"]');
+            reviewLinks.forEach((link) => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    searchForReviewResults.classList.add('hidden');
+                    formReviewContainer.classList.remove('hidden');
+                });
+            });
+
+            const cancelReviewButton = document.querySelector('#cancelReview');
+
+            cancelReviewButton.addEventListener('click', () => {
+                searchForReviewResults.classList.remove('hidden');
+                formReviewContainer.classList.add('hidden');
+            });
+        </script>
 </body>
 
 </html>

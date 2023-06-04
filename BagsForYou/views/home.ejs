@@ -8,6 +8,7 @@
     <title>BagsForYou - Share your review!</title>
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/default-styling.css">
+    <link rel="stylesheet" href="/css/form-styling.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
     <script src="/js/script.js" defer></script>
@@ -15,10 +16,14 @@
 
 <body>
     <%- include('components/navigation/header') %>
+        <%- // include('components/navigation/header-admin') %>
+            <%- //include('components/navigation/header-user') %>
+                <%- include('login') %>
+                    <%- include('signup') %>
 
-        <%- include('components/hero') %>
+                        <%- include('components/hero') %>
 
-            <%- include('components/navigation/footer') %>
+                            <%- include('components/navigation/footer') %>
 </body>
 
 </html>
