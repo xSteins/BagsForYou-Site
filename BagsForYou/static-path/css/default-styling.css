@@ -165,6 +165,16 @@ footer {
   color: black;
 }
 
+/* Default layouting untuk dua kolom user dan admin */
+.main-grid-section {
+  display: grid;
+  padding: 0 5vw;
+  grid-template-columns: repeat(2, auto);
+}
+.left-column {
+  padding-right: 1rem;
+}
+
 /* Searchbar third type : untuk container terkecil */
 
 #addBagSearch .searchbar-container {
@@ -235,4 +245,53 @@ footer {
 }
 .stat-items h2 {
   margin-bottom: 1.2rem;
+}
+
+/* Searchresults styling */
+.sidebar {
+  background-color: #f0f0f0;
+  padding: 10px;
+  max-width: 38vw;
+}
+
+.sidebar input[type='text'] {
+  max-width: 6ch;
+}
+
+.category-list,
+.subcategory-list,
+.color-list {
+  list-style-type: none;
+}
+
+.category-link,
+.subcategory-link {
+  color: #000;
+  text-decoration: none;
+}
+
+.category-link:hover,
+.subcategory-link:hover {
+  text-decoration: underline;
+}
+
+.filter-section {
+  display: flex;
+  justify-content: space-evenly;
+  justify-items: start;
+  padding: 0.8rem;
+}
+
+.filter-section :nth-child(2n),
+.filter-section :last-child {
+  justify-self: center;
+}
+
+.color-list {
+  display: flex;
+  padding: 0;
+}
+.filter-section ul li input[name='color'] {
+  /* display: inline-block; */
+  margin: 0 0.2rem;
 }

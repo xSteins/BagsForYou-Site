@@ -40,6 +40,9 @@ app.listen(port, () => {
 app.get('/', (req, res) => {
     res.render('home')
 })
+app.get('/searchresults', (req, res) => {
+    res.render('searchresults');
+})
 app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview')
 })

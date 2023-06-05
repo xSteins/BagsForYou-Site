@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/default-styling.css">
+    <link rel="stylesheet" href="/css/form-styling.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <script src="/js/script.js" defer></script>
+</head>
+
+<body>
+    <%- include('components/navigation/header-user') %>
+
+        <div class="main-grid-section">
+            <div class="left-column">
+                <div class="main-menu">
+                    <div class="searchbar-container">
+                        <input type="text" name="search" id="search-main">
+                        <button type="submit" class="boxicon-submit">
+                            <span class="material-symbols-rounded">
+                                search
+                            </span>
+                        </button>
+                    </div>
+                    <div class="search-result-grid">
+                        <div class="result-item">
+                            <img src="https://fakeimg.pl/100x100/a896ff/000000?font=bebas" alt="">
+                            <h3 class="result-item-name">
+                                EIGER STAND PACK 10L 1A BACKPACK
+                            </h3>
+                            <p id="rating-for-item">4 / 5 Stars rating</p>
+                            <p id="review-count-for-item">Reviews (1)</p>
+                            <a href="">View Detail</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-column">
+                <div class="sidebar">
+                    <h2>Filter:</h2>
+                    <div class="filter-section">
+                        <h3>Category:</h3>
+                        <ul class="category-list">
+                            <li><a href="#" class="category-link">Backpacks</a></li>
+                            <li><a href="#" class="category-link">Shoulder Bags</a></li>
+                            <li><a href="#" class="category-link">Tote Bags</a></li>
+                            <!-- Additional categories -->
+                        </ul>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>Subcategory:</h3>
+                        <ul class="subcategory-list">
+                            <li><a href="#" class="subcategory-link">Casual Backpacks</a></li>
+                            <li><a href="#" class="subcategory-link">Laptop Backpacks</a></li>
+                            <li><a href="#" class="subcategory-link">Travel Backpacks</a></li>
+                            <!-- Additional subcategories -->
+                        </ul>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>Dimension:</h3>
+                        <div class="dimension-inputs">
+                            <input type="text" id="width-input" placeholder="Width">
+                            <input type="text" id="length-input" placeholder="Length">
+                            <input type="text" id="height-input" placeholder="Height">
+                        </div>
+                    </div>
+
+
+                    <div class="filter-section">
+                        <h3>Color:</h3>
+                        <ul class="color-list">
+                            <li><input type="checkbox" name="color" value="black">Black</li>
+                            <li><input type="checkbox" name="color" value="blue">Blue</li>
+                            <li><input type="checkbox" name="color" value="gray">Gray</li>
+                            <li><input type="checkbox" name="color" value="brown">Brown</li>
+                            <li><input type="checkbox" name="color" value="red">Red</li>
+                            <!-- Additional colors -->
+                        </ul>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3>Brand:</h3>
+                        <select id="brand-dropdown">
+                            <option value="">Select brand</option>
+                            <option value="brand1">Brand 1</option>
+                            <option value="brand2">Brand 2</option>
+                            <option value="brand3">Brand 3</option>
+                            <!-- Additional brands -->
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</body>
+
+</html>
