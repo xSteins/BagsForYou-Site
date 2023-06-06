@@ -91,10 +91,56 @@ header {
   height: 2.5rem;
   border-radius: 0.5rem;
 }
-a.account-box {
-  color: black;
-  margin: 0 0.5rem;
+/* Test styling hover */
+.links-container {
+  position: relative;
 }
+
+.links-container:hover #profile-box,
+.links-container:hover #user-setting {
+  display: flex;
+}
+
+/* Dropdown styling */
+.account-menu {
+  display: flex;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+  height: 2.5rem;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.account-menu span {
+  margin-right: 1rem;
+}
+#username:hover,
+#profile-box:hover,
+#user-setting:hover {
+  background-color: #6b8bff;
+  /* color: beige; */
+}
+/* #username:hover a,
+#profile-box:hover a,
+#user-setting:hover a {
+  color: beige;
+} */
+
+#profile-box,
+#user-setting {
+  display: none;
+  position: absolute;
+  top: 38px;
+  left: 0;
+  width: 100%;
+}
+#user-setting {
+  top: 76px;
+}
+
+/*  */
 
 footer {
   grid-template-columns: 20vw 80vw;
@@ -135,7 +181,8 @@ footer {
   max-width: 60ch;
 }
 
-.searchbar-container input[type='text'] {
+.searchbar-container input[type='text'],
+.searchbar-container-secondary input[type='text'] {
   height: 3.5rem;
   width: 80ch;
   border: 3px solid black;
@@ -166,16 +213,25 @@ footer {
 }
 
 /* Default layouting untuk dua kolom user dan admin */
+/* Tambahan untuk wide menu tidak perlu repeat column. */
 .main-grid-section {
+  grid-template-columns: repeat(2, auto);
+}
+.main-grid-section,
+.wide-grid-section {
   display: grid;
   padding: 0 5vw;
-  grid-template-columns: repeat(2, auto);
 }
 .left-column {
   padding-right: 1rem;
 }
+/* .sidebar {
+  background-color: #f0f0f0;
+  padding: 10px;
+  max-width: 38vw;
+} */
 
-/* Searchbar third type : untuk container terkecil */
+/* Searchbar third type : untuk container terkecil : untuk add review menu */
 
 #addBagSearch .searchbar-container {
   margin-top: 0.5rem;
@@ -217,6 +273,82 @@ footer {
   min-height: 350px;
 }
 
+/* Searchbar secondary */
+
+.searchbar-container-secondary {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  margin-top: 0.5rem;
+  max-width: 69ch; /* nice */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Searchresults styling */
+
+.filter-menu {
+  display: flex;
+  height: 4rem;
+  /* background-color: #c4c4c4; */
+  margin: 0 auto;
+}
+.filter-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  max-width: 15rem;
+  justify-items: start;
+  padding: 1rem;
+  margin: 0 2rem;
+}
+
+.filter-section > h3 {
+  margin: auto 1rem;
+}
+
+/* Untuk pilihan warna margin kanan kiri diperkecil */
+.filter-section:nth-child(3) {
+  margin: 0 0.5rem;
+}
+
+/* Search results grid item */
+
+.search-result-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column: repeat(2, auto);
+  justify-items: center;
+  border: 2px solid black;
+  border-radius: 3px;
+  overflow: scroll;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 21ch;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 0 1rem;
+  margin: 0.4rem 0;
+}
+.result-item img {
+  max-width: 55%;
+  margin: 0 auto;
+}
+
+.result-item h3 {
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.result-item a {
+  text-align: center;
+}
+
+/* Stats widget styling */
 .stats {
   padding: 2rem 0;
 }
@@ -245,53 +377,4 @@ footer {
 }
 .stat-items h2 {
   margin-bottom: 1.2rem;
-}
-
-/* Searchresults styling */
-.sidebar {
-  background-color: #f0f0f0;
-  padding: 10px;
-  max-width: 38vw;
-}
-
-.sidebar input[type='text'] {
-  max-width: 6ch;
-}
-
-.category-list,
-.subcategory-list,
-.color-list {
-  list-style-type: none;
-}
-
-.category-link,
-.subcategory-link {
-  color: #000;
-  text-decoration: none;
-}
-
-.category-link:hover,
-.subcategory-link:hover {
-  text-decoration: underline;
-}
-
-.filter-section {
-  display: flex;
-  justify-content: space-evenly;
-  justify-items: start;
-  padding: 0.8rem;
-}
-
-.filter-section :nth-child(2n),
-.filter-section :last-child {
-  justify-self: center;
-}
-
-.color-list {
-  display: flex;
-  padding: 0;
-}
-.filter-section ul li input[name='color'] {
-  /* display: inline-block; */
-  margin: 0 0.2rem;
 }
