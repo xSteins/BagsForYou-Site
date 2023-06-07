@@ -7,7 +7,7 @@
     <script src="/js/script.js" defer></script>
 </head>
 <!-- Login EJS -->
-<div id="login" class="overlay hidden">
+<div id="login" class="overlay">
     <div class="external-window-container">
         <a href="/" id="close-window-link">Close this window</a>
         <div class="window-container">
@@ -16,7 +16,7 @@
                 <h2>LOGIN</h2>
                 <p class="alert hidden">Tes alert anjing</p>
             </div>
-            <form action="/login" method="get" id="loginForm">
+            <form action="/login" method="post" id="loginForm">
                 <label for="email">Email :</label>
                 <input type="email" name="email" id="loginEmail">
                 <label for="password">Password :</label>

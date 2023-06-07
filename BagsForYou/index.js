@@ -38,7 +38,9 @@ app.listen(port, () => {
 })
 
 app.get('/', (req, res) => {
-    res.render('home')
+    res.render('home',{
+        status: 'default'
+    })
 })
 app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview')
@@ -51,4 +53,18 @@ app.get('/signup', (req, res) => {
 })
 app.get('/login', (req, res) => {
     res.render('login')
+})
+app.post('/login', (req, res) => {
+    const email=req.body.email;
+    const password=req.body.password;
+    if(email==='admin@bags.com'&& password==='admin'){
+        res.render('home',{
+            status: 'admin'
+        })
+    }
+    else{
+        res.render('home',{
+            status: 'user'
+        })
+    }
 })

@@ -75,6 +75,7 @@ header {
   background-color: black;
   border: 1px solid white;
   border-radius: 0.5rem;
+  margin-right: 0;
 }
 #SignUpButton:hover,
 #SignInButton {
@@ -83,6 +84,7 @@ header {
   background-color: white;
   border: 1px solid black;
   border-radius: 0.5rem;
+  margin-right: 0;
 }
 
 .account-container {
