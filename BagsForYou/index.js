@@ -39,7 +39,6 @@ app.listen(port, () => {
 
 app.get('/', (req, res) => {
     res.render('home')
-    res.render('components/accountMenu/editProfile');
 })
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile');
