@@ -11,19 +11,40 @@
             <button id="SignUpButton">Sign Up</button>
             <button id="SignInButton">Sign In</button>
         </div>
-        <div class="account-container flex">
+        <!-- <div class="account-container flex">
             <div class="links-container flex">
                 <span class="material-symbols-rounded">
                     person
                 </span>
                 <a href="#" class="account-box">@Rex-Lapis</a>
             </div>
-            <div class="links-container flex hidden">
+        </div> -->
+
+        <div class="links-container flex">
+            <div id="username" class="account-menu">
+                <span class="material-symbols-outlined">
+                    alternate_email
+                </span>
+                <a href="#" class="account-box">Rex-Lapis</a>
+            </div>
+            <div id="profile-box" class="account-menu">
                 <span class="material-symbols-rounded">
                     person
                 </span>
-                <a href="#" class="account-box">@Rex-Lapis</a>
+                <a href="/me" class="active">
+                    Profile
+                </a>
+            </div>
+            <div id="user-setting" class="account-menu">
+                <span class="material-symbols-outlined">
+                    manage_accounts
+                </span>
+                <a href="settings" class="active">
+                    Settings
+                </a>
             </div>
         </div>
+
+
     </nav>
 </header>

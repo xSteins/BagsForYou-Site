@@ -12,9 +12,19 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(117, 117, 117, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
   z-index: 10;
   transition: opacity 3s ease-in-out, visibility 3s ease-in-out;
+}
+
+.alert {
+  color: red;
+  font-weight: 500;
+  font-size: 1.3rem;
+}
+
+.form-title .form-brand {
+  text-align: left !important;
 }
 /* untuk login dan signup window */
 .external-window-container {

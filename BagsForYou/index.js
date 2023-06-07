@@ -42,6 +42,13 @@ app.get('/', (req, res) => {
         status: 'default'
     })
 })
+app.get('/profile/edit', (req, res) => {
+    res.render('components/accountMenu/editProfile');
+})
+
+app.get('/searchresults', (req, res) => {
+    res.render('searchresults');
+})
 app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview')
 })
