@@ -1,4 +1,3 @@
-// import 'boxicons';
 import express from 'express';
 import mysql from 'mysql';
 import path from 'path';
@@ -13,6 +12,7 @@ const publicPath = path.resolve('static-path');
 
 app.use(express.static(publicPath));
 app.set('view engine', 'ejs');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // MySQL Connection
@@ -38,5 +38,20 @@ app.listen(port, () => {
 })
 
 app.get('/', (req, res) => {
-    res.render('test')
+    res.render('home')
+})
+app.get('/searchresults', (req, res) => {
+    res.render('searchresults');
+})
+app.get('/addReview', (req, res) => {
+    res.render('components/accountMenu/addBagReview')
+})
+app.get('/adminDashboard', (req, res) => {
+    res.render('adminDashboard')
+})
+app.get('/signup', (req, res) => {
+    res.render('signup')
+})
+app.get('/login', (req, res) => {
+    res.render('login')
 })

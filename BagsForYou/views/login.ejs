@@ -1,0 +1,29 @@
+<head>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/default-styling.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <link rel="stylesheet" href="/css/form-styling.css">
+    <script src="/js/script.js" defer></script>
+</head>
+<!-- Login EJS -->
+<div id="login" class="overlay">
+    <div class="external-window-container">
+        <a href="/" id="close-window-link">Go back</a>
+        <div class="window-container">
+            <div class="form-title">
+                <h1 class="brandName form-brand">BagsForYou</h1>
+                <h2>LOGIN</h2>
+                <p class="alert">tes alert</p>
+            </div>
+            <form action="/login" method="get" id="loginForm">
+                <label for="email">Email :</label>
+                <input type="email" name="email" id="loginEmail">
+                <label for="password">Password :</label>
+                <input type="password" name="password" id="loginPass">
+                <input type="submit" value="Log In">
+            </form>
+            <p>New to here? <a href="/signup">Sign Up</a> instead</p>
+        </div>
+    </div>
+</div>

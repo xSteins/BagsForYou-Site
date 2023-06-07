@@ -1,0 +1,380 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Start styling */
+* {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+}
+.flex {
+  display: flex;
+  align-items: center;
+}
+.space-between {
+  justify-content: space-between;
+}
+.space-evenly {
+  justify-content: space-evenly;
+}
+
+.grid {
+  display: grid;
+}
+/* Jika a link tidak ada class reset warnanya jadi hitam */
+a:is([class]) {
+  color: black;
+}
+.container {
+  max-width: 80vw;
+  height: fit-content;
+  margin: 0 auto;
+}
+/* Default link color */
+a {
+  color: #0038ff;
+  margin-right: 1rem;
+}
+button,
+a {
+  font-weight: 600;
+}
+
+a:last-child {
+  margin: 0;
+}
+.hidden {
+  display: none !important;
+}
+
+header {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 12px 0px,
+    rgba(0, 0, 0, 0.3) 0px 0px 7px 0px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: white;
+  padding: 0.6rem 4rem;
+  margin-bottom: 0.4rem;
+  z-index: 1;
+}
+.brandName {
+  /* 24px */
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.site-nav a {
+  list-style: none;
+}
+/* Give every child the same styling */
+#main-navigation > div {
+  margin: 0.5rem;
+}
+#SignUpButton,
+#SignInButton:hover {
+  padding: 0.4rem;
+  color: white;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 0.5rem;
+}
+#SignUpButton:hover,
+#SignInButton {
+  padding: 0.4rem;
+  color: black;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 0.5rem;
+}
+
+.account-container {
+  background-color: white;
+  border: 2px solid black;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+}
+/* Test styling hover */
+.links-container {
+  position: relative;
+}
+
+.links-container:hover #profile-box,
+.links-container:hover #user-setting {
+  display: flex;
+}
+
+/* Dropdown styling */
+.account-menu {
+  display: flex;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 0.5rem;
+  height: 2.5rem;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.account-menu span {
+  margin-right: 1rem;
+}
+#username:hover,
+#profile-box:hover,
+#user-setting:hover {
+  background-color: #6b8bff;
+  /* color: beige; */
+}
+/* #username:hover a,
+#profile-box:hover a,
+#user-setting:hover a {
+  color: beige;
+} */
+
+#profile-box,
+#user-setting {
+  display: none;
+  position: absolute;
+  top: 38px;
+  left: 0;
+  width: 100%;
+}
+#user-setting {
+  top: 76px;
+}
+
+/*  */
+
+footer {
+  grid-template-columns: 20vw 80vw;
+  grid-template-rows: max-content;
+  padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #191919;
+  color: aliceblue;
+  z-index: 1;
+}
+
+.footer-copyright-notice {
+  margin-left: 1.5rem;
+  max-width: 850px;
+  font-weight: lighter;
+}
+
+.admin-container {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 1fr 1fr;
+  gap: 1em 1em;
+  grid-auto-flow: row;
+  justify-items: center;
+  align-items: center;
+}
+
+.hero {
+  z-index: 1;
+  flex-direction: column;
+}
+.searchbar-container {
+  display: flex;
+  margin-top: 7rem;
+  justify-content: center;
+  max-width: 60ch;
+}
+
+.searchbar-container input[type='text'],
+.searchbar-container-secondary input[type='text'] {
+  height: 3.5rem;
+  width: 80ch;
+  border: 3px solid black;
+  padding: 0 10px;
+  /* outline: none; */
+}
+
+.boxicon-submit {
+  height: 3.5rem;
+  padding: 0 2rem;
+  background-color: white;
+  color: black;
+  border: 3px solid black;
+  border-left: none;
+  transition: border-color 0.3s;
+}
+
+.boxicon-submit:hover {
+  background-color: #6b8bff; /* Change the border color to #0038ff on hover */
+}
+
+.boxicon-submit {
+  border-left: none;
+}
+
+.boxicon-submit i {
+  color: black;
+}
+
+/* Default layouting untuk dua kolom user dan admin */
+/* Tambahan untuk wide menu tidak perlu repeat column. */
+.main-grid-section {
+  grid-template-columns: repeat(2, auto);
+}
+.main-grid-section,
+.wide-grid-section {
+  display: grid;
+  padding: 0 5vw;
+}
+.left-column {
+  padding-right: 1rem;
+}
+/* .sidebar {
+  background-color: #f0f0f0;
+  padding: 10px;
+  max-width: 38vw;
+} */
+
+/* Searchbar third type : untuk container terkecil : untuk add review menu */
+
+#addBagSearch .searchbar-container {
+  margin-top: 0.5rem;
+}
+
+#addBagSearch .searchbar-container input[type='text'] {
+  height: 2rem;
+  width: 20ch;
+  border: 3px solid black;
+  border-radius: 0;
+  outline: none;
+}
+
+#addBagSearch .boxicon-submit {
+  height: 2rem;
+  padding: 0 0.5rem;
+  background-color: white;
+  color: black;
+  border: 3px solid black;
+  border-left: none;
+  transition: border-color 0.3s;
+}
+
+#addBagSearch .boxicon-submit:hover {
+  background-color: #6b8bff; /* Change the border color to #0038ff on hover */
+}
+
+.centered-container {
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 50vw;
+}
+
+.main-display-container {
+  border: 2px solid black;
+  border-radius: 3px;
+  padding: 1rem;
+  min-height: 350px;
+}
+
+/* Searchbar secondary */
+
+.searchbar-container-secondary {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  margin-top: 0.5rem;
+  max-width: 69ch; /* nice */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Searchresults styling */
+
+.filter-menu {
+  display: flex;
+  height: 4rem;
+  /* background-color: #c4c4c4; */
+  margin: 0 auto;
+}
+.filter-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  max-width: 15rem;
+  justify-items: start;
+  padding: 1rem;
+  margin: 0 2rem;
+}
+
+.filter-section > h3 {
+  margin: auto 1rem;
+}
+
+/* Untuk pilihan warna margin kanan kiri diperkecil */
+.filter-section:nth-child(3) {
+  margin: 0 0.5rem;
+}
+
+/* Search results grid item */
+
+.search-result-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column: repeat(2, auto);
+  justify-items: center;
+  border: 2px solid black;
+  border-radius: 3px;
+  overflow: scroll;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 21ch;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 0 1rem;
+  margin: 0.4rem 0;
+}
+.result-item img {
+  max-width: 55%;
+  margin: 0 auto;
+}
+
+.result-item h3 {
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.result-item a {
+  text-align: center;
+}
+
+/* Stats widget styling */
+.stats {
+  padding: 2rem 0;
+}
+
+.stats-row {
+  margin: 0.5rem auto;
+  padding-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(5, max-content);
+  gap: 1rem;
+  justify-items: center;
+  align-items: center;
+}
+
+.stats-row:last-child {
+  padding: 0;
+  grid-template-columns: repeat(3, max-content);
+}
+
+/* border-radius = padding + 1 */
+.stat-items {
+  border: 3px solid black;
+  line-height: 0.5;
+  border-radius: 0.6rem;
+  padding: 0.5rem;
+}
+.stat-items h2 {
+  margin-bottom: 1.2rem;
+}
