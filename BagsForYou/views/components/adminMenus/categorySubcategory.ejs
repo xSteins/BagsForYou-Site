@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,16 +23,16 @@
 
         <div class="main-grid-section">
             <div class="left-column">
-                <div class="main-menu">
-                    <div class="review-req">
-                        <p>Adjust Review Requirement</p>
+                <div class="main-menu">            
+                    <div class="container-category">
+                        <p>Add a category or sub-category</p>
                         <br>
-                        <p>Minimum character / space required for a review item field</p>
-                        <br>
-                        <form class="adjust-req"> 
-                            <input type="text" name="review-char">
-                            <input type="text" name="min-review">
-                            <input type="submit">
+                        <form class="form-category">
+                                <input type="text" id="categoryIn" name="categoryIn">
+                                <label for="categoryIn">Category</label>
+                                <input type="text" id="sub-categoryIn" name="sub-categoryIn">
+                                <label for="sub-categoryIn">Sub-category</label>
+                                <input type="submit" id="category-submit">
                         </form>
                     </div>
                 </div>
