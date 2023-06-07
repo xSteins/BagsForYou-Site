@@ -1,0 +1,57 @@
+body {
+  background-color: rgba(0, 0, 0, 0.816);
+}
+
+.profile-container {
+  max-width: 600px;
+  padding: 2rem;
+  background-color: #ebebeb;
+  border: 1px solid black;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-container .grid-profile-edit label {
+  font-weight: 600;
+}
+
+.profile-container .grid-profile-edit {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 5rem 1fr;
+  max-width: 400px;
+  grid-template-rows: repeat(2, 2rem);
+  justify-content: center;
+}
+
+.grid-profile-edit p,
+button,
+input {
+  grid-column: 2;
+  margin-left: 2rem;
+}
+
+.grid-profile-edit button,
+input[type='submit'] {
+  max-width: fit-content;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-bottom: 1ch;
+}
+
+.grid-profile-edit button:hover,
+input[type='submit']:hover {
+  background-color: black;
+  color: white;
+}
+
+.grid-profile-edit input[type='password'],
+input[type='submit'] {
+  font-weight: 500;
+  max-width: 20ch;
+  margin-bottom: 0.4rem;
+}

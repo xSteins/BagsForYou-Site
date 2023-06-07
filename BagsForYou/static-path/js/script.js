@@ -14,11 +14,11 @@ document.getElementById('SignInButton').addEventListener('click', (e) => {
 });
 
 // Close the window button
-const windowCloseButton = document.querySelector('#close-window-link');
+// const windowCloseButton = document.querySelector('#close-window-link');
 
-windowCloseButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    signUpMenu.classList.add('hidden');
-    loginMenu.classList.add('hidden');
-})
+// windowCloseButton.addEventListener('click', (e) => {
+//     e.preventDefault();
+//     signUpMenu.classList.add('hidden');
+//     loginMenu.classList.add('hidden');
+// })
 
