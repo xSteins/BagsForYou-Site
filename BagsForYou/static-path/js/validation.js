@@ -1,9 +1,9 @@
 // Get the form and the alert element
 const form = document.getElementById('loginForm');
-const alertElement = document.getElementById('Alert');
+const alertElement = document.getElementsByClassName('alert');
 
 // Add event listener to the form submission
-form.addEventListener('submit', (event) => {
+form.addEventListener('keyup', (event) => {
     event.preventDefault(); // Prevent form submission
 
     // Get the form inputs
@@ -58,9 +58,6 @@ form.addEventListener('submit', (event) => {
         displayAlert('Password must be maximum 20 characters long');
         return;
     }
-
-    // If all validations pass, submit the form
-    form.submit();
 });
 
 // Function to display the alert message
