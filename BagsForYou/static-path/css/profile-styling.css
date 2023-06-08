@@ -2,7 +2,8 @@ body {
   background-color: rgba(0, 0, 0, 0.816);
 }
 
-.profile-container {
+.profile-container,
+.profile-container-account {
   max-width: 600px;
   padding: 2rem;
   background-color: #ebebeb;
@@ -14,6 +15,73 @@ body {
   justify-content: center;
 }
 
+/* profile post information styling */
+.profile-container-account {
+  padding: 0;
+}
+.user-information {
+  width: 100%;
+  /* margin-bottom: 1rem; */
+  border-bottom: 1px solid black;
+  padding: 1rem;
+}
+
+.username-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.username-tag {
+  font-weight: 500;
+  margin-right: 1.5rem;
+}
+
+.following-follower-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.following-follower-container p:first-child {
+  margin-right: 1rem;
+}
+
+.following-follower-container strong {
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.follower-info,
+.following-info {
+  font-weight: 400;
+}
+
+.review-box {
+  min-height: 405px;
+}
+
+.empty-data {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.empty-data h3 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 3rem;
+}
+
+.empty-data p {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* edit profile styling */
 .profile-container .grid-profile-edit label {
   font-weight: 600;
 }
