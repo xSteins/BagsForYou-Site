@@ -38,10 +38,16 @@ app.listen(port, () => {
 })
 
 app.get('/', (req, res) => {
-    res.render('home',{
-        status: 'default'
-    })
+    res.render('components/accountMenu/following');
+    // res.render('home', {
+    //     status: 'default'
+    // })
 })
+
+app.get('/profile/self', (req, res) => {
+    res.render('components/accountMenu/profile-self');
+})
+
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile');
 })
@@ -61,16 +67,17 @@ app.get('/signup', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login')
 })
+
 app.post('/login', (req, res) => {
-    const email=req.body.email;
-    const password=req.body.password;
-    if(email==='admin@bags.com'&& password==='admin'){
-        res.render('home',{
+    const email = req.body.email;
+    const password = req.body.password;
+    if (email === 'admin@bags.com' && password === 'admin') {
+        res.render('home', {
             status: 'admin'
         })
     }
-    else{
-        res.render('home',{
+    else {
+        res.render('home', {
             status: 'user'
         })
     }

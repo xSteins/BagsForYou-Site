@@ -148,7 +148,8 @@ footer {
   grid-template-columns: 20vw 80vw;
   grid-template-rows: max-content;
   padding: 1rem;
-  position: fixed;
+  margin-top: 1rem;
+  position: absolute;
   bottom: 0;
   width: 100%;
   background-color: #191919;
