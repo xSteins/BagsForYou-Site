@@ -38,10 +38,13 @@ app.listen(port, () => {
 })
 
 app.get('/', (req, res) => {
-    res.render('components/accountMenu/following');
-    // res.render('home', {
-    //     status: 'default'
-    // })
+    res.render('home', {
+        status: 'default'
+    })
+})
+
+app.get('/profile/self/follower', (req, res) => {
+    res.render('components/accountMenu/follower');
 })
 
 app.get('/profile/self', (req, res) => {
