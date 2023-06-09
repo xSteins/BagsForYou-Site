@@ -90,6 +90,9 @@ body {
   .review-box {
     max-height: 617px;
   }
+  .foll-list {
+    max-height: 500px;
+  }
 }
 .review-post {
   border: 2px solid black;
@@ -111,6 +114,47 @@ body {
   font-size: 1.3rem;
   font-weight: 500;
   text-align: left;
+}
+
+/* Following/follower menu */
+
+.foll-list {
+  display: flex;
+  overflow-y: scroll;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 300px;
+  max-height: 360px;
+}
+
+.account-foll {
+  display: flex;
+  width: 25ch; /* 30 character width, asumsi db nama username max 20ch*/
+  background-color: #e3d6c5;
+  border: 1px solid black;
+  margin: 0.5rem;
+  padding: 0.3rem;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.account-foll a {
+  padding: 0.2rem;
+  color: white;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 3px;
+  margin-right: 0;
+}
+
+.account-foll a:hover {
+  color: black;
+  background-color: white;
+}
+
+.account-foll .account-name {
+  font-weight: 450;
 }
 
 /* edit profile styling */
