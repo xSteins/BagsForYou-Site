@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BagsForYou - View ${ username } Follower.</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/default-styling.css">
+    <link rel="stylesheet" href="/css/profile-styling.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+</head>
+
+<body>
+    <%- include('../navigation/header-user') %>
+        <div id="following" class="profile-container-account">
+            <div class="user-information" id="self-profile">
+                <div class="username-data-container">
+                    <h2 class="username-tag">Username</h2>
+                    <a href="/profile/edit">Edit</a>
+                </div>
+                <div class="following-follower-container">
+                    <p><strong>10</strong> <a href="/profile/follower" class="follower-info">Follower</a></p>
+                    <p><strong>1</strong> <a href="/profile/following" class="following-info">Following</a> </p>
+                </div>
+            </div>
+            <div class="foll-list">
+                <!-- href link herisikan data mengacu pada db dimana :
+            localhost:/account/accountusername, rencana pakai username saja untuk display data akun tersebut. -->
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+                <div class="account-foll">
+                    <p class="account-name">Rex-lapis</p>
+                    <a href="">Unfollow</a>
+                </div>
+            </div>
+        </div>
+        <%- include('../navigation/footer') %>
+</body>
+
+</html>

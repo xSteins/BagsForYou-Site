@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BagsForYou - Share your review!</title>
+    <link rel="stylesheet" href="/css/reset.css">
+    <link rel="stylesheet" href="/css/default-styling.css">
+    <link rel="stylesheet" href="/css/profile-styling.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+</head>
+
+<body>
+    <%- include('../navigation/header-user') %>
+        <div id="edit-profile-container" class="profile-container">
+            <form action="/updateProfileData" method="get" id="editProfileForm">
+                <h2 style="margin-bottom: 1rem;">Edit your profile data :</h2>
+                <div class="grid-profile-edit">
+                    <label for="username">Username</label>
+                    <p id="profile-username">Username-max isi disini</p>
+                    <button class="editButton" id="usernameEditButton">Edit</button>
+                    <input type="text" name=username"" id="usernameUpdated" class="hidden">
+                </div>
+
+                <div class="grid-profile-edit">
+                    <label for="email">Email</label>
+                    <p id="profile-email">john-doe@example.com</p>
+                    <button class="editButton" id="emailEditButton">Edit</button>
+                    <input type="text" name="email" id="emailUpdated" class="hidden">
+                </div>
+
+                <div class="grid-profile-edit">
+                    <label for="name">Name</label>
+                    <p id="profile-name">John Doe</p>
+                    <button class="editButton" id="nameEditButton">Edit</button>
+                    <input type="text" name="name" id="nameUpdated" class="hidden">
+                </div>
+
+                <div class="grid-profile-edit">
+                    <label for="name">Password</label>
+                    <input type="password" name="oldPass" id="oldPasswordField" placeholder="Insert your old password">
+                    <input type="password" name="newPass" id="newPasswordField" placeholder="Create new password">
+                    <input type="password" name="newPassValidation" id="newPasswordRevalidation"
+                        placeholder="Reenter your new password">
+                    <input type="submit" value="Submit Change">
+                </div>
+            </form>
+        </div>
+        <%- include('../navigation/footer') %>
+</body>
+
+</html>
