@@ -44,18 +44,17 @@ app.listen(port, () => {
 
 app.get('/', (req, res) => {
     res.render('home', {
-        status: req.session.is_admin ? 'admin' : req.session.username ? 'user' : 'default',
-        username: req.session.username || '',
-    });
-});
+        status: 'default'
+    })
+})
 
 app.get('/profile/self/follower', (req, res) => {
     res.render('components/accountMenu/follower');
-});
+})
 
-app.get('/profile', (req, res) => {
+app.get('/profile/self', (req, res) => {
     res.render('components/accountMenu/profile-self');
-});
+})
 
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile');
