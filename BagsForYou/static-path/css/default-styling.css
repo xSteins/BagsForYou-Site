@@ -289,30 +289,26 @@ footer {
 }
 
 /* Searchresults styling */
+.main-menu {
+  margin: 0 auto;
+}
 
 .filter-menu {
   display: flex;
   height: 4rem;
-  /* background-color: #c4c4c4; */
-  margin: 0 auto;
+  align-items: center;
+  justify-content: space-evenly;
 }
+
 .filter-section {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  max-width: 15rem;
   justify-items: start;
-  padding: 1rem;
-  margin: 0 2rem;
+  max-height: 2rem;
 }
 
 .filter-section > h3 {
-  margin: auto 1rem;
-}
-
-/* Untuk pilihan warna margin kanan kiri diperkecil */
-.filter-section:nth-child(3) {
-  margin: 0 0.5rem;
+  margin-right: 1rem;
 }
 
 /* Search results grid item */
@@ -324,7 +320,10 @@ footer {
   justify-items: center;
   border: 2px solid black;
   border-radius: 3px;
-  overflow: scroll;
+  max-height: 60vh;
+  max-width: 85vw;
+  margin: 0 auto;
+  overflow-y: scroll;
 }
 
 .result-item {
