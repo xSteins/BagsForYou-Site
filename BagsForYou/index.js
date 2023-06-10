@@ -20,8 +20,7 @@ const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'MIBD-BagsForYou',
-    // Undecided, harus dibuat lagi nanti
+    database: 'dbreviewtas',
 });
 // Middleware connection 
 app.use(
@@ -38,6 +37,7 @@ app.listen(port, () => {
 })
 
 app.get('/', (req, res) => {
+    // res.render('components/bagsData/bagPost')
     res.render('home', {
         status: 'default'
     })
@@ -64,24 +64,55 @@ app.get('/addReview', (req, res) => {
 app.get('/adminDashboard', (req, res) => {
     res.render('adminDashboard')
 })
+
+// Error message tidak diisi dulu (kosong)
 app.get('/signup', (req, res) => {
-    res.render('signup')
+    res.render('signup', { errorMsg: null })
 })
 app.get('/login', (req, res) => {
-    res.render('login')
+    res.render('login', { errorMsg: null });
 })
 
+// app.post('/login', (req, res) => {
+//     const email = req.body.email;
+//     const password = req.body.password;
+//     if (email === 'admin@bags.com' && password === 'admin') {
+//         res.render('home', {
+//             status: 'admin'
+//         })
+//     }
+//     else {
+//         res.render('home', {
+//             status: 'user'
+//         })
+//     }
+// })
+
 app.post('/login', (req, res) => {
-    const email = req.body.email;
+    const usernameOrEmail = req.body.usernameOrEmail;
     const password = req.body.password;
-    if (email === 'admin@bags.com' && password === 'admin') {
-        res.render('home', {
-            status: 'admin'
-        })
-    }
-    else {
-        res.render('home', {
-            status: 'user'
-        })
-    }
-})
+    const accountQuery = 'SELECT `Username`, `Password`, `E_mail`, `IsAdmin` FROM `account` WHERE (`Username` = ? OR `E_mail` = ?) AND `Password` = ?';
+    pool.query(accountQuery, [usernameOrEmail, usernameOrEmail, password], (error, results) => {
+        if (error) {
+            // error handling dilog dulu ajah
+            console.log(error);
+        } else if (results.length > 0) {
+            // login successful
+            const user = results[0];
+            if (user.IsAdmin === 1) {
+                res.render('home', {
+                    status: 'admin'
+                });
+            } else {
+                res.render('home', {
+                    status: 'user'
+                });
+            }
+        } else {
+            // fail login, display error di login /
+            res.render('login', {
+                errorMsg: 'Invalid login credentials'
+            });
+        }
+    });
+});

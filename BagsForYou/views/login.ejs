@@ -14,11 +14,14 @@
             <div class="form-title">
                 <h1 class="brandName form-brand">BagsForYou</h1>
                 <h2>LOGIN</h2>
-                <p class="alert">tes alert</p>
+                <p class="alert">
+                    <%= errorMsg %>
+                </p>
             </div>
             <form action="/login" method="post" id="loginForm">
-                <label for="email">Email :</label>
-                <input type="email" name="email" id="loginEmail">
+                <label for="usernameOrEmail">Email / Username :</label>
+                <input type="text" name="usernameOrEmail" id="loginUsernameOrEmail">
+                <!-- <input type="email" name="email" id="loginEmail"> -->
                 <label for="password">Password :</label>
                 <input type="password" name="password" id="loginPass">
                 <input type="submit" value="Log In">
