@@ -16,13 +16,16 @@
   flex-direction: column;
   align-items: center;
   background-color: #ffc8c8;
-  max-width: 30ch;
-  padding: 8px 0;
+  padding: 1rem 0;
 }
 
 .menu-icon {
   height: 3rem;
   fill: #313131;
+}
+.admin-button a {
+  color: #5755b4;
+  padding-top: 1rem;
 }
 /* .admin-button a {
   color: #5755b4;
