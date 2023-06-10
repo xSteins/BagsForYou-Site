@@ -8,17 +8,29 @@
     <title>BagsForYou - Share your review!</title>
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/default-styling.css">
+    <link rel="stylesheet" href="/css/form-styling.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <script src="/js/script.js" defer></script>
 </head>
 
 <body>
-    <%- include('components/header') %>
+    <%switch(status){
+    case 'admin':%>
+        <%- include('components/navigation/header-admin') %>    
+        <% break;
+    case 'user':%>
+        <%- include('components/navigation/header-user') %>
+        <% break;
+    default:%>
+        <%- include('components/navigation/header') %>
+        <% break;
+    }%>
+    <%- include('components/hero') %>
 
-        <%- include('components/hero') %>
-
-            <%- include('components/footer') %>
+    <%- include('components/navigation/footer') %>
 </body>
 
 </html>

@@ -1,0 +1,201 @@
+body {
+  background-color: rgba(0, 0, 0, 0.816);
+}
+
+.profile-container,
+.profile-container-account {
+  max-width: 600px;
+  padding: 2rem;
+  background-color: #ebebeb;
+  border: 1px solid black;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* profile post information styling */
+.profile-container-account {
+  padding: 0;
+}
+.user-information {
+  width: 100%;
+  /* margin-bottom: 1rem; */
+  border-bottom: 1px solid black;
+  padding: 1rem;
+}
+
+.username-data-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.username-tag {
+  font-weight: 500;
+  margin-right: 1.5rem;
+}
+
+.following-follower-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.following-follower-container p:first-child {
+  margin-right: 1rem;
+}
+
+.following-follower-container strong {
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
+}
+
+.follower-info,
+.following-info {
+  font-weight: 400;
+}
+
+.empty-data {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.empty-data h3 {
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-top: 3rem;
+}
+.empty-data p {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.review-box {
+  overflow-y: auto;
+  width: 100%;
+  padding: 0 1rem;
+  min-height: 405px;
+  max-height: 405px;
+
+  /* Media query for screens bigger than 1600px by 900px */
+}
+
+@media (min-height: 900px) {
+  .review-box {
+    max-height: 617px;
+  }
+  .foll-list {
+    max-height: 500px;
+  }
+}
+.review-post {
+  border: 2px solid black;
+  border-radius: 3px;
+  padding: 0.4rem;
+  display: flex;
+  margin: 1rem 0;
+}
+.review-post img {
+  max-width: 100%;
+  margin-right: 1rem;
+}
+
+.review-information {
+  max-width: 25rem;
+}
+
+.review-information h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Following/follower menu */
+
+.foll-list {
+  display: flex;
+  overflow-y: scroll;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  min-height: 300px;
+  max-height: 360px;
+}
+
+.account-foll {
+  display: flex;
+  width: 25ch; /* 30 character width, asumsi db nama username max 20ch*/
+  background-color: #e3d6c5;
+  border: 1px solid black;
+  margin: 0.5rem;
+  padding: 0.3rem;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.account-foll a {
+  padding: 0.2rem;
+  color: white;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 3px;
+  margin-right: 0;
+}
+
+.account-foll a:hover {
+  color: black;
+  background-color: white;
+}
+
+.account-foll .account-name {
+  font-weight: 450;
+}
+
+/* edit profile styling */
+.profile-container .grid-profile-edit label {
+  font-weight: 600;
+}
+
+.profile-container .grid-profile-edit {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 5rem 1fr;
+  max-width: 400px;
+  grid-template-rows: repeat(2, 2rem);
+  justify-content: center;
+}
+
+.grid-profile-edit p,
+button,
+input {
+  grid-column: 2;
+  margin-left: 2rem;
+}
+
+.grid-profile-edit button,
+input[type='submit'] {
+  max-width: fit-content;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  margin-bottom: 1ch;
+}
+
+.grid-profile-edit button:hover,
+input[type='submit']:hover {
+  background-color: black;
+  color: white;
+}
+
+.grid-profile-edit input[type='password'],
+input[type='submit'] {
+  font-weight: 500;
+  max-width: 20ch;
+  margin-bottom: 0.4rem;
+}
