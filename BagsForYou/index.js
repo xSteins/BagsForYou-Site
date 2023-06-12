@@ -2,9 +2,7 @@ import express from 'express';
 import mysql from 'mysql';
 import path from 'path';
 import bodyParser from 'body-parser';
-
-import crypto from 'crypto'
-import session from 'express-session';
+import session from 'cookie-session';
 
 const app = express();
 const port = 8005;
@@ -22,96 +20,96 @@ const pool = mysql.createPool({
     password: '',
     database: 'dbreviewtas',
 });
-// Middleware connection 
+
+// Middleware connection
 app.use(
     session({
+        name: 'session',
+        keys: ['key1', 'key2'], // You can change the keys
         secret: 'must be filled later...',
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
+        cookie: {
+            secure: true, // Use true if you have HTTPS
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+        },
     })
 );
 
 app.listen(port, () => {
     console.log('App started');
     console.log(`Server running on http://localhost:${port}`);
-})
+});
 
 app.get('/', (req, res) => {
-    // res.render('components/bagsData/bagPost')
     res.render('home', {
-        status: 'default'
-    })
-})
+        status: req.session.is_admin ? 'admin' : req.session.username ? 'user' : 'default',
+        username: req.session.username || '',
+    });
+});
 
 app.get('/profile/self/follower', (req, res) => {
     res.render('components/accountMenu/follower');
-})
+});
 
-app.get('/profile/self', (req, res) => {
+app.get('/profile', (req, res) => {
     res.render('components/accountMenu/profile-self');
-})
+});
 
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile');
-})
+});
 
 app.get('/searchresults', (req, res) => {
     res.render('searchresults');
-})
+});
 app.get('/addReview', (req, res) => {
-    res.render('components/accountMenu/addBagReview')
-})
+    res.render('components/accountMenu/addBagReview');
+});
 app.get('/adminDashboard', (req, res) => {
-    res.render('adminDashboard')
-})
+    res.render('adminDashboard');
+});
 
 // Error message tidak diisi dulu (kosong)
 app.get('/signup', (req, res) => {
-    res.render('signup', { errorMsg: null, success: null })
-})
+    res.render('signup', { errorMsg: null, success: null });
+});
 app.get('/login', (req, res) => {
     res.render('login', { errorMsg: null, success: null });
-})
-
-// app.post('/login', (req, res) => {
-//     const email = req.body.email;
-//     const password = req.body.password;
-//     if (email === 'admin@bags.com' && password === 'admin') {
-//         res.render('home', {
-//             status: 'admin'
-//         })
-//     }
-//     else {
-//         res.render('home', {
-//             status: 'user'
-//         })
-//     }
-// })
-
+});
 app.post('/login', (req, res) => {
     const usernameOrEmail = req.body.usernameOrEmail;
     const password = req.body.password;
-    const accountQuery = 'SELECT `Username`, `Password`, `E_mail`, `IsAdmin` FROM `account` WHERE (`Username` = ? OR `E_mail` = ?) AND `Password` = ?';
-    pool.query(accountQuery, [usernameOrEmail, usernameOrEmail, password], (error, results) => {
+    const accountQuery =
+        'SELECT `Username`, `Password`, `E_mail`, `IsAdmin` FROM `account` WHERE (`Username` = ? OR `E_mail` = ?) AND `Password` = ?';
+    const accountParams = [usernameOrEmail, usernameOrEmail, password];
+
+    pool.query(accountQuery, accountParams, (error, results) => {
         if (error) {
-            // error handling dilog dulu ajah
             console.log(error);
         } else if (results.length > 0) {
-            // login successful
             const user = results[0];
+            req.session.username = user.Username;
+            req.session.is_admin = user.IsAdmin === 1;
+
             if (user.IsAdmin === 1) {
                 res.render('home', {
-                    status: 'admin', success: false
+                    status: 'admin',
+                    username: req.session.username,
+                    success: false,
                 });
             } else {
                 res.render('home', {
-                    status: 'user', success: false
+                    status: 'user',
+                    username: req.session.username,
+                    success: false,
                 });
             }
         } else {
-            // fail login, display error di login /
             res.render('login', {
-                errorMsg: 'Invalid login credentials', success: false
+                errorMsg: 'Invalid login credentials',
+                success: false,
             });
         }
     });
@@ -123,34 +121,45 @@ app.post('/signup', (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    // validate input
     if (username.length > 31 || username.includes(' ')) {
         res.render('signup', {
-            errorMsg: 'Invalid username : Terlalu panjang\n Maksimal 30 karakter', success: false
+            errorMsg: 'Invalid username: Terlalu panjang\n Maksimal 30 karakter',
+            success: false,
         });
-    }
-    else if (password.length > 41) {
+    } else if (password.length > 41) {
         res.render('signup', {
-            errorMsg: 'Invalid password : Terlalu panjang\n Maksimal 40 karakter', success: false
+            errorMsg: 'Invalid password: Terlalu panjang\n Maksimal 40 karakter',
+            success: false,
         });
     } else if (email.length > 41) {
         res.render('signup', {
-            errorMsg: 'Invalid email : Terlalu panjang\n Maksimal 40 karakter', success: false
+            errorMsg: 'Invalid email: Terlalu panjang\n Maksimal 40 karakter',
+            success: false,
         });
     } else if (nama.length > 51) {
         res.render('signup', {
-            errorMsg: 'Invalid nama : Terlalu panjang\n Maksimal 50 karakter', success: false
+            errorMsg: 'Invalid nama: Terlalu panjang\n Maksimal 50 karakter',
+            success: false,
         });
     } else {
-        // input is valid, insert into database
-        const updateData = 'INSERT INTO `account` (`Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin`) VALUES (?, ?, ?, ?, ?)';
-        pool.query(updateData, [username, password, email, nama, 0], (error, results) => {
+        const updateData =
+            'INSERT INTO `account` (`Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin`) VALUES (?, ?, ?, ?, ?)';
+        const updateParams = [username, password, email, nama, 0];
+
+        pool.query(updateData, updateParams, (error, results) => {
             if (error) {
-                // handle error
+                console.log(error);
             } else {
-                // signup successful
+                req.session.username = username;
+                req.session.is_admin = false;
                 res.render('/login', { errorMsg: 'Akun anda berhasil dibuat! Silahkan login.', success: true });
             }
         });
     }
+});
+
+
+app.get('/logout', (req, res) => {
+    req.session = null; // Clear the session data
+    res.redirect('/'); // Redirect to the login page or any other desired page
 });

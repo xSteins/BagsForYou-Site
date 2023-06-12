@@ -17,7 +17,9 @@
                 <span class="material-symbols-outlined">
                     alternate_email
                 </span>
-                <a href="" class="account-box">Rex-Lapis</a>
+                <a href="" class="account-box">
+                    <%= username %>
+                </a>
             </div>
             <div id="profile-box" class="account-menu">
                 <span class="material-symbols-rounded">
@@ -32,7 +34,15 @@
                     manage_accounts
                 </span>
                 <a href="/profile/edit" class="active">
-                    Settings
+                    Setting
+                </a>
+            </div>
+            <div id="user-logout" class="account-menu">
+                <span class="material-symbols-outlined">
+                    logout
+                </span>
+                <a href="/logout" class="active">
+                    Logout
                 </a>
             </div>
         </div>
