@@ -44,17 +44,18 @@ app.listen(port, () => {
 
 app.get('/', (req, res) => {
     res.render('home', {
-        status: 'default'
-    })
-})
+        status: req.session.is_admin ? 'admin' : req.session.username ? 'user' : 'default',
+        username: req.session.username || '',
+    });
+});
 
 app.get('/profile/self/follower', (req, res) => {
     res.render('components/accountMenu/follower');
-})
+});
 
-app.get('/profile/self', (req, res) => {
+app.get('/profile', (req, res) => {
     res.render('components/accountMenu/profile-self');
-})
+});
 
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile');
@@ -76,20 +77,84 @@ app.get('/signup', (req, res) => {
 });
 app.get('/login', (req, res) => {
     res.render('login', { errorMsg: null, success: null });
-})
-
+});
 app.post('/login', (req, res) => {
+    const usernameOrEmail = req.body.usernameOrEmail;
+    const password = req.body.password;
+    const accountQuery =
+        'SELECT `Username`, `Password`, `E_mail`, `IsAdmin` FROM `account` WHERE (`Username` = ? OR `E_mail` = ?) AND `Password` = ?';
+    const accountParams = [usernameOrEmail, usernameOrEmail, password];
+
+    pool.query(accountQuery, accountParams, (error, results) => {
+        if (error) {
+            console.log(error);
+        } else if (results.length > 0) {
+            const user = results[0];
+            req.session.username = user.Username;
+            req.session.is_admin = user.IsAdmin === 1;
+
+            if (user.IsAdmin === 1) {
+                res.render('home', {
+                    status: 'admin',
+                    username: req.session.username,
+                    success: false,
+                });
+            } else {
+                res.render('home', {
+                    status: 'user',
+                    username: req.session.username,
+                    success: false,
+                });
+            }
+        } else {
+            res.render('login', {
+                errorMsg: 'Invalid login credentials',
+                success: false,
+            });
+        }
+    });
+});
+
+app.post('/signup', (req, res) => {
+    const username = req.body.username;
+    const nama = req.body.nama;
     const email = req.body.email;
     const password = req.body.password;
-    if (email === 'admin@bags.com' && password === 'admin') {
-        res.render('home', {
-            status: 'admin'
-        })
-    }
-    else {
-        res.render('home', {
-            status: 'user'
-        })
+
+    if (username.length > 31 || username.includes(' ')) {
+        res.render('signup', {
+            errorMsg: 'Invalid username: Terlalu panjang\n Maksimal 30 karakter',
+            success: false,
+        });
+    } else if (password.length > 41) {
+        res.render('signup', {
+            errorMsg: 'Invalid password: Terlalu panjang\n Maksimal 40 karakter',
+            success: false,
+        });
+    } else if (email.length > 41) {
+        res.render('signup', {
+            errorMsg: 'Invalid email: Terlalu panjang\n Maksimal 40 karakter',
+            success: false,
+        });
+    } else if (nama.length > 51) {
+        res.render('signup', {
+            errorMsg: 'Invalid nama: Terlalu panjang\n Maksimal 50 karakter',
+            success: false,
+        });
+    } else {
+        const updateData =
+            'INSERT INTO `account` (`Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin`) VALUES (?, ?, ?, ?, ?)';
+        const updateParams = [username, password, email, nama, 0];
+
+        pool.query(updateData, updateParams, (error, results) => {
+            if (error) {
+                console.log(error);
+            } else {
+                req.session.username = username;
+                req.session.is_admin = false;
+                res.render('/login', { errorMsg: 'Akun anda berhasil dibuat! Silahkan login.', success: true });
+            }
+        });
     }
 });
 
