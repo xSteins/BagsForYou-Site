@@ -19,6 +19,13 @@ const pool = mysql.createPool({
     user: 'root',
     password: '',
     database: 'dbreviewtas',
+    "typeCast": function castField(field,useDefaultTypeCasting ) {
+        if ((field.type === "BIT")&&(field.length===1)){
+            var bytes=  field.buffer();
+            return(bytes[0]);
+        }
+        return(useDefaultTypeCasting());
+    }
 });
 
 // Middleware connection
