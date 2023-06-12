@@ -67,10 +67,10 @@ app.get('/adminDashboard', (req, res) => {
 
 // Error message tidak diisi dulu (kosong)
 app.get('/signup', (req, res) => {
-    res.render('signup', { errorMsg: null })
+    res.render('signup', { errorMsg: null, success: null })
 })
 app.get('/login', (req, res) => {
-    res.render('login', { errorMsg: null });
+    res.render('login', { errorMsg: null, success: null });
 })
 
 // app.post('/login', (req, res) => {
@@ -101,18 +101,56 @@ app.post('/login', (req, res) => {
             const user = results[0];
             if (user.IsAdmin === 1) {
                 res.render('home', {
-                    status: 'admin'
+                    status: 'admin', success: false
                 });
             } else {
                 res.render('home', {
-                    status: 'user'
+                    status: 'user', success: false
                 });
             }
         } else {
             // fail login, display error di login /
             res.render('login', {
-                errorMsg: 'Invalid login credentials'
+                errorMsg: 'Invalid login credentials', success: false
             });
         }
     });
+});
+
+app.post('/signup', (req, res) => {
+    const username = req.body.username;
+    const nama = req.body.nama;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // validate input
+    if (username.length > 31 || username.includes(' ')) {
+        res.render('signup', {
+            errorMsg: 'Invalid username : Terlalu panjang\n Maksimal 30 karakter', success: false
+        });
+    }
+    else if (password.length > 41) {
+        res.render('signup', {
+            errorMsg: 'Invalid password : Terlalu panjang\n Maksimal 40 karakter', success: false
+        });
+    } else if (email.length > 41) {
+        res.render('signup', {
+            errorMsg: 'Invalid email : Terlalu panjang\n Maksimal 40 karakter', success: false
+        });
+    } else if (nama.length > 51) {
+        res.render('signup', {
+            errorMsg: 'Invalid nama : Terlalu panjang\n Maksimal 50 karakter', success: false
+        });
+    } else {
+        // input is valid, insert into database
+        const updateData = 'INSERT INTO `account` (`Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin`) VALUES (?, ?, ?, ?, ?)';
+        pool.query(updateData, [username, password, email, nama, 0], (error, results) => {
+            if (error) {
+                // handle error
+            } else {
+                // signup successful
+                res.render('/login', { errorMsg: 'Akun anda berhasil dibuat! Silahkan login.', success: true });
+            }
+        });
+    }
 });

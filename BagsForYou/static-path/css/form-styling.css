@@ -17,10 +17,14 @@
   transition: opacity 3s ease-in-out, visibility 3s ease-in-out;
 }
 
-.alert {
+.alert,
+.success {
   color: red;
   font-weight: 500;
   font-size: 1.3rem;
+}
+.success {
+  color: rgb(69, 168, 69);
 }
 
 .form-title .form-brand {
@@ -55,6 +59,7 @@ p {
 }
 
 #loginForm,
+#signUpForm,
 #formAddBagReview {
   display: grid;
   gap: 1rem;

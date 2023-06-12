@@ -316,12 +316,11 @@ footer {
 .search-result-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-column: repeat(2, auto);
   justify-items: center;
   border: 2px solid black;
   border-radius: 3px;
   max-height: 60vh;
-  max-width: 85vw;
+  max-width: 88vw;
   margin: 0 auto;
   overflow-y: scroll;
 }
@@ -351,13 +350,13 @@ footer {
 }
 
 /* Stats widget styling */
-.stats {
-  padding: 2rem 0;
+
+.stats:first-child {
+  margin-top: 1rem;
 }
 
 .stats-row {
   margin: 0.5rem auto;
-  padding-top: 1rem;
   display: grid;
   grid-template-columns: repeat(5, max-content);
   gap: 1rem;

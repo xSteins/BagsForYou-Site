@@ -14,9 +14,15 @@
             <div class="form-title">
                 <h1 class="brandName form-brand">BagsForYou</h1>
                 <h2>LOGIN</h2>
-                <p class="alert">
-                    <%= errorMsg %>
-                </p>
+                <% if (success) { %>
+                    <p class="alert success">
+                        <%= errorMsg %>
+                    </p>
+                    <% } else { %>
+                        <p class="alert">
+                            <%= errorMsg %>
+                        </p>
+                        <% } %>
             </div>
             <form action="/login" method="post" id="loginForm">
                 <label for="usernameOrEmail">Email / Username :</label>
