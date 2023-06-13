@@ -100,6 +100,16 @@ function returnUsername(req) {
 }
 
 app.get('/', (req, res) => {
+    // Global value untuk akun yang sudah logged in
+    const id_account = req.session.id_account;
+    const username = req.session.username;
+    const email = req.session.email;
+    const nama_lengkap = req.session.nama_lengkap;
+    const is_admin = req.session.is_admin;
+
+    let statusValidation = validateAccountType(is_admin);
+    let usernameValidation = validateUsername(username);
+
     res.render('home', {
         status: validateLoginStatus(req),
         username: returnUsername(req),
