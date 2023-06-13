@@ -3,6 +3,7 @@ import mysql from 'mysql';
 import path from 'path';
 import bodyParser from 'body-parser';
 import session from 'cookie-session';
+import crypto from 'crypto';
 
 const app = express();
 const port = 8005;
@@ -29,17 +30,22 @@ const pool = mysql.createPool({
 });
 
 // Middleware connection
+const key1 = crypto.randomBytes(32).toString('hex');
+const key2 = crypto.randomBytes(32).toString('hex');
 app.use(
     session({
         name: 'session',
-        keys: ['key1', 'key2'], // You can change the keys
+        // Updated this key to be random value using crypto
+        keys: [key1, key2],
         secret: 'must be filled later...',
         resave: false,
         saveUninitialized: true,
         cookie: {
             secure: true, // Use true if you have HTTPS
             httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000, // 24 hours in milliseconds
+            maxAge: 8 * 60 * 60 * 1000,
+            // maxAge: 24 * 60 * 60 * 1000, 
+            // max 24h cookies, mungkin disingkat u/ debugging dulu gaes (8 jam sahaja)
         },
     })
 );
@@ -49,10 +55,44 @@ app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
 
+function validateAccountType(is_admin) {
+    // Typecast is_admin to a number
+    const isAdmin = Number(is_admin);
+    // Check if is_admin is 1 or 0
+    if (isAdmin === 1) {
+        return 'admin';
+    } else if (isAdmin === 0) {
+        return 'user';
+    } else {
+        return 'default';
+    }
+}
+
+function validateUsername(username) {
+    // Check if username is defined
+    if (username) {
+        return username;
+    } else {
+        return null;
+    }
+}
+
+// STORE ALL DATA DISINI ((TESTING DULU BESTIE))
+
 app.get('/', (req, res) => {
+    // Global value untuk akun yang sudah logged in
+    const id_account = req.session.id_account;
+    const username = req.session.username;
+    const email = req.session.email;
+    const nama_lengkap = req.session.nama_lengkap;
+    const is_admin = req.session.is_admin;
+
+    let statusValidation = validateAccountType(is_admin);
+    let usernameValidation = validateUsername(username);
+
     res.render('home', {
-        status: req.session.is_admin ? 'admin' : req.session.username ? 'user' : 'default',
-        username: req.session.username || '',
+        status: statusValidation,
+        username: usernameValidation,
     });
 });
 
