@@ -100,6 +100,16 @@ function returnUsername(req) {
 }
 
 app.get('/', (req, res) => {
+    // Global value untuk akun yang sudah logged in
+    const id_account = req.session.id_account;
+    const username = req.session.username;
+    const email = req.session.email;
+    const nama_lengkap = req.session.nama_lengkap;
+    const is_admin = req.session.is_admin;
+
+    let statusValidation = validateAccountType(is_admin);
+    let usernameValidation = validateUsername(username);
+
     res.render('home', {
         status: validateLoginStatus(req),
         username: returnUsername(req),
@@ -200,6 +210,13 @@ app.get('/login', (req, res) => {
     res.render('login', { errorMsg: null, success: null });
 });
 
+// Error message tidak diisi dulu (kosong)
+app.get('/signup', (req, res) => {
+    res.render('signup', { errorMsg: null, success: null });
+});
+app.get('/login', (req, res) => {
+    res.render('login', { errorMsg: null, success: null });
+});
 app.post('/login', (req, res) => {
     const usernameOrEmail = req.body.usernameOrEmail;
     const password = req.body.password;
