@@ -5,6 +5,9 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
 }
+strong {
+  font-weight: 600;
+}
 .flex {
   display: flex;
   align-items: center;
@@ -383,4 +386,68 @@ footer {
 }
 .stat-items h2 {
   margin-bottom: 1.2rem;
+}
+
+
+/* bagposts styling */
+#result-container {
+  display: flex;
+  width: 80vw;
+  margin: 0 auto;
+}
+
+.container-all{
+  display: flex;
+  justify-content: space-between;
+}
+.container-left, .container-right{
+  display: flex;
+}
+.container-left, .container-right{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: center;
+  background-color: rgb(240, 240, 240);
+  max-width: 40vw;
+  padding: 1rem 0.5rem;
+}
+
+.result-image-container {
+  margin: 0 auto;
+  border: 1px solid black;
+}
+
+.bagresult-image {
+  height: 250px;
+}
+
+.container-left .detail {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.container-left .detail p {
+  margin-bottom: 8px;
+}
+
+.container-right{
+  max-width: 60vw;
+  background-color: rgb(188, 188, 228);
+}
+
+.reviewUser .review {
+  background-color: rgb(255, 188, 188);
+  border: 2px solid black;
+  border-radius: 3px;
+  max-height: 100%;
+  padding: 1rem 2rem;
+}
+
+.account-review-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 3rem;
 }
