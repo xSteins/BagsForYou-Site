@@ -99,7 +99,8 @@ header {
 }
 
 .links-container:hover #profile-box,
-.links-container:hover #user-setting {
+.links-container:hover #user-setting,
+.links-container:hover #user-logout {
   display: flex;
 }
 
@@ -120,7 +121,8 @@ header {
 }
 #username:hover,
 #profile-box:hover,
-#user-setting:hover {
+#user-setting:hover,
+#user-logout:hover {
   background-color: #6b8bff;
   /* color: beige; */
 }
@@ -131,7 +133,8 @@ header {
 } */
 
 #profile-box,
-#user-setting {
+#user-setting,
+#user-logout {
   display: none;
   position: absolute;
   top: 38px;
@@ -141,7 +144,9 @@ header {
 #user-setting {
   top: 76px;
 }
-
+#user-logout {
+  top: 114px;
+}
 /*  */
 
 footer {

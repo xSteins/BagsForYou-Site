@@ -17,20 +17,16 @@
 </head>
 
 <body>
-    <%switch(status){
-    case 'admin':%>
-        <%- include('components/navigation/header-admin') %>    
-        <% break;
-    case 'user':%>
-        <%- include('components/navigation/header-user') %>
-        <% break;
-    default:%>
-        <%- include('components/navigation/header') %>
-        <% break;
-    }%>
-    <%- include('components/hero') %>
+    <%switch(status){ case 'admin' :%>
+        <%- include('components/navigation/header-admin') %>
+            <% break; case 'user' :%>
+                <%- include('components/navigation/header-user') %>
+                    <% break; default:%>
+                        <%- include('components/navigation/header') %>
+                            <% break; }%>
+                                <%- include('components/hero') %>
 
-    <%- include('components/navigation/footer') %>
+                                    <%- include('components/navigation/footer') %>
 </body>
 
 </html>
