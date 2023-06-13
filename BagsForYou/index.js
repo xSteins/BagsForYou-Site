@@ -20,6 +20,13 @@ const pool = mysql.createPool({
     user: 'root',
     password: '',
     database: 'dbreviewtas',
+    "typeCast": function castField(field, useDefaultTypeCasting) {
+        if ((field.type === "BIT") && (field.length === 1)) {
+            var bytes = field.buffer();
+            return (bytes[0]);
+        }
+        return (useDefaultTypeCasting());
+    }
 });
 
 // Middleware connection
@@ -203,3 +210,8 @@ app.get('/logout', (req, res) => {
     req.session = null; // Clear the session data
     res.redirect('/'); // Redirect to the login page or any other desired page
 });
+
+
+app.get('/bp',(req,res)=>{
+    res.render('components/bagsData/bagPost');
+})
