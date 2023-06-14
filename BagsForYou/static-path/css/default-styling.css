@@ -96,6 +96,12 @@ header {
   height: 2.5rem;
   border-radius: 0.5rem;
 }
+
+.account-container {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Test styling hover */
 .links-container {
   position: relative;
@@ -388,7 +394,6 @@ footer {
   margin-bottom: 1.2rem;
 }
 
-
 /* bagposts styling */
 #result-container {
   display: flex;
@@ -396,17 +401,19 @@ footer {
   margin: 0 auto;
 }
 
-.container-all{
+.container-all {
   display: flex;
   justify-content: space-between;
 }
-.container-left, .container-right{
+.container-left,
+.container-right {
   display: flex;
 }
-.container-left, .container-right{
+.container-left,
+.container-right {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: center;
   background-color: rgb(240, 240, 240);
   max-width: 40vw;
@@ -432,7 +439,7 @@ footer {
   margin-bottom: 8px;
 }
 
-.container-right{
+.container-right {
   max-width: 60vw;
   background-color: rgb(188, 188, 228);
 }

@@ -1,40 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="import-table hidden">
+    <h1>Import Table</h1>
+    <h3>Upload / export bags data</h3>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/css/reset.css">
-    <link rel="stylesheet" href="/css/default-styling.css">
-    <link rel="stylesheet" href="/css/admin-styling.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-</head>
-
-<body>
-    <%- include('../navigation/header-admin') %>
-
-        <div class="main-grid-section">
-            <div class="left-column">
-                <div class="main-menu">
-                    <div class="import-table">
-                        <h2>Import Table Here</h2>
-                        <input type="file" name="bagsData" id="importedTable">
-                        <input type="submit" value="Upload File">
-                    </div>
-                </div>
-                <div class="secondary-menu">
-                    <%- include('../adminMenus/stat-all') %>
-                </div>
-            </div>
-            <div class="right-column">
-                <%- include('../adminMenus/recentBags') %>
-            </div>
-        </div>
-</body>
-
-</html>
+    <form action="" class="admin-form-menu">
+        <label for="bagsData">Insert bag data here :</label>
+        <input type="button" value="Export to CSV" id="exportFileButton">
+        <input type="file" name="bagsData" id="importTable">
+        <input type="submit" value="Upload File" id="uploadFileButton">
+    </form>
+</div>

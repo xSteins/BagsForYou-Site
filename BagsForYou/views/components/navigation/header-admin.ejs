@@ -10,13 +10,23 @@
         <div class="site-nav">
             <a href="/" class="site-links">Home</a>
             <a href="/adminDashboard" class="site-links">Dashboard</a>
+            <a href="/adjustReview" class="site-links">
+                Adjust Review Requirement
+            </a>
+            <a href="/addItem" class="site-links">
+                Add Item
+            </a>
+            <a href="/addCategory" class="site-links">
+                Add Category/Sub-category
+            </a>
+
         </div>
-        <div class="account-container flex">
+        <div class="links-container flex">
             <div id="username" class="account-menu">
-                <span class="material-symbols-rounded">
-                    admin_panel_settings
+                <span class="material-symbols-outlined">
+                    alternate_email
                 </span>
-                <a href="" class="account-box">@ Poweruser Admin</a>
+                <a href="" class="account-box"><%- // username%></a>
             </div>
             <div id="profile-box" class="account-menu">
                 <span class="material-symbols-rounded">
@@ -32,6 +42,14 @@
                 </span>
                 <a href="/profile/edit" class="active">
                     Settings
+                </a>
+            </div>
+            <div id="user-logout" class="account-menu">
+                <span class="material-symbols-outlined">
+                    logout
+                </span>
+                <a href="/logout" class="active">
+                    Log Out
                 </a>
             </div>
         </div>

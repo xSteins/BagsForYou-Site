@@ -77,9 +77,17 @@ function validateUsername(username) {
     }
 }
 
-// STORE ALL DATA DISINI ((TESTING DULU BESTIE))
+// STORE ALL DATA DISINI ((TESTING DULU ))
+// pp.use((req, res, next) => {
+//     const username = req.session.username;
+//     res.locals.username = username;
+//     next();
+// });
+
 
 app.get('/', (req, res) => {
+
+    // console.log(JSON.stringify(document.cookie))
     // Global value untuk akun yang sudah logged in
     const id_account = req.session.id_account;
     const username = req.session.username;
@@ -141,12 +149,14 @@ app.post('/login', (req, res) => {
             req.session.is_admin = user.IsAdmin === 1;
 
             if (user.IsAdmin === 1) {
+                res.redirect('/')
                 res.render('home', {
                     status: 'admin',
                     username: req.session.username,
                     success: false,
                 });
             } else {
+                res.redirect('/')
                 res.render('home', {
                     status: 'user',
                     username: req.session.username,
@@ -159,8 +169,13 @@ app.post('/login', (req, res) => {
                 success: false,
             });
         }
+
     });
+
+
 });
+
+
 
 app.post('/signup', (req, res) => {
     const username = req.body.username;
@@ -199,6 +214,7 @@ app.post('/signup', (req, res) => {
             } else {
                 req.session.username = username;
                 req.session.is_admin = false;
+                res.redirect('/login');
                 res.render('/login', { errorMsg: 'Akun anda berhasil dibuat! Silahkan login.', success: true });
             }
         });
@@ -212,6 +228,6 @@ app.get('/logout', (req, res) => {
 });
 
 
-app.get('/bp',(req,res)=>{
+app.get('/bp', (req, res) => {
     res.render('components/bagsData/bagPost');
 })

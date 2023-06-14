@@ -1,7 +1,11 @@
 .main-menu {
+  /* min-height: fit-content; */
+  max-height: 40vh;
+  overflow-y: scroll;
   border: 2px solid black;
   border-radius: 3px;
   background-color: #ccd7ff;
+  padding: 1rem;
 }
 .admin-panel {
   padding: 0 auto;
@@ -27,17 +31,17 @@
   color: #5755b4;
   padding-top: 1rem;
 }
-/* .admin-button a {
-  color: #5755b4;
-} */
 
 .recent {
   display: grid;
   grid-template-rows: 4em 1fr 1fr;
   overflow-y: scroll;
   height: 610px;
-  padding: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   gap: 0.5rem;
+  border: 2px solid black;
+  border-radius: 3px;
 }
 
 .recent h2 {
@@ -74,4 +78,52 @@
 .rec-bag td:last-child {
   text-align: left;
   width: 99%;
+}
+
+.admin-form-menu {
+  display: grid;
+  grid-template-columns: 35ch 20ch;
+  grid-gap: 10px;
+  padding: 1rem;
+  justify-content: center;
+}
+
+.admin-form-menu label,
+input#importTable {
+  text-align: left;
+  grid-column: 1;
+}
+
+.admin-form-menu input,
+.admin-form-menu .dimension-container {
+  grid-column: 2;
+}
+
+.admin-form-menu .dimension-container .dimension {
+  max-width: 47px;
+}
+
+.admin-form-menu button,
+.admin-form-menu input[type='submit'],
+.admin-form-menu input:not([type='text']) {
+  border: 2px solid #fd0000;
+  border-radius: 3px;
+  background-color: #313131;
+  color: whitesmoke;
+  padding: 6px;
+}
+.admin-form-menu input:not([type='text']) {
+  border-radius: 3px;
+}
+
+.admin-form-menu button:hover,
+.admin-form-menu input[type='submit']:hover,
+.admin-form-menu input,
+.admin-form-menu input[type='number'],
+.admin-form-menu textarea {
+  font-weight: 700;
+  border: 2px solid black;
+  border-radius: 3px;
+  background-color: #ffffff;
+  color: black;
 }

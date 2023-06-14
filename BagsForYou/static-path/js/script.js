@@ -1,28 +1,31 @@
-const loginMenu = document.querySelector('#login');
-const signUpMenu = document.querySelector('#signup');
+// Retrieve user information from the server and store it in localStorage
+function storeUserData() {
+    fetch('/login', {
+        method: 'POST',
+        body: new URLSearchParams({
+            usernameOrEmail: 'your_username_or_email',
+            password: 'your_password'
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            localStorage.setItem('userData', JSON.stringify(data)); // Store user data as a string
+        })
+        .catch(error => {
+            console.error('Error fetching user data:', error);
+        });
+}
 
-// Display the login / signup modal is disabled for now.
+// Get user information from localStorage
+function getUserData() {
+    const userDataString = localStorage.getItem('userData');
+    return JSON.parse(userDataString); // Parse the stored string back to an object
+}
 
-// document.getElementById('SignUpButton').addEventListener('click', function () {
-//     window.location.href = '/signup';
-//     // signUpMenu.classList.remove('hidden');
-// });
-// document.getElementById('SignInButton').addEventListener('click', function () {
-//     window.location.href = '/login';
-//     // loginMenu.classList.remove('hidden');
-// });
+// Usage example:
+// Call the storeUserData function to retrieve and store user information from the server
+storeUserData();
 
-
-// Close the window button
-// const windowCloseButton = document.querySelector('#close-window-link');
-
-// windowCloseButton.addEventListener('click', (e) => {
-//     e.preventDefault();
-//     signUpMenu.classList.add('hidden');
-//     loginMenu.classList.add('hidden');
-// })
-
-// windowCloseButton.addEventListener('click', () => {
-//     signUpMenu.classList.add('hidden');
-//     loginMenu.classList.add('hidden');
-// })
+// Access user information from localStorage
+const userData = getUserData();
+console.log(userData.username); // Access the username property from the stored user data
