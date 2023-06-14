@@ -172,6 +172,10 @@ footer {
   z-index: 1;
 }
 
+footer .container {
+  justify-content: space-around;
+}
+
 .footer-copyright-notice {
   margin-left: 1.5rem;
   max-width: 850px;
