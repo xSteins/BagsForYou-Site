@@ -4,6 +4,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import session from 'cookie-session';
 import crypto from 'crypto';
+import { constrainedMemory } from 'process';
 
 const app = express();
 const port = 8005;
@@ -109,7 +110,22 @@ app.get('/profile/edit', (req, res) => {
 });
 
 app.get('/searchresults', (req, res) => {
-    res.render('searchresults');
+    console.log(req.query.search);
+    const bagSearchQuery =
+        'SELECT `Id_Tas`,`namaTas` FROM `tas` WHERE `namaTas` LIKE ?';
+    const searchParam='%'+req.query.search+'%';
+    pool.query(bagSearchQuery, searchParam, (error, results) => {
+        if (error) {
+            console.log(error);
+        } else {
+            const resSearch=results;
+            console.log(resSearch);
+            res.render('searchresults',{
+                search: req.query.search,
+                bagsRes: resSearch
+            });
+        }
+    });
 });
 app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview');
