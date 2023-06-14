@@ -21,9 +21,9 @@
 
         <div class="wide-grid-section">
             <div class="main-menu">
-                <form action="/search">
+                <form action="/searchresults">
                     <div class="searchbar-container-secondary">
-                        <input type="text" name="search" id="search-secondary">
+                        <input type="text" name="search" id="search-secondary" value="<%=search%>">
                         <button type="submit" class="boxicon-submit">
                             <span class="material-symbols-rounded">
                                 search
@@ -83,14 +83,15 @@
                     </div>
                 </form>
                 <div class="search-result-grid">
-
+                    <%for(const bag of bagsRes){%>
                     <div class="result-item">
                         <img src="https://fakeimg.pl/100x100/FFFFFF" alt="">
                         <h3 class="result-item-name">
-                            Classic Black Leather Backpack
+                            <%=bag.namaTas%>
                         </h3>
-                        <a href="">View Detail</a>
+                        <a href="<%='bag/'+bag.Id_Tas%>">View Detail</a>
                     </div>
+                    <%}%>
                 </div>
             </div>
         </div>
