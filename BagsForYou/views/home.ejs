@@ -21,7 +21,7 @@
         <%- include('components/navigation/header-admin') %>
             <% break; case 'user' :%>
                 <%- include('components/navigation/header-user') %>
-                    <% break; default:%>
+                    <% break; case 'anon' :%>
                         <%- include('components/navigation/header') %>
                             <% break; }%>
                                 <%- include('components/hero') %>

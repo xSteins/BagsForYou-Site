@@ -8,6 +8,10 @@
 strong {
   font-weight: 600;
 }
+body {
+  overflow-y: hidden;
+}
+
 .flex {
   display: flex;
   align-items: center;
@@ -338,34 +342,39 @@ footer .container {
   justify-items: center;
   border: 2px solid black;
   border-radius: 3px;
-  max-height: 60vh;
+  min-height: 60vh;
+  max-height: 65vh;
   max-width: 88vw;
   margin: 0 auto;
   overflow-y: scroll;
+  padding: 1rem;
 }
 
 .result-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 21ch;
-  border: 1px solid black;
+  width: 186px;
+  height: fit-content;
+  background: #2e2e2e;
+  border: 3px solid #000000;
+  color: white;
+  text-align: center;
   border-radius: 3px;
-  padding: 0 1rem;
-  margin: 0.4rem 0;
 }
 .result-item img {
-  max-width: 55%;
-  margin: 0 auto;
+  width: 186px;
+  height: 132px;
+  left: 0;
+  top: 0;
+  position: relative;
+  border-radius: 3px 3px 0px 0px;
 }
 
 .result-item h3 {
   font-weight: 600;
   overflow: hidden;
 }
-
-.result-item a {
-  text-align: center;
+.result-item h3,
+a {
+  margin-bottom: 1rem;
 }
 
 /* Stats widget styling */

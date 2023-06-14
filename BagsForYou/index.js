@@ -4,8 +4,10 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import session from 'cookie-session';
 import crypto from 'crypto';
+import cookieParser from 'cookie-parser';
 
 const app = express();
+app.use(cookieParser());
 const port = 8005;
 const publicPath = path.resolve('static-path');
 
@@ -49,81 +51,69 @@ app.use(
         },
     })
 );
-
 app.listen(port, () => {
     console.log('App started');
     console.log(`Server running on http://localhost:${port}`);
 });
 
-function validateAccountType(is_admin) {
-    // Typecast is_admin to a number
-    const isAdmin = Number(is_admin);
-    // Check if is_admin is 1 or 0
-    if (isAdmin === 1) {
-        return 'admin';
-    } else if (isAdmin === 0) {
-        return 'user';
+function validateLoginStatus(req) {
+    if (!req.cookies.username) {
+        return 'anon';
     } else {
-        return 'default';
+        const isAdmin = Number(req.cookies.is_admin);
+        if (isAdmin === 1) {
+            return 'admin';
+        } else {
+            return 'user';
+        }
     }
 }
 
-function validateUsername(username) {
-    // Check if username is defined
-    if (username) {
-        return username;
-    } else {
-        return null;
-    }
+function validateUsername(req) {
+    console.log('Cookie - username:', req.cookies.username)
+    console.log(req.cookies);
+    return req.cookies.username;
 }
-
-// STORE ALL DATA DISINI ((TESTING DULU ))
-// pp.use((req, res, next) => {
-//     const username = req.session.username;
-//     res.locals.username = username;
-//     next();
-// });
-
 
 app.get('/', (req, res) => {
-
-    // console.log(JSON.stringify(document.cookie))
-    // Global value untuk akun yang sudah logged in
-    const id_account = req.session.id_account;
-    const username = req.session.username;
-    const email = req.session.email;
-    const nama_lengkap = req.session.nama_lengkap;
-    const is_admin = req.session.is_admin;
-
-    let statusValidation = validateAccountType(is_admin);
-    let usernameValidation = validateUsername(username);
-
     res.render('home', {
-        status: statusValidation,
-        username: usernameValidation,
+        status: validateLoginStatus(req),
+        username: validateUsername(req),
     });
 });
 
+
 app.get('/profile/self/follower', (req, res) => {
-    res.render('components/accountMenu/follower');
+    res.render('components/accountMenu/follower', {
+        username: validateUsername(req),
+    });
 });
 
 app.get('/profile', (req, res) => {
-    res.render('components/accountMenu/profile-self');
+    res.render('components/accountMenu/profile-self', {
+        username: validateUsername(req),
+    });
 });
-
 app.get('/profile/edit', (req, res) => {
-    res.render('components/accountMenu/editProfile');
+    res.render('components/accountMenu/editProfile', {
+        username: validateUsername(req),
+    });
 });
 
 app.get('/searchresults', (req, res) => {
     res.render('searchresults');
 });
+
 app.get('/addReview', (req, res) => {
-    res.render('components/accountMenu/addBagReview');
+    res.render('components/accountMenu/addBagReview', {
+        username: validateUsername(req),
+    });
 });
+
 app.get('/adminDashboard', (req, res) => {
-    res.render('adminDashboard');
+    res.render('adminDashboard', {
+        username: validateUsername(req),
+    });
 });
 
 // Error message tidak diisi dulu (kosong)
@@ -133,11 +123,12 @@ app.get('/signup', (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login', { errorMsg: null, success: null });
 });
+
 app.post('/login', (req, res) => {
     const usernameOrEmail = req.body.usernameOrEmail;
     const password = req.body.password;
     const accountQuery =
-        'SELECT `Username`, `Password`, `E_mail`, `IsAdmin` FROM `account` WHERE (`Username` = ? OR `E_mail` = ?) AND `Password` = ?';
+        'SELECT `Id_Account`, `Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin` FROM `account` WHERE (`Username` = ? OR `E_mail` = ?) AND `Password` = ?';
     const accountParams = [usernameOrEmail, usernameOrEmail, password];
 
     pool.query(accountQuery, accountParams, (error, results) => {
@@ -145,23 +136,16 @@ app.post('/login', (req, res) => {
             console.log(error);
         } else if (results.length > 0) {
             const user = results[0];
-            req.session.username = user.Username;
-            req.session.is_admin = user.IsAdmin === 1;
+            res.cookie('id_account', user.Id_Account);
+            res.cookie('username', user.Username);
+            res.cookie('email', user.E_mail);
+            res.cookie('nama_lengkap', user.Nama_Lengkap);
+            res.cookie('is_admin', user.IsAdmin);
 
             if (user.IsAdmin === 1) {
-                res.redirect('/')
-                res.render('home', {
-                    status: 'admin',
-                    username: req.session.username,
-                    success: false,
-                });
+                res.redirect('/adminDashboard');
             } else {
-                res.redirect('/')
-                res.render('home', {
-                    status: 'user',
-                    username: req.session.username,
-                    success: false,
-                });
+                res.redirect('/');
             }
         } else {
             res.render('login', {
@@ -169,13 +153,10 @@ app.post('/login', (req, res) => {
                 success: false,
             });
         }
-
     });
-
-
 });
 
-
+// console.log(cookie);
 
 app.post('/signup', (req, res) => {
     const username = req.body.username;
@@ -221,10 +202,59 @@ app.post('/signup', (req, res) => {
     }
 });
 
+// app.post('/updateProfileData', function (req, res) {
+//     const idAccount = req.cookies.id_account;
+//     const newUsername = req.body.username;
+//     const newEmail = req.body.email;
+//     const newName = req.body.name;
+//     const oldPassword = req.body.oldPass;
+//     const newPassword = req.body.newPass;
+
+//     // First, check if the old password is correct
+//     const passwordCheckQuery = 'SELECT Password FROM account WHERE Id_Account = ?';
+
+//     pool.query(passwordCheckQuery, [idAccount], function (err, results) {
+//         if (err) {
+//             console.error(err);
+//             // return res.status(500).send('An error occurred while checking the old password.');
+//         }
+//         // Ensure that a row was found for the provided account ID
+//         if (results.length === 0) {
+//             // return res.status(400).send('Account not found.');
+//         }
+//         // Extract the stored password from the query results
+//         const storedPassword = results[0].Password;
+//         // Compare the provided old password with the stored password
+//         if (oldPassword !== storedPassword) {
+//             return res.status(401).send('Invalid old password.');
+//         }
+//         else {
+//             // If the old password is correct, update the profile data in the database
+//             const sql = `UPDATE account SET Username=?, E_mail=?, Nama_Lengkap=?, Password=? WHERE Id_Account=?`;
+//             const values = [newUsername, newEmail, newName, newPassword, idAccount];
+
+//             // Execute the SQL query to update the profile data
+//             pool.query(sql, values, function (err, result) {
+//                 if (err) {
+//                     // Handle the error appropriately
+//                     console.error(err);
+//                     res.status(500).send('An error occurred while updating the profile data.');
+//                 } else {
+//                     // Profile data updated successfully
+//                     res.redirect('/profile'); // Redirect to the profile page or any other desired destination
+//                 }
+//             });
+//         }
+//     });
+// });
 
 app.get('/logout', (req, res) => {
-    req.session = null; // Clear the session data
-    res.redirect('/'); // Redirect to the login page or any other desired page
+    res.clearCookie('id_account');
+    res.clearCookie('username');
+    res.clearCookie('email');
+    res.clearCookie('nama_lengkap');
+    res.clearCookie('is_admin');
+    res.redirect('/');
 });
 
 

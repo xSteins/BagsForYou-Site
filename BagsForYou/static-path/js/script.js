@@ -1,31 +1,32 @@
-// Retrieve user information from the server and store it in localStorage
-function storeUserData() {
-    fetch('/login', {
-        method: 'POST',
-        body: new URLSearchParams({
-            usernameOrEmail: 'your_username_or_email',
-            password: 'your_password'
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            localStorage.setItem('userData', JSON.stringify(data)); // Store user data as a string
-        })
-        .catch(error => {
-            console.error('Error fetching user data:', error);
-        });
+// Function to get the value of a cookie
+function getCookie(name) {
+    const cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].split("=");
+        if (cookie[0] === name) {
+            return decodeURIComponent(cookie[1]);
+        }
+    }
+    return "";
 }
 
-// Get user information from localStorage
-function getUserData() {
-    const userDataString = localStorage.getItem('userData');
-    return JSON.parse(userDataString); // Parse the stored string back to an object
-}
+// Halaman edit profile
+document.getElementById("profile-username").textContent = getCookie("username");
+document.getElementById("profile-email").textContent = getCookie("email");
+document.getElementById("profile-name").textContent = getCookie("nama_lengkap");
 
-// Usage example:
-// Call the storeUserData function to retrieve and store user information from the server
-storeUserData();
+// Display the hidden input fields when the corresponding edit button is clicked
+document.getElementById("usernameEditButton").addEventListener("click", function () {
+    document.getElementById("profile-username").classList.add("hidden");
+    document.getElementById("usernameUpdated").classList.remove("hidden");
+});
 
-// Access user information from localStorage
-const userData = getUserData();
-console.log(userData.username); // Access the username property from the stored user data
+document.getElementById("emailEditButton").addEventListener("click", function () {
+    document.getElementById("profile-email").classList.add("hidden");
+    document.getElementById("emailUpdated").classList.remove("hidden");
+});
+
+document.getElementById("nameEditButton").addEventListener("click", function () {
+    document.getElementById("profile-name").classList.add("hidden");
+    document.getElementById("nameUpdated").classList.remove("hidden");
+});
