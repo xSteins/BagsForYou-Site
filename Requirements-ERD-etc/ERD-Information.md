@@ -3,22 +3,14 @@
 Gambar ERD :
 ![ERD](./ERD.png)
 
-## USER
+## ACCOUNT
 
 Id_Account (PK)
 Username
 Password
 E-mail
 Nama_Lengkap
-
-## ADMIN
-
-Id_Account (PK)
-Username
-Password
-E-mail
-Nama_Lengkap
-Id_Admin
+IsAdmin
 
 ## FOLLOW
 
@@ -41,8 +33,7 @@ Deskripsi
 Warna
 Dimensi
 Id_Merk(FK)
-Id_Designer(FK)
-Id_Kategori(FK)
+Id_Designer(FK) Bisa NULL
 Id_Subkategori(FK)
 
 ## MERK
@@ -59,11 +50,9 @@ Nama_Designer
 
 Id_Kategori(PK)
 Nama_Kategori
-Id_Admin(FK)
 
 ## SUB_KATEGORI
 
 Id_Subkategori(PK)
 Nama_Subkategori
 Id_Kategori(PK,FK)
-Id_Admin(FK)
