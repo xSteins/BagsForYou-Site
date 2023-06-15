@@ -113,7 +113,7 @@ input#importTable {
 }
 
 .admin-form-menu .dimension-container .dimension {
-  max-width: 47px;
+  max-width: 105px;
 }
 
 .admin-form-menu button,
@@ -139,4 +139,9 @@ input#importTable {
   background-color: #ffffff;
   color: black;
   cursor: pointer;
+}
+
+.admin-form-menu textarea {
+  max-width: 470px;
+  max-height: 600px;
 }
