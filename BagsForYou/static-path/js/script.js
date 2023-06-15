@@ -16,9 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("profile-email").textContent = getCookie("email");
     document.getElementById("profile-name").textContent = getCookie("nama_lengkap");
 
-    // Halaman profile
-    document.querySelector("#profile-username2").textContent = getCookie("username");
-
     // Display the hidden input fields when the corresponding edit button is clicked
     document.getElementById("usernameEditButton").addEventListener("click", function () {
         document.getElementById("profile-username").classList.add("hidden");
