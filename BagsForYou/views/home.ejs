@@ -17,6 +17,7 @@
 </head>
 
 <body>
+    <!-- COMPONENT HEADER UTAMA -->
     <%switch(status){ case 'admin' :%>
         <%- include('components/navigation/header-admin') %>
             <% break; case 'user' :%>
@@ -24,6 +25,8 @@
                     <% break; case 'anon' :%>
                         <%- include('components/navigation/header') %>
                             <% break; }%>
+                                <!-- END OF HEADER -->
+
                                 <%- include('components/hero') %>
 
                                     <%- include('components/navigation/footer') %>

@@ -17,84 +17,93 @@
 </head>
 
 <body>
-    <%- include('components/navigation/header-user') %>
+    <!-- COMPONENT HEADER UTAMA -->
+    <%switch(status){ case 'admin' :%>
+        <%- include('components/navigation/header-admin') %>
+            <% break; case 'user' :%>
+                <%- include('components/navigation/header-user') %>
+                    <% break; case 'anon' :%>
+                        <%- include('components/navigation/header') %>
+                            <% break; }%>
+                                <!-- END OF HEADER -->
 
-        <div class="wide-grid-section">
-            <div class="main-menu">
-                <form action="/searchresults">
-                    <div class="searchbar-container-secondary">
-                        <input type="text" name="search" id="search-secondary" value="<%=search%>">
-                        <button type="submit" class="boxicon-submit">
-                            <span class="material-symbols-rounded">
-                                search
-                            </span>
-                        </button>
-                    </div>
-                    <div class="filter-menu">
-                        <div class="filter-section">
-                            <h3>Category:</h3>
-                            <select id="category-dropdown" class="category-dropdown">
-                                <option value="">Select category</option>
-                                <option value="backpacks">Backpacks</option>
-                                <option value="shoulder-bags">Shoulder Bags</option>
-                                <option value="tote-bags">Tote Bags</option>
-                            </select>
-                        </div>
+                                <div class="wide-grid-section">
+                                    <div class="main-menu">
+                                        <form action="/searchresults">
+                                            <div class="searchbar-container-secondary">
+                                                <input type="text" name="search" id="search-secondary"
+                                                    value="<%=search%>">
+                                                <button type="submit" class="boxicon-submit">
+                                                    <span class="material-symbols-rounded">
+                                                        search
+                                                    </span>
+                                                </button>
+                                            </div>
+                                            <div class="filter-menu">
+                                                <div class="filter-section">
+                                                    <h3>Category:</h3>
+                                                    <select id="category-dropdown" class="category-dropdown">
+                                                        <option value="">Select category</option>
+                                                        <option value="backpacks">Backpacks</option>
+                                                        <option value="shoulder-bags">Shoulder Bags</option>
+                                                        <option value="tote-bags">Tote Bags</option>
+                                                    </select>
+                                                </div>
 
-                        <div class="filter-section">
-                            <h3>Subcategory:</h3>
-                            <select id="subcategory-dropdown" class="subcategory-dropdown">
-                                <option value="">Select subcategory</option>
-                                <option value="casual-backpacks">Casual Backpacks</option>
-                                <option value="laptop-backpacks">Laptop Backpacks</option>
-                                <option value="travel-backpacks">Travel Backpacks</option>
-                            </select>
-                        </div>
+                                                <div class="filter-section">
+                                                    <h3>Subcategory:</h3>
+                                                    <select id="subcategory-dropdown" class="subcategory-dropdown">
+                                                        <option value="">Select subcategory</option>
+                                                        <option value="casual-backpacks">Casual Backpacks</option>
+                                                        <option value="laptop-backpacks">Laptop Backpacks</option>
+                                                        <option value="travel-backpacks">Travel Backpacks</option>
+                                                    </select>
+                                                </div>
 
-                        <div class="filter-section">
-                            <h3>Color:</h3>
-                            <select id="color-dropdown" class="color-dropdown">
-                                <option value="">Select color</option>
-                                <option value="black">Black</option>
-                                <option value="blue">Blue</option>
-                                <option value="gray">Gray</option>
-                                <option value="brown">Brown</option>
-                                <option value="red">Red</option>
-                                <option value="green">Green</option>
-                                <option value="pink">Pink</option>
-                                <option value="purple">Purple</option>
-                                <option value="yellow">Yellow</option>
-                                <option value="orange">Orange</option>
-                            </select>
-                        </div>
-
-
-                        <div class="filter-section">
-                            <h3>Brand:</h3>
-                            <select id="brand-dropdown" class="brand-dropdown">
-                                <option value="">Select brand</option>
-                                <option value="brand1">Brand 1</option>
-                                <option value="brand2">Brand 2</option>
-                                <option value="brand3">Brand 3</option>
-                            </select>
-                        </div>
+                                                <div class="filter-section">
+                                                    <h3>Color:</h3>
+                                                    <select id="color-dropdown" class="color-dropdown">
+                                                        <option value="">Select color</option>
+                                                        <option value="black">Black</option>
+                                                        <option value="blue">Blue</option>
+                                                        <option value="gray">Gray</option>
+                                                        <option value="brown">Brown</option>
+                                                        <option value="red">Red</option>
+                                                        <option value="green">Green</option>
+                                                        <option value="pink">Pink</option>
+                                                        <option value="purple">Purple</option>
+                                                        <option value="yellow">Yellow</option>
+                                                        <option value="orange">Orange</option>
+                                                    </select>
+                                                </div>
 
 
-                    </div>
-                </form>
-                <div class="search-result-grid">
-                    <%for(const bag of bagsRes){%>
-                    <div class="result-item">
-                        <img src="https://fakeimg.pl/100x100/FFFFFF" alt="">
-                        <h3 class="result-item-name">
-                            <%=bag.namaTas%>
-                        </h3>
-                        <a href="<%='bag/'+bag.Id_Tas%>">View Detail</a>
-                    </div>
-                    <%}%>
-                </div>
-            </div>
-        </div>
+                                                <div class="filter-section">
+                                                    <h3>Brand:</h3>
+                                                    <select id="brand-dropdown" class="brand-dropdown">
+                                                        <option value="">Select brand</option>
+                                                        <option value="brand1">Brand 1</option>
+                                                        <option value="brand2">Brand 2</option>
+                                                        <option value="brand3">Brand 3</option>
+                                                    </select>
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+                                        <div class="search-result-grid">
+                                            <%for(const bag of bagsRes){%>
+                                                <div class="result-item">
+                                                    <img src="https://fakeimg.pl/100x100/FFFFFF" alt="">
+                                                    <h3 class="result-item-name">
+                                                        <%=bag.namaTas%>
+                                                    </h3>
+                                                    <a href="<%='bag/'+bag.Id_Tas%>">View Detail</a>
+                                                </div>
+                                                <%}%>
+                                        </div>
+                                    </div>
+                                </div>
 </body>
 
 </html>

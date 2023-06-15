@@ -18,79 +18,88 @@
 </head>
 
 <body>
-    <%- include('components/navigation/header-admin') %>
+    <!-- COMPONENT HEADER UTAMA -->
+    <%switch(status){ case 'admin' :%>
+        <%- include('components/navigation/header-admin') %>
+            <% break; case 'user' :%>
+                <%- include('components/navigation/header-user') %>
+                    <% break; case 'anon' :%>
+                        <%- include('components/navigation/header') %>
+                            <% break; }%>
+                                <!-- END OF HEADER -->
+                                <div class="main-grid-section">
+                                    <div class="left-column">
+                                        <div class="main-menu">
+                                            <div class="admin-menu-button">
+                                                <button class="site-links" id="adjustReview">Adjust Review
+                                                    Requirement</button>
+                                                <button class="site-links" id="addItem">Add Item</button>
+                                                <button class="site-links" id="addCategory">Add
+                                                    Category/Sub-category</button>
+                                                <button class="site-links" id="importTable">Import/Export table</button>
 
-        <div class="main-grid-section">
-            <div class="left-column">
-                <div class="main-menu">
-                    <div class="admin-menu-button">
-                        <button class="site-links" id="adjustReview">Adjust Review Requirement</button>
-                        <button class="site-links" id="addItem">Add Item</button>
-                        <button class="site-links" id="addCategory">Add Category/Sub-category</button>
-                        <button class="site-links" id="importTable">Import/Export table</button>
+                                            </div>
+                                            <%- include('components/adminMenus/adjustReviewReq') %>
+                                                <%- include('components/adminMenus/importTable') %>
+                                                    <%- include('components/adminMenus/addCategorySubcategory') %>
+                                                        <%- include('components/adminMenus/addBagItem') %>
+                                                            <%- include('components/adminMenus/stat-all') %>
+                                        </div>
+                                    </div>
+                                    <div class="right-column">
+                                        <%- include('components/adminMenus/recentBags') %>
+                                    </div>
+                                </div>
+                                <script>
 
-                    </div>
-                    <%- include('components/adminMenus/adjustReviewReq') %>
-                        <%- include('components/adminMenus/importTable') %>
-                            <%- include('components/adminMenus/addCategorySubcategory') %>
-                                <%- include('components/adminMenus/addBagItem') %>
-                                    <%- include('components/adminMenus/stat-all') %>
-                </div>
-            </div>
-            <div class="right-column">
-                <%- include('components/adminMenus/recentBags') %>
-            </div>
-        </div>
-        <script>
+                                    const bagitem = document.getElementById('addBagItem');
+                                    const catsub = document.getElementById('addCategoryForm');
+                                    const adjust = document.getElementById('revreq');
+                                    const importTable = document.getElementById('importForm');
 
-            const bagitem = document.getElementById('addBagItem');
-            const catsub = document.getElementById('addCategoryForm');
-            const adjust = document.getElementById('revreq');
-            const importTable = document.getElementById('importForm');
+                                    function showAddBagItem() {
+                                        bagitem.classList.remove('hidden');
+                                        importForm.classList.add('hidden');
+                                        catsub.classList.add('hidden');
+                                        adjust.classList.add('hidden');
+                                    }
 
-            function showAddBagItem() {
-                bagitem.classList.remove('hidden');
-                importForm.classList.add('hidden');
-                catsub.classList.add('hidden');
-                adjust.classList.add('hidden');
-            }
+                                    function showCatSubHidden() {
+                                        bagitem.classList.add('hidden');
+                                        importForm.classList.add('hidden');
+                                        adjust.classList.add('hidden');
+                                        catsub.classList.remove('hidden');
+                                    }
 
-            function showCatSubHidden() {
-                bagitem.classList.add('hidden');
-                importForm.classList.add('hidden');
-                adjust.classList.add('hidden');
-                catsub.classList.remove('hidden');
-            }
+                                    function showRevereq() {
+                                        bagitem.classList.add('hidden');
+                                        catsub.classList.add('hidden');
+                                        importForm.classList.add('hidden');
+                                        adjust.classList.remove('hidden');
+                                    }
 
-            function showRevereq() {
-                bagitem.classList.add('hidden');
-                catsub.classList.add('hidden');
-                importForm.classList.add('hidden');
-                adjust.classList.remove('hidden');
-            }
+                                    function showImportExport() {
+                                        bagitem.classList.add('hidden');
+                                        catsub.classList.add('hidden');
+                                        importForm.classList.remove('hidden');
+                                    }
 
-            function showImportExport() {
-                bagitem.classList.add('hidden');
-                catsub.classList.add('hidden');
-                importForm.classList.remove('hidden');
-            }
+                                    document.getElementById('addItem').addEventListener('click', function () {
+                                        showAddBagItem();
+                                    });
 
-            document.getElementById('addItem').addEventListener('click', function () {
-                showAddBagItem();
-            });
+                                    document.getElementById('addCategory').addEventListener('click', function () {
+                                        showCatSubHidden();
+                                    });
 
-            document.getElementById('addCategory').addEventListener('click', function () {
-                showCatSubHidden();
-            });
+                                    document.getElementById('adjustReview').addEventListener('click', function () {
+                                        showRevereq();
+                                    });
 
-            document.getElementById('adjustReview').addEventListener('click', function () {
-                showRevereq();
-            });
-
-            document.getElementById('importTable').addEventListener('click', function () {
-                showImportExport();
-            });
-        </script>
+                                    document.getElementById('importTable').addEventListener('click', function () {
+                                        showImportExport();
+                                    });
+                                </script>
 </body>
 
 </html>
