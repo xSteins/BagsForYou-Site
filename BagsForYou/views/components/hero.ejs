@@ -1,18 +1,13 @@
 <section class="hero flex">
-    <div class="searchbar-container">
-        <input type="text" name="search" id="search-main">
-        <button type="submit" class="boxicon-submit" id="main-seach-button">
-            <span class="material-symbols-rounded">
-                search
-            </span>
-        </button>
+    <div class="searchbar-div">
+        <form action="/searchresults" method="get" class="searchbar-container">
+            <input type="text" name="search" id="search-main">
+            <button type="submit" class="boxicon-submit" id="main-seach-button">
+                <span class="material-symbols-rounded">
+                    search
+                </span>
+            </button>
+        </form>
     </div>
     <%- include('stat-user') %>
 </section>
-<script>
-    const mainSearchButton = document.querySelector('#main-seach-button');
-    mainSearchButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.location.href = "/searchresults";
-    })
-</script>

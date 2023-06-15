@@ -11,45 +11,56 @@
     <link rel="stylesheet" href="/css/profile-styling.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <script src="/js/script.js" defer></script>
 </head>
 
 <body>
-    <%- include('../navigation/header-user') %>
-        <div id="edit-profile-container" class="profile-container">
-            <form action="/updateProfileData" method="get" id="editProfileForm">
-                <h2 style="margin-bottom: 1rem;">Edit your profile data :</h2>
-                <div class="grid-profile-edit">
-                    <label for="username">Username</label>
-                    <p id="profile-username">Username-max isi disini</p>
-                    <button class="editButton" id="usernameEditButton">Edit</button>
-                    <input type="text" name=username"" id="usernameUpdated" class="hidden">
-                </div>
+    <!-- COMPONENT HEADER UTAMA -->
+    <%switch(status){ case 'admin' :%>
+        <%- include('../navigation/header-admin') %>
+            <% break; case 'user' :%>
+                <%- include('../navigation/header-user') %>
+                    <% break; case 'anon' :%>
+                        <%- include('../navigation/header') %>
+                            <% break; }%>
+                                <!-- END OF HEADER -->
+                                <div id="edit-profile-container" class="profile-container">
+                                    <form action="/updateProfileData" method="get" id="editProfileForm">
+                                        <h2 style="margin-bottom: 1rem;">Edit your profile data :</h2>
+                                        <div class="grid-profile-edit">
+                                            <label for="username">Username</label>
+                                            <input type="text" name=username"" id="usernameUpdated"
+                                                class="editField hidden">
+                                            <p id="profile-username"></p>
+                                            <button class="editButton" id="usernameEditButton">Edit</button>
+                                        </div>
 
-                <div class="grid-profile-edit">
-                    <label for="email">Email</label>
-                    <p id="profile-email">john-doe@example.com</p>
-                    <button class="editButton" id="emailEditButton">Edit</button>
-                    <input type="text" name="email" id="emailUpdated" class="hidden">
-                </div>
+                                        <div class="grid-profile-edit">
+                                            <label for="email">Email</label>
+                                            <input type="text" name="email" id="emailUpdated" class="hidden">
+                                            <p id="profile-email"></p>
+                                            <button class="editButton" id="emailEditButton">Edit</button>
+                                        </div>
 
-                <div class="grid-profile-edit">
-                    <label for="name">Name</label>
-                    <p id="profile-name">John Doe</p>
-                    <button class="editButton" id="nameEditButton">Edit</button>
-                    <input type="text" name="name" id="nameUpdated" class="hidden">
-                </div>
+                                        <div class="grid-profile-edit">
+                                            <label for="name">Name</label>
+                                            <input type="text" name="name" id="nameUpdated" class="hidden">
+                                            <p id="profile-name"></p>
+                                            <button class="editButton" id="nameEditButton">Edit</button>
+                                        </div>
 
-                <div class="grid-profile-edit">
-                    <label for="name">Password</label>
-                    <input type="password" name="oldPass" id="oldPasswordField" placeholder="Insert your old password">
-                    <input type="password" name="newPass" id="newPasswordField" placeholder="Create new password">
-                    <input type="password" name="newPassValidation" id="newPasswordRevalidation"
-                        placeholder="Reenter your new password">
-                    <input type="submit" value="Submit Change">
-                </div>
-            </form>
-        </div>
-        <%- include('../navigation/footer') %>
+                                        <div class="grid-profile-edit">
+                                            <label for="name">Password</label>
+                                            <input type="password" name="oldPass" id="oldPasswordField"
+                                                placeholder="Insert your old password">
+                                            <input type="password" name="newPass" id="newPasswordField"
+                                                placeholder="Create new password">
+                                            <input type="password" name="newPassValidation" id="newPasswordRevalidation"
+                                                placeholder="Reenter your new password">
+                                            <input type="submit" value="Submit Change">
+                                        </div>
+                                    </form>
+                                </div>
 </body>
 
 </html>

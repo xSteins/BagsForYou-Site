@@ -11,13 +11,14 @@
             <a href="/" class="site-links">Home</a>
             <a href="/addReview" class="site-links">Add Review</a>
         </div>
-
         <div class="links-container flex">
             <div id="username" class="account-menu">
                 <span class="material-symbols-outlined">
                     alternate_email
                 </span>
-                <a href="" class="account-box">Rex-Lapis</a>
+                <a href="" class="account-box" id="accountUsername">
+                    <%- username %>
+                </a>
             </div>
             <div id="profile-box" class="account-menu">
                 <span class="material-symbols-rounded">
@@ -33,6 +34,14 @@
                 </span>
                 <a href="/profile/edit" class="active">
                     Settings
+                </a>
+            </div>
+            <div id="user-logout" class="account-menu">
+                <span class="material-symbols-outlined">
+                    logout
+                </span>
+                <a href="/logout" class="active">
+                    Log Out
                 </a>
             </div>
         </div>

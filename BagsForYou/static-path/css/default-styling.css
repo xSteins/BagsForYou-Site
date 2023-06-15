@@ -5,13 +5,18 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
 }
+strong {
+  font-weight: 600;
+}
+body {
+  overflow-y: hidden;
+}
+
 .flex {
   display: flex;
   align-items: center;
 }
-.space-between {
-  justify-content: space-between;
-}
+
 .space-evenly {
   justify-content: space-evenly;
 }
@@ -46,6 +51,7 @@ a:last-child {
 }
 
 header {
+  justify-content: space-around;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 12px 0px,
     rgba(0, 0, 0, 0.3) 0px 0px 7px 0px;
   position: sticky;
@@ -93,13 +99,21 @@ header {
   height: 2.5rem;
   border-radius: 0.5rem;
 }
+
+.account-container {
+  display: flex;
+  flex-direction: column;
+}
+
 /* Test styling hover */
 .links-container {
   position: relative;
+  width: 60px;
 }
 
 .links-container:hover #profile-box,
-.links-container:hover #user-setting {
+.links-container:hover #user-setting,
+.links-container:hover #user-logout {
   display: flex;
 }
 
@@ -109,6 +123,7 @@ header {
   background-color: white;
   border: 2px solid black;
   border-radius: 0.5rem;
+  min-width: 150px;
   height: 2.5rem;
   justify-content: space-between;
   align-items: center;
@@ -120,7 +135,8 @@ header {
 }
 #username:hover,
 #profile-box:hover,
-#user-setting:hover {
+#user-setting:hover,
+#user-logout:hover {
   background-color: #6b8bff;
   /* color: beige; */
 }
@@ -131,7 +147,8 @@ header {
 } */
 
 #profile-box,
-#user-setting {
+#user-setting,
+#user-logout {
   display: none;
   position: absolute;
   top: 38px;
@@ -141,7 +158,9 @@ header {
 #user-setting {
   top: 76px;
 }
-
+#user-logout {
+  top: 114px;
+}
 /*  */
 
 footer {
@@ -155,6 +174,10 @@ footer {
   background-color: #191919;
   color: aliceblue;
   z-index: 1;
+}
+
+footer .container {
+  justify-content: space-around;
 }
 
 .footer-copyright-notice {
@@ -289,30 +312,26 @@ footer {
 }
 
 /* Searchresults styling */
+.main-menu {
+  margin: 0 auto;
+}
 
 .filter-menu {
   display: flex;
   height: 4rem;
-  /* background-color: #c4c4c4; */
-  margin: 0 auto;
+  align-items: center;
+  justify-content: space-evenly;
 }
+
 .filter-section {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
-  max-width: 15rem;
   justify-items: start;
-  padding: 1rem;
-  margin: 0 2rem;
+  max-height: 2rem;
 }
 
 .filter-section > h3 {
-  margin: auto 1rem;
-}
-
-/* Untuk pilihan warna margin kanan kiri diperkecil */
-.filter-section:nth-child(3) {
-  margin: 0 0.5rem;
+  margin-right: 1rem;
 }
 
 /* Search results grid item */
@@ -320,45 +339,63 @@ footer {
 .search-result-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-column: repeat(2, auto);
   justify-items: center;
   border: 2px solid black;
   border-radius: 3px;
-  overflow: scroll;
+  min-height: 60vh;
+  max-height: 65vh;
+  max-width: 88vw;
+  margin: 0 auto;
+  overflow-y: scroll;
 }
 
 .result-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 21ch;
-  border: 1px solid black;
+  width: 186px;
+  min-height: 268px;
+  height: fit-content;
+  background: #2e2e2e;
+  border: 3px solid #000000;
+  color: white;
+  text-align: center;
   border-radius: 3px;
-  padding: 0 1rem;
-  margin: 0.4rem 0;
-}
-.result-item img {
-  max-width: 55%;
-  margin: 0 auto;
+  margin: 0.5rem;
 }
 
-.result-item h3 {
+.result-item-name {
+  height: 70px;
+  padding: 1rem;
   font-weight: 600;
   overflow: hidden;
+  margin-bottom: 1rem;
 }
 
+.result-item img {
+  width: 186px;
+  height: 132px;
+  left: 0;
+  top: 0;
+  position: relative;
+  border-radius: 3px 3px 0px 0px;
+}
 .result-item a {
-  text-align: center;
+  margin-bottom: 1rem;
 }
 
 /* Stats widget styling */
+
 .stats {
-  padding: 2rem 0;
+  background-color: #eeeeeed3;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
+.stats:first-child {
+  margin-top: 1rem;
 }
 
 .stats-row {
   margin: 0.5rem auto;
-  padding-top: 1rem;
   display: grid;
   grid-template-columns: repeat(5, max-content);
   gap: 1rem;
@@ -380,4 +417,94 @@ footer {
 }
 .stat-items h2 {
   margin-bottom: 1.2rem;
+}
+
+/* bagposts styling */
+#result-container {
+  display: flex;
+  width: 80vw;
+  margin: 0 auto;
+}
+
+.container-all {
+  display: flex;
+  justify-content: space-between;
+}
+/* .container-left {
+  overflow-y: scroll;
+} */
+.container-left,
+.container-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: rgb(240, 240, 240);
+  max-width: 40vw;
+  max-height: 80vh;
+  padding: 1rem 0.5rem;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.bagdetail-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 4rem;
+}
+
+.result-image-container {
+  margin: 0 auto;
+}
+
+.bagresult-image {
+  height: 200px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0px 12px 0px,
+    rgba(0, 0, 0, 0.3) 0px 0px 7px 0px;
+}
+
+#bagpost .detail {
+  overflow-y: scroll;
+}
+.container-left {
+  background-color: rgb(255, 188, 188);
+}
+.container-left .detail {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.container-left .detail p {
+  margin-bottom: 8px;
+}
+
+.container-right {
+  max-width: 60vw;
+  background-color: rgb(188, 188, 228);
+}
+.reviewUser {
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
+.reviewUser .review {
+  background-color: rgb(255, 205, 205);
+  border: 2px solid black;
+  border-radius: 3px;
+  margin: 1rem;
+  max-height: 80%;
+  padding: 1rem 2rem;
+}
+
+.account-review-container {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 3rem;
 }
