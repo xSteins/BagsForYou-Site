@@ -1,33 +1,30 @@
 <div class="container-category add-bag-entry" id="addBagItem">
     <h1>Add new Bag entry</h1>
+    <h3 id="alertMessage"></h3>
     <h3>Select bag category and subcategory from dropdown below.</h3>
-    <form action="/addBagEntry" method="post" class="admin-form-menu">
+    <form action="/addBagEntry" method="post" class="admin-form-menu" onsubmit="return validateForm()">
         <label for="bag-name">Bag Name:</label>
-        <input type="text" id="bag-name" name="bag-name">
+        <input type="text" id="bag-name" name="bag-name" required>
 
         <label for="category">Category:</label>
-        <select id="category" name="category">
-            <option value="" disabled>Choose an option</option>
-            <option value="clutch">Clutch</option>
-            <option value="shoulder-bag">Shoulder Bag</option>
-            <option value="crossbody">Crossbody</option>
-            <option value="tote">Tote</option>
-            <option value="hobo">Hobo</option>
-            <option value="satchel">Satchel</option>
-            <option value="backpack">Backpack</option>
-            <option value="bucket-bag">Bucket Bag</option>
-            <option value="envelope-bag">Envelope Bag</option>
-            <option value="wristlet">Wristlet</option>
+        <label for="category">Category:</label>
+        <select id="category" name="category" onchange="updateSubcategories()">
+            <option value="" disabled selected>Choose an option</option>
+            <option value="1">Backpack</option>
+            <option value="2">Tote</option>
+            <option value="3">Messenger</option>
+            <option value="4">Duffel</option>
+            <option value="5">Satchel</option>
+            <option value="6">Clutch</option>
+            <option value="7">Crossbody</option>
+            <option value="8">Briefcase</option>
+            <option value="9">Waist Pack</option>
         </select>
 
+
         <label for="subcategory">Subcategory:</label>
-        <select id="subcategory" name="subcategory">
-            <option value="" disabled>Choose an option</option>
-            <option value="leather">Leather</option>
-            <option value="canvas">Canvas</option>
-            <option value="suede">Suede</option>
-            <option value="nylon">Nylon</option>
-            <option value="straw">Straw</option>
+        <select id="subcategory" name="subcategory" required>
+            <option value="" disabled selected>Choose an option</option>
         </select>
 
         <label for="color">Color:</label>
@@ -42,16 +39,105 @@
         <label for="bag-description">Bag Description:</label>
         <textarea id="bag-description" name="bag-description"></textarea>
 
-        <label for=bag-dimensions>Bag Dimensions (WxLxH):</label>
+        <label for="bag-dimensions">Bag Dimensions (WxLxH):</label>
         <div class="dimension-container">
-            <input type="number" id=width" name="width" class="dimension">
-            <input type="number" id=length" name="length" class="dimension">
-            <input type="number" id=height" name="height" class="dimension">
+            <input type="number" id="width" name="width" class="dimension">
+            <input type="number" id="length" name="length" class="dimension">
+            <input type="number" id="height" name="height" class="dimension">
         </div>
 
-        <label for=bag-image>Bag Image (only accept png or jpg):</label>
-        <input type="file" accept=".png,.jpg" id=bag-image" name=bag-image">
+        <label for="bag-image">Bag Image (only accept png or jpg):</label>
+        <input type="file" accept=".png,.jpg" id="bag-image" name="bag-image">
 
         <input type="submit" value="Submit">
     </form>
 </div>
+
+<script>
+    // Define the subcategories based on category selection
+    const subcategories = {
+        1: [
+            { id: 1, name: 'Travel' },
+            { id: 10, name: 'School' },
+            { id: 19, name: 'Luxury' }
+        ],
+        2: [
+            { id: 2, name: 'Everyday' },
+            { id: 11, name: 'Beach' },
+            { id: 20, name: 'Outdoor' }
+        ],
+        3: [
+            { id: 3, name: 'Work' },
+            { id: 12, name: 'Bike' }
+        ],
+        4: [
+            { id: 4, name: 'Gym' },
+            { id: 13, name: 'Hiking' }
+        ],
+        5: [
+            { id: 5, name: 'Formal' },
+            { id: 14, name: 'Party' }
+        ],
+        6: [
+            { id: 6, name: 'Evening' },
+            { id: 15, name: 'Team Sports' }
+        ],
+        7: [
+            { id: 7, name: 'Casual' },
+            { id: 16, name: 'Travel' }
+        ],
+        8: [
+            { id: 8, name: 'Business' },
+            { id: 17, name: 'Luxury' }
+        ],
+        9: [
+            { id: 9, name: 'Outdoor' },
+            { id: 18, name: 'Sports' }
+        ]
+    };
+
+    // Update the subcategory dropdown options based on the selected category
+    function updateSubcategories() {
+        const categorySelect = document.getElementById('category');
+        const subcategorySelect = document.getElementById('subcategory');
+        const selectedCategoryId = categorySelect.value;
+
+        // Clear previous options
+        subcategorySelect.innerHTML = '<option value="" disabled selected>Choose an option</option>';
+
+        // Add new options based on the selected category
+        if (selectedCategoryId in subcategories) {
+            const options = subcategories[selectedCategoryId];
+            options.forEach(option => {
+                const subcategoryOption = document.createElement('option');
+                subcategoryOption.value = option.id;
+                subcategoryOption.text = option.name;
+                subcategorySelect.appendChild(subcategoryOption);
+            });
+        }
+    }
+
+    // Validate the form submission
+    function validateForm() {
+        const categorySelect = document.getElementById('category');
+        const subcategorySelect = document.getElementById('subcategory');
+        const selectedCategoryId = categorySelect.value;
+        const selectedSubcategoryId = subcategorySelect.value;
+
+        // Check if the selected subcategory belongs to the selected category
+        if (selectedCategoryId in subcategories) {
+            const subcategoryOptions = subcategories[selectedCategoryId];
+            const matchingSubcategory = subcategoryOptions.find(option => option.id === parseInt(selectedSubcategoryId));
+
+            if (!matchingSubcategory) {
+                const categoryOptions = categorySelect.options;
+                const selectedCategoryName = categoryOptions[categoryOptions.selectedIndex].text;
+                const alertMessage = `Selected subcategory does not belong to the "${selectedCategoryName}" category.`;
+                document.getElementById('alertMessage').innerText = alertMessage;
+                return false;
+            }
+        }
+
+        return true;
+    }
+</script>

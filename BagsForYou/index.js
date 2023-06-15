@@ -1,10 +1,11 @@
 import express from 'express';
-import mysql from 'mysql';
 import path from 'path';
-import bodyParser from 'body-parser';
 import session from 'cookie-session';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
+import fs from 'fs';
+
+
 
 const app = express();
 app.use(cookieParser());
@@ -14,8 +15,10 @@ const publicPath = path.resolve('static-path');
 app.use(express.static(publicPath));
 app.set('view engine', 'ejs');
 
+import bodyParser from 'body-parser';
 app.use(bodyParser.urlencoded({ extended: true }));
 
+import mysql from 'mysql';
 // MySQL Connection
 const pool = mysql.createPool({
     host: 'localhost',
@@ -51,6 +54,26 @@ app.use(
         },
     })
 );
+
+// Multer : untuk upload / export file :
+// Multer configuration
+import multer from 'multer';
+// Set storage configuration for multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'tas-img'); // Specify the destination directory
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        const fileName = `${file.fieldname}-${Date.now()}${ext}`; // Generate a unique filename
+        cb(null, fileName);
+    }
+});
+// Create multer instance with the storage configuration
+const upload = multer({ storage: storage });
+
+
+
 app.listen(port, () => {
     console.log('App started');
     console.log(`Server running on http://localhost:${port}`);
@@ -247,6 +270,75 @@ app.post('/signup', (req, res) => {
 //         }
 //     });
 // });
+
+// Function to validate if the selected subcategory belongs to the selected category
+
+function isSubcategoryValid(categoryId, subcategoryId) {
+    const subcategoryOptions = subcategories[categoryId];
+    return subcategoryOptions.some(option => option.id === parseInt(subcategoryId));
+}
+app.post('/addBagEntry', (req, res) => {
+    const bagName = req.body['bag-name'];
+    const category = req.body.category;
+    const subcategory = req.body.subcategory;
+    const color = req.body.color;
+    const bagDesigner = req.body['bag-designer'];
+    const bagBrand = req.body['bag-brand'];
+    const bagDescription = req.body['bag-description'];
+    const width = req.body.width;
+    const length = req.body.length;
+    const height = req.body.height;
+
+    const dimensions = `${width}" x ${length}" x ${height}"`;
+
+    // Validate if the selected subcategory belongs to the selected category
+    const selectSubcategoryQuery = 'SELECT `Id_Subkategori` FROM `sub_kategori` WHERE `Id_Kategori` = ? AND `Id_Subkategori` = ?';
+    pool.query(selectSubcategoryQuery, [category, subcategory], (error, results) => {
+        if (error) {
+            console.log(error);
+            res.status(500).send('Error validating subcategory.');
+            return;
+        }
+
+        if (results.length === 0) {
+            console.log('Invalid subcategory for the selected category');
+            res.status(500).send('Invalid subcategory for the selected category.');
+            return;
+        }
+
+        // Subcategory is valid, proceed with the bag entry insertion
+        const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const insertParams = [bagName, bagDescription, color, dimensions, bagBrand, bagDesigner, subcategory];
+
+        pool.query(insertQuery, insertParams, (error, results) => {
+            if (error) {
+                console.log(error);
+                res.status(500).send('Error adding bag entry.');
+            } else {
+                const bagId = results.insertId;
+                const selectQuery = 'SELECT * FROM `tas` WHERE `Id_Tas` = ?';
+                pool.query(selectQuery, [bagId], (error, bagData) => {
+                    if (error) {
+                        console.log(error);
+                        res.status(500).send('Error retrieving bag data.');
+                    } else {
+                        console.log('Bag entry added successfully.');
+                        console.log('Bag Data:', bagData);
+                        res.status(200).send('Bag entry added successfully.');
+                    }
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
+
 
 app.get('/logout', (req, res) => {
     res.clearCookie('id_account');
