@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path';
+import path, { resolve } from 'path';
 import session from 'cookie-session';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
@@ -323,37 +323,68 @@ app.post('/addBagEntry', (req, res) => {
 
         // Subcategory is valid, proceed with the bag entry insertion
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        const insertParams = [bagName, bagDescription, color, dimensions, bagBrand, bagDesigner, subcategory];
-
-        pool.query(insertQuery, insertParams, (error, results) => {
-            if (error) {
-                console.log(error);
-                res.status(500).send('Error adding bag entry.');
-            } else {
-                const bagId = results.insertId;
-                const selectQuery = 'SELECT * FROM `tas` WHERE `Id_Tas` = ?';
-                pool.query(selectQuery, [bagId], (error, bagData) => {
-                    if (error) {
+        console.log('this is here');
+        doThing();
+        async function doThing(){
+            let brandId,desigId;
+            const brandIdQuery= await new Promise((resolve,reject)=>{
+                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?',bagBrand,(error,results)=>{
+                    if(error){
                         console.log(error);
-                        res.status(500).send('Error retrieving bag data.');
-                    } else {
-                        console.log('Bag entry added successfully.');
-                        console.log('Bag Data:', bagData);
-                        res.status(200).send('Bag entry added successfully.');
+                        res.status(500).send('Error finding brand.');
+                        reject(error);
+                    }
+                    else{
+                        // console.log(results.RowDataPacket);
+                        resolve(JSON.parse(JSON.stringify(results)));
                     }
                 });
+            });
+        
+            // console.log('test2');
+            brandId=brandIdQuery[0].Id_Merk;
+            if(bagDesigner===''){
+                desigId=null;
             }
-        });
+            else{
+                const desigIdQuery= await new Promise((resolve,reject)=>{
+                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?',bagDesigner,(error,results)=>{
+                        if(error){
+                            console.log(error);
+                            res.status(500).send('Error finding designer.');
+                            reject(error);
+                        }
+                        else{
+                            // console.log(results.RowDataPacket);
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                desigId=desigIdQuery[0].Id_Designer;
+            }
+            const insertParams = [bagName, bagDescription, color, dimensions, brandId, desigId, subcategory];
+            pool.query(insertQuery, insertParams, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error adding bag entry.');
+                } else {
+                    const bagId = results.insertId;
+                    const selectQuery = 'SELECT * FROM `tas` WHERE `Id_Tas` = ?';
+                    pool.query(selectQuery, [bagId], (error, bagData) => {
+                        if (error) {
+                            console.log(error);
+                            res.status(500).send('Error retrieving bag data.');
+                        } else {
+                            console.log('Bag entry added successfully.');
+                            console.log('Bag Data:', bagData);
+                            res.status(200).send('Bag entry added successfully.');
+                        }
+                    });
+                }
+            });
+        }
     });
 });
-
-
-
-
-
-
-
-
 
 app.get('/logout', (req, res) => {
     res.clearCookie('id_account');
@@ -363,8 +394,14 @@ app.get('/logout', (req, res) => {
     res.clearCookie('is_admin');
     res.redirect('/');
 });
-
-
-app.get('/bp', (req, res) => {
+app.get('/bag/:number',(req,res)=>{
+    const getBag ='SEARCH * FROM `tas` WHERE `Id_Tas` = ?';
+    pool.query(getBag, req.params.number, (error, results) => {
+        if (error) {
+            console.log(error);
+        } else {
+            
+        }
+    });
     res.render('components/bagsData/bagPost');
 })
