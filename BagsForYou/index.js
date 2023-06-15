@@ -4,7 +4,7 @@ import session from 'cookie-session';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
-
+import csv from 'csv-parser';
 
 
 const app = express();
@@ -61,7 +61,7 @@ import multer from 'multer';
 // Set storage configuration for multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'tas-img'); // Specify the destination directory
+        cb(null, 'tes'); // Specify the destination directory
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
@@ -93,7 +93,7 @@ function validateLoginStatus(req) {
 }
 
 function validateUsername(req) {
-    console.log('Cookie - username:', req.cookies.username)
+    // console.log('Cookie - username:', req.cookies.username)
     console.log(req.cookies);
     return req.cookies.username;
 }
@@ -332,8 +332,115 @@ app.post('/addBagEntry', (req, res) => {
     });
 });
 
+// Category sudah work, tinggal 2 menu diatas ini saja
+app.post('/addCategory', (req, res) => {
+    const category = req.body.categoryIn;
+    const subCategory = req.body['sub-categoryIn'];
+
+    // Check if category exists
+    pool.query('SELECT `Id_Kategori` FROM `kategori` WHERE `Nama_Kategori` = ?', [category], (error, results) => {
+        if (error) {
+            console.log(error);
+        } else if (results.length > 0) {
+            // Category exists, check if subcategory exists
+            const idKategori = results[0].Id_Kategori;
+            pool.query('SELECT `Id_Subkategori` FROM `sub_kategori` WHERE `Nama_Subkategori` = ? AND `Id_Kategori` = ?', [subCategory, idKategori], (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else if (results.length > 0) {
+                    // Subcategory exists, do nothing
+                    res.redirect('back');
+                } else {
+                    // Subcategory does not exist, insert subcategory
+                    pool.query('INSERT INTO `sub_kategori`(`Nama_Subkategori`, `Id_Kategori`) VALUES (?, ?)', [subCategory, idKategori], (error, results) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            res.redirect('back');
+                        }
+                    });
+                }
+            });
+        } else {
+            // Category does not exist, insert category
+            pool.query('INSERT INTO `kategori`(`Nama_Kategori`) VALUES (?)', [category], (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    res.redirect('back');
+                }
+            });
+        }
+    });
+});
+
+// Multer upload instance ada diatas
+// Import "tas" from CSV file
+app.post('/importTable', upload.single('bagsData'), (req, res) => {
+    const filePath = req.file.path;
+
+    fs.createReadStream(filePath)
+        .pipe(csv())
+        .on('data', (row) => {
+            const query = `
+        INSERT INTO tas (namaTas, Deskripsi, Warna, Dimensi)
+        VALUES ('${row.namaTas}', '${row.Deskripsi}', '${row.Warna}', '${row.Dimensi}')
+      `;
+
+            pool.query(query, (error) => {
+                if (error) {
+                    console.error(error);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+            });
+        })
+        .on('end', () => {
+            fs.unlink(filePath, (error) => {
+                if (error) {
+                    console.error(error);
+                }
+            });
+
+            return res.status(200).json({ message: 'Import successful' });
+        });
+});
 
 
+// export tas
+// Export the "tas" table as CSV
+app.get('/exportTable', (req, res) => {
+    const query = `
+    SELECT Id_Tas, namaTas, Deskripsi, Warna, Dimensi, Id_Merk, Id_Designer, Id_Subkategori
+    FROM tas
+  `;
+
+    pool.query(query, (error, results) => {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        const csvData = results.map((row) => Object.values(row).join(','));
+
+        fs.writeFile('tas.csv', csvData.join('\n'), (error) => {
+            if (error) {
+                console.error(error);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+            return res.download('tas.csv', 'tas.csv', (error) => {
+                if (error) {
+                    console.error(error);
+                    return res.status(500).json({ error: 'Internal server error' });
+                }
+                fs.unlink('tas.csv', (error) => {
+                    if (error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    });
+});
 
 
 
