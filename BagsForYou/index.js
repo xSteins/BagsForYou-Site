@@ -80,46 +80,80 @@ app.listen(port, () => {
 });
 
 function validateLoginStatus(req) {
+    const isAdmin = Number(req.cookies.is_admin);
     if (!req.cookies.username) {
         return 'anon';
-    } else {
-        const isAdmin = Number(req.cookies.is_admin);
+    }
+    else {
         if (isAdmin === 1) {
             return 'admin';
-        } else {
+        }
+        else {
             return 'user';
         }
     }
 }
 
-function validateUsername(req) {
-    // console.log('Cookie - username:', req.cookies.username)
-    console.log(req.cookies);
+function returnUsername(req) {
+    console.log(req.cookies)
     return req.cookies.username;
 }
 
 app.get('/', (req, res) => {
     res.render('home', {
         status: validateLoginStatus(req),
-        username: validateUsername(req),
+        username: returnUsername(req),
     });
 });
 
 
 app.get('/profile/self/follower', (req, res) => {
     res.render('components/accountMenu/follower', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
+    });
+});
+app.get('/profile/self/following', (req, res) => {
+    res.render('components/accountMenu/following', {
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
+// index.js
+
+// index.js
 app.get('/profile', (req, res) => {
-    res.render('components/accountMenu/profile-self', {
-        username: validateUsername(req),
+    const id_account = req.cookies.id_account;
+    const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
+
+    pool.query(getReviewObj, id_account, (error, results) => {
+        if (error) {
+            console.log(error);
+        } else if (results.length > 0) {
+            const reviews = results;
+            res.render('components/accountMenu/profile-self', {
+                postResult: reviews,
+                reviews: reviews,
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+            });
+        } else {
+            res.render('components/accountMenu/profile-self', {
+                postResult: null,
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+            });
+        }
     });
 });
+
+
+
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
@@ -135,6 +169,8 @@ app.get('/searchresults', (req, res) => {
             const resSearch = results;
             console.log(resSearch);
             res.render('searchresults', {
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
                 search: req.query.search,
                 bagsRes: resSearch
             });
@@ -144,13 +180,15 @@ app.get('/searchresults', (req, res) => {
 
 app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
 app.get('/adminDashboard', (req, res) => {
     res.render('adminDashboard', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
