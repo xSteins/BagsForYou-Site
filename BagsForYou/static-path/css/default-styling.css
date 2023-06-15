@@ -379,6 +379,13 @@ a {
 
 /* Stats widget styling */
 
+.stats {
+  background-color: #eeeeeed3;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
+  text-align: center;
+}
+
 .stats:first-child {
   margin-top: 1rem;
 }

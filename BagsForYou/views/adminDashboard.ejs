@@ -23,13 +23,18 @@
         <div class="main-grid-section">
             <div class="left-column">
                 <div class="main-menu">
+                    <div class="admin-menu-button">
+                        <button class="site-links" id="adjustReview">Adjust Review Requirement</button>
+                        <button class="site-links" id="addItem">Add Item</button>
+                        <button class="site-links" id="addCategory">Add Category/Sub-category</button>
+                        <button class="site-links" id="importTable">Import/Export table</button>
+
+                    </div>
                     <%- include('components/adminMenus/adjustReviewReq') %>
                         <%- include('components/adminMenus/importTable') %>
                             <%- include('components/adminMenus/addCategorySubcategory') %>
                                 <%- include('components/adminMenus/addBagItem') %>
-                </div>
-                <div class="secondary-menu">
-                    <%- include('components/adminMenus/stat-all') %>
+                                    <%- include('components/adminMenus/stat-all') %>
                 </div>
             </div>
             <div class="right-column">
@@ -39,25 +44,35 @@
         <script>
 
             const bagitem = document.getElementById('addBagItem');
-            const catsub = document.getElementById('CatSubHidden');
+            const catsub = document.getElementById('addCategoryForm');
             const adjust = document.getElementById('revreq');
+            const importTable = document.getElementById('importForm');
 
             function showAddBagItem() {
                 bagitem.classList.remove('hidden');
+                importForm.classList.add('hidden');
                 catsub.classList.add('hidden');
                 adjust.classList.add('hidden');
             }
 
             function showCatSubHidden() {
                 bagitem.classList.add('hidden');
+                importForm.classList.add('hidden');
+                adjust.classList.add('hidden');
                 catsub.classList.remove('hidden');
-                sadjust.classList.add('hidden');
             }
 
             function showRevereq() {
                 bagitem.classList.add('hidden');
                 catsub.classList.add('hidden');
+                importForm.classList.add('hidden');
                 adjust.classList.remove('hidden');
+            }
+
+            function showImportExport() {
+                bagitem.classList.add('hidden');
+                catsub.classList.add('hidden');
+                importForm.classList.remove('hidden');
             }
 
             document.getElementById('addItem').addEventListener('click', function () {
@@ -70,6 +85,10 @@
 
             document.getElementById('adjustReview').addEventListener('click', function () {
                 showRevereq();
+            });
+
+            document.getElementById('importTable').addEventListener('click', function () {
+                showImportExport();
             });
         </script>
 </body>

@@ -10,23 +10,28 @@ function getCookie(name) {
     return "";
 }
 
-// Halaman edit profile
-document.getElementById("profile-username").textContent = getCookie("username");
-document.getElementById("profile-email").textContent = getCookie("email");
-document.getElementById("profile-name").textContent = getCookie("nama_lengkap");
+document.addEventListener('DOMContentLoaded', () => {
+    // Halaman edit profile
+    document.getElementById("profile-username").textContent = getCookie("username");
+    document.getElementById("profile-email").textContent = getCookie("email");
+    document.getElementById("profile-name").textContent = getCookie("nama_lengkap");
 
-// Display the hidden input fields when the corresponding edit button is clicked
-document.getElementById("usernameEditButton").addEventListener("click", function () {
-    document.getElementById("profile-username").classList.add("hidden");
-    document.getElementById("usernameUpdated").classList.remove("hidden");
-});
+    // Halaman profile
+    document.querySelector("#profile-username2").textContent = getCookie("username");
 
-document.getElementById("emailEditButton").addEventListener("click", function () {
-    document.getElementById("profile-email").classList.add("hidden");
-    document.getElementById("emailUpdated").classList.remove("hidden");
-});
+    // Display the hidden input fields when the corresponding edit button is clicked
+    document.getElementById("usernameEditButton").addEventListener("click", function () {
+        document.getElementById("profile-username").classList.add("hidden");
+        document.getElementById("usernameUpdated").classList.remove("hidden");
+    });
 
-document.getElementById("nameEditButton").addEventListener("click", function () {
-    document.getElementById("profile-name").classList.add("hidden");
-    document.getElementById("nameUpdated").classList.remove("hidden");
-});
+    document.getElementById("emailEditButton").addEventListener("click", function () {
+        document.getElementById("profile-email").classList.add("hidden");
+        document.getElementById("emailUpdated").classList.remove("hidden");
+    });
+
+    document.getElementById("nameEditButton").addEventListener("click", function () {
+        document.getElementById("profile-name").classList.add("hidden");
+        document.getElementById("nameUpdated").classList.remove("hidden");
+    });
+})
