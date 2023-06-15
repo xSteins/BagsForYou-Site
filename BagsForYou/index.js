@@ -396,36 +396,36 @@ app.post('/addBagEntry', (req, res) => {
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         console.log('this is here');
         doThing();
-        async function doThing() {
-            let brandId, desigId;
-            const brandIdQuery = await new Promise((resolve, reject) => {
-                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?', bagBrand, (error, results) => {
-                    if (error) {
+        async function doThing(){
+            let brandId,desigId;
+            const brandIdQuery= await new Promise((resolve,reject)=>{
+                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?',bagBrand,(error,results)=>{
+                    if(error){
                         console.log(error);
                         res.status(500).send('Error finding brand.');
                         reject(error);
                     }
-                    else {
+                    else{
                         // console.log(results.RowDataPacket);
                         resolve(JSON.parse(JSON.stringify(results)));
                     }
                 });
             });
-
+        
             // console.log('test2');
-            brandId = brandIdQuery[0].Id_Merk;
-            if (bagDesigner === '') {
-                desigId = null;
+            brandId=brandIdQuery[0].Id_Merk;
+            if(bagDesigner===''){
+                desigId=null;
             }
-            else {
-                const desigIdQuery = await new Promise((resolve, reject) => {
-                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?', bagDesigner, (error, results) => {
-                        if (error) {
+            else{
+                const desigIdQuery= await new Promise((resolve,reject)=>{
+                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?',bagDesigner,(error,results)=>{
+                        if(error){
                             console.log(error);
                             res.status(500).send('Error finding designer.');
                             reject(error);
                         }
-                        else {
+                        else{
                             // console.log(results.RowDataPacket);
                             resolve(JSON.parse(JSON.stringify(results)));
                         }
@@ -582,7 +582,7 @@ app.get('/bag/:number', (req, res) => {
         if (error) {
             console.log(error);
         } else {
-
+            
         }
     });
     res.render('components/bagsData/bagPost', {
