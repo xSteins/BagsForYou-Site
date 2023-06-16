@@ -108,15 +108,56 @@ app.get('/', (req, res) => {
 
 
 app.get('/profile/self/follower', (req, res) => {
-    res.render('components/accountMenu/follower', {
-        status: validateLoginStatus(req),
-        username: returnUsername(req),
+    const followerQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
+    const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Account` = ?";
+    const accountLoggedIn = req.cookies.id_account;
+
+    pool.query(followerQuery, [accountLoggedIn], (err, results) => {
+        if (err) {
+            // Handle the error appropriately
+            console.error(err);
+        } else {
+            const followers = results.map((row) => row.Username);
+
+            pool.query(followingQuery, [accountLoggedIn], (err, results) => {
+                if (err) {
+                    // Handle the error appropriately
+                    console.error(err);
+                } else {
+                    const followingCount = results[0].followingCount;
+
+                    res.render('components/accountMenu/follower', {
+                        followers,
+                        followingCount,
+                        status: validateLoginStatus(req),
+                        username: returnUsername(req),
+                    });
+                }
+            });
+        }
     });
+
+
 });
+
+
 app.get('/profile/self/following', (req, res) => {
-    res.render('components/accountMenu/following', {
-        status: validateLoginStatus(req),
-        username: returnUsername(req),
+    const followingQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
+    const accountLoggedIn = req.cookies.id_account;
+
+    pool.query(followingQuery, [accountLoggedIn], (err, results) => {
+        if (err) {
+            // Handle the error appropriately
+            console.error(err);
+        } else {
+            const following = results.map((row) => row.Username);
+
+            res.render('components/accountMenu/following', {
+                following,
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+            });
+        }
     });
 });
 
@@ -232,8 +273,6 @@ app.post('/login', (req, res) => {
     });
 });
 
-// console.log(cookie);
-
 app.post('/signup', (req, res) => {
     const username = req.body.username;
     const nama = req.body.nama;
@@ -324,12 +363,6 @@ app.post('/signup', (req, res) => {
 //     });
 // });
 
-// Function to validate if the selected subcategory belongs to the selected category
-
-function isSubcategoryValid(categoryId, subcategoryId) {
-    const subcategoryOptions = subcategories[categoryId];
-    return subcategoryOptions.some(option => option.id === parseInt(subcategoryId));
-}
 app.post('/addBagEntry', (req, res) => {
     const bagName = req.body['bag-name'];
     const category = req.body.category;
@@ -497,8 +530,6 @@ app.post('/importTable', upload.single('bagsData'), (req, res) => {
         });
 });
 
-
-// export tas
 // Export the "tas" table as CSV
 app.get('/exportTable', (req, res) => {
     const query = `
@@ -533,8 +564,6 @@ app.get('/exportTable', (req, res) => {
         });
     });
 });
-
-
 
 
 

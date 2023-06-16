@@ -5,6 +5,23 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
 }
+button:hover,
+input[type='submit']:hover {
+  color: black;
+  background-color: white;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+button,
+input[type='submit'] {
+  padding: 0.4rem;
+  color: rgb(255, 255, 255);
+  background-color: rgb(0, 0, 0);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 0.5rem;
+  margin-right: 0;
+}
 strong {
   font-weight: 600;
 }
@@ -74,6 +91,7 @@ header {
 #main-navigation > div {
   margin: 0.5rem;
 }
+
 #SignUpButton,
 #SignInButton:hover {
   padding: 0.4rem;
