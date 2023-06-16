@@ -102,7 +102,7 @@ function returnUsername(req) {
 const getIdYangDesain = () => {
     return new Promise((resolve, reject) => {
         const query = `
-        SELECT d.Nama_Designer, COUNT(t.Id_Tas) AS Total_Bags
+        SELECT d.Nama_Designer AS Nama_yd, COUNT(t.Id_Tas) AS Total_Bags
         FROM designer d
         LEFT JOIN tas t ON d.Id_Designer = t.Id_Designer
         GROUP BY d.Nama_Designer
@@ -113,7 +113,7 @@ const getIdYangDesain = () => {
             if (error) {
                 reject(error);
             } else {
-                resolve(results[0]);
+                resolve(results[0].Nama_yd);
             }
         });
     });
@@ -140,18 +140,18 @@ const getUnikCount = () => {
 const getBrandCount = () => {
     return new Promise((resolve, reject) => {
         const query = `
-        SELECT t.Id_Tas, t.namaTas, COUNT(r.Id_Review) AS Review_Count
+        SELECT t.Id_Tas, t.namaTas AS Nama_Tas_N, COUNT(r.Id_Review) AS Review_Count
         FROM tas t
         LEFT JOIN review r ON t.Id_Tas = r.Id_Tas
         GROUP BY t.Id_Tas, t.namaTas
         ORDER BY Review_Count DESC
         LIMIT 1;
-      `;
+        `;
         pool.query(query, (error, results) => {
             if (error) {
                 reject(error);
             } else {
-                resolve(results[0].Review_Count);
+                resolve(results[0].Nama_Tas_N);
             }
         });
     });
@@ -160,7 +160,7 @@ const getBrandCount = () => {
 app.get('/', async (req, res) => {
     try {
         // Execute the queries
-        const yangdesain = await getIdYangDesain();
+        const yangdesainCount = await getIdYangDesain();
         const unikCount = await getUnikCount();
         const brandCount = await getBrandCount();
 
@@ -168,7 +168,7 @@ app.get('/', async (req, res) => {
         res.render('home', {
             status: validateLoginStatus(req),
             username: validateUsername(req),
-            yangdesainCount: yangdesain ? yangdesain.Total_Bags : 0,
+            yangdesainCount,
             unikCount,
             brandCount,
         });
@@ -227,7 +227,7 @@ app.get('/profile/self/following', (req, res) => {
 // index.js
 app.get('/profile', (req, res) => {
     const id_account = req.cookies.id_account;
-    const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
+    const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?`';
 
     pool.query(getReviewObj, id_account, (error, results) => {
         if (error) {
@@ -408,7 +408,7 @@ app.post('/signup', (req, res) => {
 //         }
 //         else {
 //             // If the old password is correct, update the profile data in the database
-//             const sql = `UPDATE account SET Username=?, E_mail=?, Nama_Lengkap=?, Password=? WHERE Id_Account=?`;
+//             const sql = `UPDATE account SET Username =?, E_mail =?, Nama_Lengkap =?, Password =? WHERE Id_Account =? `;
 //             const values = [newUsername, newEmail, newName, newPassword, idAccount];
 
 //             // Execute the SQL query to update the profile data
@@ -444,7 +444,7 @@ app.post('/addBagEntry', (req, res) => {
     const length = req.body.length;
     const height = req.body.height;
 
-    const dimensions = `${width}" x ${length}" x ${height}"`;
+    const dimensions = `${width} " x ${length}" x ${height} "`;
 
     // Validate if the selected subcategory belongs to the selected category
     const selectSubcategoryQuery = 'SELECT `Id_Subkategori` FROM `sub_kategori` WHERE `Id_Kategori` = ? AND `Id_Subkategori` = ?';
