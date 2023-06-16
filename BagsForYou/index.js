@@ -98,115 +98,13 @@ function returnUsername(req) {
     console.log(req.cookies)
     return req.cookies.username;
 }
-// Execute query for 'id yang desain'
-const getIdYangDesain = () => {
-    return new Promise((resolve, reject) => {
-        const query = `
-        SELECT d.Nama_Designer, COUNT(t.Id_Tas) AS Total_Bags
-        FROM designer d
-        LEFT JOIN tas t ON d.Id_Designer = t.Id_Designer
-        GROUP BY d.Nama_Designer
-        ORDER BY Total_Bags DESC
-        LIMIT 1;
-      `;
-        pool.query(query, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0]);
-            }
-        });
+
+app.get('/', (req, res) => {
+    res.render('home', {
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
-};
-
-// Execute query for 'unik'
-const getUnikCount = () => {
-    return new Promise((resolve, reject) => {
-        const query = `
-        SELECT COUNT(*) AS Bag_Count
-        FROM tas;
-      `;
-        pool.query(query, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0].Bag_Count);
-            }
-        });
-    });
-};
-
-// Execute query for 'brand'
-const getBrandCount = () => {
-    return new Promise((resolve, reject) => {
-        const query = `
-        SELECT t.Id_Tas, t.namaTas, COUNT(r.Id_Review) AS Review_Count
-        FROM tas t
-        LEFT JOIN review r ON t.Id_Tas = r.Id_Tas
-        GROUP BY t.Id_Tas, t.namaTas
-        ORDER BY Review_Count DESC
-        LIMIT 1;
-      `;
-        pool.query(query, (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(results[0].Review_Count);
-            }
-        });
-    });
-};
-
-app.get('/', async (req, res) => {
-    try {
-        // Execute the queries
-        const yangdesain = await getIdYangDesain();
-        const unikCount = await getUnikCount();
-        const brandCount = await getBrandCount();
-
-        // Render the home.ejs template with the data
-        res.render('home', {
-            status: validateLoginStatus(req),
-            username: validateUsername(req),
-            yangdesainCount: yangdesain ? yangdesain.Total_Bags : 0,
-            unikCount,
-            brandCount,
-        });
-    } catch (error) {
-        // Handle the error
-        console.error('Error:', error);
-        res.status(500).send('Internal Server Error');
-    }
 });
-
-
-
-//   app.get('/', async (req, res) => {
-//     try {
-//       // Render the home.ejs template with the data
-//       res.render('home', {
-//         status: validateLoginStatus(req),
-//         username: validateUsername(req),
-//         yangdesain: await getyangdesain(),
-//         unik: await getUnik(),
-//         brand: await getBrand(),
-//       });
-//     } catch (error) {
-//       // Handle the error
-//       console.error('Error:', error);
-//       res.status(500).send('Internal Server Error');
-//     }
-//   });
-
-
-
-
-// app.get('/', (req, res) => {
-//     res.render('home', {
-//         status: validateLoginStatus(req),
-//         username: validateUsername(req),
-//     });
-// });
 
 
 app.get('/profile/self/follower', (req, res) => {
