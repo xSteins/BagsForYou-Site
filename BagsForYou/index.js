@@ -588,7 +588,6 @@ app.get('/bag/:number', (req, res) => {
                     reject(error);
                 }
                 else{
-                    // console.log(results.RowDataPacket);
                     resolve(JSON.parse(JSON.stringify(results)));
                 }
             });
@@ -603,14 +602,24 @@ app.get('/bag/:number', (req, res) => {
                     reject(error);
                 }
                 else{
-                    // console.log(results.RowDataPacket);
                     resolve(JSON.parse(JSON.stringify(results)));
                 }
             });
         });
         let reviews=getReviewInfo;
-        // console.log(reviews);
-        // console.log(bag.Id_Tas);
+        const getAvgStar= await new Promise((resolve,reject)=>{
+            pool.query('SELECT AVG(`Bintang`)AS AvgBintang FROM `review` WHERE `Id_Tas`=?',req.params.number,(error,results)=>{
+                if(error){
+                    console.log(error);
+                    res.status(500).send('Error finding avg stars.');
+                    reject(error);
+                }
+                else{
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const avgStar=getAvgStar[0].AvgBintang;
         res.render('components/bagsData/bagPost', {
             status: validateLoginStatus(req),
             username: returnUsername(req),
