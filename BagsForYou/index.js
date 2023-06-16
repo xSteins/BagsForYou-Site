@@ -556,5 +556,8 @@ app.get('/bag/:number', (req, res) => {
 
         }
     });
-    res.render('components/bagsData/bagPost');
+    res.render('components/bagsData/bagPost', {
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
+    });
 })
