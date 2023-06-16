@@ -100,16 +100,6 @@ function returnUsername(req) {
 }
 
 app.get('/', (req, res) => {
-    // Global value untuk akun yang sudah logged in
-    const id_account = req.session.id_account;
-    const username = req.session.username;
-    const email = req.session.email;
-    const nama_lengkap = req.session.nama_lengkap;
-    const is_admin = req.session.is_admin;
-
-    let statusValidation = validateAccountType(is_admin);
-    let usernameValidation = validateUsername(username);
-
     res.render('home', {
         status: validateLoginStatus(req),
         username: returnUsername(req),
@@ -405,8 +395,8 @@ app.post('/addBagEntry', (req, res) => {
         // Subcategory is valid, proceed with the bag entry insertion
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         console.log('this is here');
-        doThing();
-        async function doThing(){
+        getBrandDesignerId();
+        async function getBrandDesignerId(){
             let brandId,desigId;
             const brandIdQuery= await new Promise((resolve,reject)=>{
                 pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?',bagBrand,(error,results)=>{
@@ -587,16 +577,45 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 app.get('/bag/:number', (req, res) => {
-    const getBag = 'SEARCH * FROM `tas` WHERE `Id_Tas` = ?';
-    pool.query(getBag, req.params.number, (error, results) => {
-        if (error) {
-            console.log(error);
-        } else {
-            
-        }
-    });
-    res.render('components/bagsData/bagPost', {
-        status: validateLoginStatus(req),
-        username: returnUsername(req),
-    });
+    getBag();
+    async function getBag(){
+        const getBagQuery = 'SELECT `tas`.* ,`kategori`.`Nama_Kategori`,sub_kategori.Nama_Subkategori FROM `tas` INNER JOIN `sub_kategori` ON `sub_kategori`.`Id_Subkategori`=`tas`.`Id_Subkategori` INNER JOIN `kategori`ON `sub_kategori`.`Id_Kategori`=`kategori`.`Id_Kategori` WHERE `Id_Tas` = ?';
+        const getbagInfo= await new Promise((resolve,reject)=>{
+            pool.query(getBagQuery,req.params.number,(error,results)=>{
+                if(error){
+                    console.log(error);
+                    res.status(500).send('Error finding bag.');
+                    reject(error);
+                }
+                else{
+                    // console.log(results.RowDataPacket);
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        let bag=getbagInfo[0];
+        const getReviewQuery= 'SELECT `review`.*,`account`.`Username` FROM `review` INNER JOIN `account` ON `review`.`Id_Account`=`account`.`Id_Account`WHERE `Id_Tas` = ?';
+        const getReviewInfo= await new Promise((resolve,reject)=>{
+            pool.query(getReviewQuery,req.params.number,(error,results)=>{
+                if(error){
+                    console.log(error);
+                    res.status(500).send('Error finding review.');
+                    reject(error);
+                }
+                else{
+                    // console.log(results.RowDataPacket);
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        let reviews=getReviewInfo;
+        // console.log(reviews);
+        // console.log(bag.Id_Tas);
+        res.render('components/bagsData/bagPost', {
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+            bag: bag,
+            reviews: reviews
+        });
+    }
 })
