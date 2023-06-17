@@ -286,8 +286,7 @@ app.get('/', async (req, res) => {
 
 app.get('/profile/self/follower', (req, res) => {
     const followerQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
-    const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Account` = ?";
-
+    const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";
     const accountLoggedIn = req.cookies.id_account;
 
     pool.query(followerQuery, [accountLoggedIn], (err, results) => {
@@ -302,12 +301,11 @@ app.get('/profile/self/follower', (req, res) => {
                     // Handle the error appropriately
                     console.error(err);
                 } else {
-                    console.log(results[0]);
                     const followingCount = results[0].followingCount;
+
                     res.render('components/accountMenu/follower', {
                         followers,
                         followingCount,
-                        followerCount,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
                     });
@@ -315,14 +313,14 @@ app.get('/profile/self/follower', (req, res) => {
             });
         }
     });
+
+
 });
-
-
 
 app.get('/profile/self/following', (req, res) => {
     const followingQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
     const accountLoggedIn = req.cookies.id_account;
-
+    const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
     pool.query(followingQuery, [accountLoggedIn], (err, results) => {
         if (err) {
             // Handle the error appropriately
@@ -330,14 +328,12 @@ app.get('/profile/self/following', (req, res) => {
         } else {
             const following = results.map((row) => row.Username);
 
-            const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Follower` = ?";
             pool.query(followerQuery, [accountLoggedIn], (err, results) => {
                 if (err) {
                     // Handle the error appropriately
                     console.error(err);
                 } else {
                     const followerCount = results[0].followerCount;
-
                     res.render('components/accountMenu/following', {
                         following,
                         followerCount,
@@ -350,8 +346,6 @@ app.get('/profile/self/following', (req, res) => {
     });
 });
 
-
-
 app.get('/profile', (req, res) => {
     const id_account = req.cookies.id_account;
     const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
@@ -359,24 +353,63 @@ app.get('/profile', (req, res) => {
     pool.query(getReviewObj, id_account, (error, results) => {
         if (error) {
             console.log(error);
-        } else if (results.length > 0) {
-            const reviews = results;
-            res.render('components/accountMenu/profile-self', {
-                postResult: reviews,
-                reviews: reviews,
-                status: validateLoginStatus(req),
-                username: returnUsername(req),
-            });
-        } else {
-            res.render('components/accountMenu/profile-self', {
-                postResult: null,
-                status: validateLoginStatus(req),
-                username: returnUsername(req),
-            });
+        }
+        else {
+            async function getFollow() {
+                const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
+                const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";
+                const getfollowerCount = await new Promise((resolve, reject) => {
+                    pool.query(followerQuery, id_account, (error, results) => {
+                        if (error) {
+                            console.log(error);
+                            res.status(500).send('Error finding bag.');
+                            reject(error);
+                        }
+                        else {
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                const getfollowingCount = await new Promise((resolve, reject) => {
+                    pool.query(followingQuery, id_account, (error, results) => {
+                        if (error) {
+                            console.log(error);
+                            res.status(500).send('Error finding bag.');
+                            reject(error);
+                        }
+                        else {
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                return [getfollowerCount[0].followerCount, getfollowingCount[0].followingCount];
+            }
+            if (results.length > 0) {
+                const reviews = results;
+                getFollow().then(x => {
+                    const followInfo = x;
+                    res.render('components/accountMenu/profile-self', {
+                        postResult: reviews,
+                        reviews: reviews,
+                        status: validateLoginStatus(req),
+                        username: returnUsername(req),
+                        follow: followInfo
+                    });
+                });
+            } else {
+                getFollow().then(x => {
+                    const followInfo = x;
+                    res.render('components/accountMenu/profile-self', {
+                        postResult: null,
+                        status: validateLoginStatus(req),
+                        username: returnUsername(req),
+                        follow: followInfo
+                    });
+                });
+            }
         }
     });
 });
-
 
 
 app.get('/profile/edit', (req, res) => {
@@ -620,9 +653,6 @@ app.post('/updateProfileData', (req, res) => {
         }
     });
 });
-
-
-
 
 app.get('/searchresults', (req, res) => {
     console.log(req.query.search);
