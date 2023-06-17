@@ -30,11 +30,12 @@
                                         <div class="title-container">
                                             <div class="result-image-container">
                                                 <% console.log(bag.Foto);%>
-                                                <img src="../<%=bag.Foto%>" alt=""
-                                                    class="bagresult-image">
+                                                    <img src="../<%=bag.Foto%>" alt="" class="bagresult-image">
                                             </div>
                                             <div class="bagdetail-title">
-                                                <h2><%=bag.namaTas%></h2>
+                                                <h2>
+                                                    <%=bag.namaTas%>
+                                                </h2>
                                                 <div class="judul-star">
                                                     <svg id="star1" xmlns="http://www.w3.org/2000/svg" height="24"
                                                         viewBox="0 -960 960 960" width="24" fill="#ffd400"
@@ -68,9 +69,15 @@
                                             </div>
                                         </div>
                                         <div class="detail">
-                                            <p class="category"><strong>Category :</strong> Bags > <%=bag.Nama_Kategori%></p>
-                                            <p class="sub-category"><strong>Subcategory :</strong>  <%=bag.Nama_Subkategori%></p>
-                                            <p class="dimension"><strong>Dimension :</strong> <%=bag.Dimensi%></p>
+                                            <p class="category"><strong>Category :</strong> Bags >
+                                                <%=bag.Nama_Kategori%>
+                                            </p>
+                                            <p class="sub-category"><strong>Subcategory :</strong>
+                                                <%=bag.Nama_Subkategori%>
+                                            </p>
+                                            <p class="dimension"><strong>Dimension :</strong>
+                                                <%=bag.Dimensi%>
+                                            </p>
                                             <p class="desc">
                                                 <strong>Description :</strong><br>
                                                 <%=bag.Deskripsi%>
@@ -80,19 +87,19 @@
                                     <div class="container-right">
                                         <div class="reviewUser">
                                             <% for(const review of reviews){%>
-                                            <div class="review">
-                                                <div class="account-review-container">
-                                                    <p class="userReviewName">
-                                                        <%=review.Username%>
+                                                <div class="review">
+                                                    <div class="account-review-container">
+                                                        <p class="userReviewName">
+                                                            <%=review.Username%>
+                                                        </p>
+                                                        <button class="reviewFollowButton">Follow</button>
+                                                    </div>
+                                                    <p class="review-text">
+                                                        <%=review.Isi_Review%>
                                                     </p>
-                                                    <button class="reviewFollowButton">Follow</button>
+                                                    <br>
                                                 </div>
-                                                <p class="review-text">
-                                                    <%=review.Isi_Review%>
-                                                </p>
-                                                <br>
-                                            </div>
-                                            <%}%>
+                                                <%}%>
                                         </div>
                                     </div>
                                 </div>

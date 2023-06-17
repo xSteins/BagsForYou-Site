@@ -100,6 +100,16 @@ function returnUsername(req) {
 }
 
 app.get('/', (req, res) => {
+    // Global value untuk akun yang sudah logged in
+    const id_account = req.session.id_account;
+    const username = req.session.username;
+    const email = req.session.email;
+    const nama_lengkap = req.session.nama_lengkap;
+    const is_admin = req.session.is_admin;
+
+    let statusValidation = validateLoginStatus(req);
+    let usernameValidation = returnUsername(req);
+
     res.render('home', {
         status: validateLoginStatus(req),
         username: returnUsername(req),
@@ -445,36 +455,36 @@ app.post('/addBagEntry', (req, res) => {
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         console.log('this is here');
         getBrandDesignerId();
-        async function getBrandDesignerId(){
-            let brandId,desigId;
-            const brandIdQuery= await new Promise((resolve,reject)=>{
-                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?',bagBrand,(error,results)=>{
-                    if(error){
+        async function getBrandDesignerId() {
+            let brandId, desigId;
+            const brandIdQuery = await new Promise((resolve, reject) => {
+                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?', bagBrand, (error, results) => {
+                    if (error) {
                         console.log(error);
                         res.status(500).send('Error finding brand.');
                         reject(error);
                     }
-                    else{
+                    else {
                         // console.log(results.RowDataPacket);
                         resolve(JSON.parse(JSON.stringify(results)));
                     }
                 });
             });
-        
+
             // console.log('test2');
-            brandId=brandIdQuery[0].Id_Merk;
-            if(bagDesigner===''){
-                desigId=null;
+            brandId = brandIdQuery[0].Id_Merk;
+            if (bagDesigner === '') {
+                desigId = null;
             }
-            else{
-                const desigIdQuery= await new Promise((resolve,reject)=>{
-                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?',bagDesigner,(error,results)=>{
-                        if(error){
+            else {
+                const desigIdQuery = await new Promise((resolve, reject) => {
+                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?', bagDesigner, (error, results) => {
+                        if (error) {
                             console.log(error);
                             res.status(500).send('Error finding designer.');
                             reject(error);
                         }
-                        else{
+                        else {
                             // console.log(results.RowDataPacket);
                             resolve(JSON.parse(JSON.stringify(results)));
                         }
@@ -506,117 +516,6 @@ app.post('/addBagEntry', (req, res) => {
     });
 });
 
-// Category sudah work, tinggal 2 menu diatas ini saja
-app.post('/addCategory', (req, res) => {
-    const category = req.body.categoryIn;
-    const subCategory = req.body['sub-categoryIn'];
-
-    // Check if category exists
-    pool.query('SELECT `Id_Kategori` FROM `kategori` WHERE `Nama_Kategori` = ?', [category], (error, results) => {
-        if (error) {
-            console.log(error);
-        } else if (results.length > 0) {
-            // Category exists, check if subcategory exists
-            const idKategori = results[0].Id_Kategori;
-            pool.query('SELECT `Id_Subkategori` FROM `sub_kategori` WHERE `Nama_Subkategori` = ? AND `Id_Kategori` = ?', [subCategory, idKategori], (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else if (results.length > 0) {
-                    // Subcategory exists, do nothing
-                    res.redirect('back');
-                } else {
-                    // Subcategory does not exist, insert subcategory
-                    pool.query('INSERT INTO `sub_kategori`(`Nama_Subkategori`, `Id_Kategori`) VALUES (?, ?)', [subCategory, idKategori], (error, results) => {
-                        if (error) {
-                            console.log(error);
-                        } else {
-                            res.redirect('back');
-                        }
-                    });
-                }
-            });
-        } else {
-            // Category does not exist, insert category
-            pool.query('INSERT INTO `kategori`(`Nama_Kategori`) VALUES (?)', [category], (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    res.redirect('back');
-                }
-            });
-        }
-    });
-});
-
-// Multer upload instance ada diatas
-// Import "tas" from CSV file
-app.post('/importTable', upload.single('bagsData'), (req, res) => {
-    const filePath = req.file.path;
-
-    fs.createReadStream(filePath)
-        .pipe(csv())
-        .on('data', (row) => {
-            const query = `
-        INSERT INTO tas (namaTas, Deskripsi, Warna, Dimensi)
-        VALUES ('${row.namaTas}', '${row.Deskripsi}', '${row.Warna}', '${row.Dimensi}')
-      `;
-
-            pool.query(query, (error) => {
-                if (error) {
-                    console.error(error);
-                    return res.status(500).json({ error: 'Internal server error' });
-                }
-            });
-        })
-        .on('end', () => {
-            fs.unlink(filePath, (error) => {
-                if (error) {
-                    console.error(error);
-                }
-            });
-
-            return res.status(200).json({ message: 'Import successful' });
-        });
-});
-
-// Export the "tas" table as CSV
-app.get('/exportTable', (req, res) => {
-    const query = `
-    SELECT Id_Tas, namaTas, Deskripsi, Warna, Dimensi, Id_Merk, Id_Designer, Id_Subkategori
-    FROM tas
-  `;
-
-    pool.query(query, (error, results) => {
-        if (error) {
-            console.error(error);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
-
-        const csvData = results.map((row) => Object.values(row).join(','));
-
-        fs.writeFile('tas.csv', csvData.join('\n'), (error) => {
-            if (error) {
-                console.error(error);
-                return res.status(500).json({ error: 'Internal server error' });
-            }
-            return res.download('tas.csv', 'tas.csv', (error) => {
-                if (error) {
-                    console.error(error);
-                    return res.status(500).json({ error: 'Internal server error' });
-                }
-                fs.unlink('tas.csv', (error) => {
-                    if (error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-    });
-});
-
-
-
-
 app.get('/logout', (req, res) => {
     res.clearCookie('id_account');
     res.clearCookie('username');
@@ -627,48 +526,48 @@ app.get('/logout', (req, res) => {
 });
 app.get('/bag/:number', (req, res) => {
     getBag();
-    async function getBag(){
+    async function getBag() {
         const getBagQuery = 'SELECT `tas`.* ,`kategori`.`Nama_Kategori`,sub_kategori.Nama_Subkategori FROM `tas` INNER JOIN `sub_kategori` ON `sub_kategori`.`Id_Subkategori`=`tas`.`Id_Subkategori` INNER JOIN `kategori`ON `sub_kategori`.`Id_Kategori`=`kategori`.`Id_Kategori` WHERE `Id_Tas` = ?';
-        const getbagInfo= await new Promise((resolve,reject)=>{
-            pool.query(getBagQuery,req.params.number,(error,results)=>{
-                if(error){
+        const getbagInfo = await new Promise((resolve, reject) => {
+            pool.query(getBagQuery, req.params.number, (error, results) => {
+                if (error) {
                     console.log(error);
                     res.status(500).send('Error finding bag.');
                     reject(error);
                 }
-                else{
+                else {
                     resolve(JSON.parse(JSON.stringify(results)));
                 }
             });
         });
-        let bag=getbagInfo[0];
-        const getReviewQuery= 'SELECT `review`.*,`account`.`Username` FROM `review` INNER JOIN `account` ON `review`.`Id_Account`=`account`.`Id_Account`WHERE `Id_Tas` = ?';
-        const getReviewInfo= await new Promise((resolve,reject)=>{
-            pool.query(getReviewQuery,req.params.number,(error,results)=>{
-                if(error){
+        let bag = getbagInfo[0];
+        const getReviewQuery = 'SELECT `review`.*,`account`.`Username` FROM `review` INNER JOIN `account` ON `review`.`Id_Account`=`account`.`Id_Account`WHERE `Id_Tas` = ?';
+        const getReviewInfo = await new Promise((resolve, reject) => {
+            pool.query(getReviewQuery, req.params.number, (error, results) => {
+                if (error) {
                     console.log(error);
                     res.status(500).send('Error finding review.');
                     reject(error);
                 }
-                else{
+                else {
                     resolve(JSON.parse(JSON.stringify(results)));
                 }
             });
         });
-        let reviews=getReviewInfo;
-        const getAvgStar= await new Promise((resolve,reject)=>{
-            pool.query('SELECT AVG(`Bintang`)AS AvgBintang FROM `review` WHERE `Id_Tas`=?',req.params.number,(error,results)=>{
-                if(error){
+        let reviews = getReviewInfo;
+        const getAvgStar = await new Promise((resolve, reject) => {
+            pool.query('SELECT AVG(`Bintang`)AS AvgBintang FROM `review` WHERE `Id_Tas`=?', req.params.number, (error, results) => {
+                if (error) {
                     console.log(error);
                     res.status(500).send('Error finding avg stars.');
                     reject(error);
                 }
-                else{
+                else {
                     resolve(JSON.parse(JSON.stringify(results)));
                 }
             });
         });
-        const avgStar=getAvgStar[0].AvgBintang;
+        const avgStar = getAvgStar[0].AvgBintang;
         res.render('components/bagsData/bagPost', {
             status: validateLoginStatus(req),
             username: returnUsername(req),
