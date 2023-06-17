@@ -258,24 +258,82 @@ app.get('/profile/edit', (req, res) => {
 });
 
 app.get('/searchresults', (req, res) => {
-    // console.log(req.query.search);
-    const bagSearchQuery =
-        'SELECT `Id_Tas`,`namaTas` FROM `tas` WHERE `namaTas` LIKE ?';
-    const searchParam = '%' + req.query.search + '%';
-    pool.query(bagSearchQuery, searchParam, (error, results) => {
-        if (error) {
-            console.log(error);
-        } else {
-            const resSearch = results;
-            // console.log(resSearch);
-            res.render('searchresults', {
-                status: validateLoginStatus(req),
-                username: returnUsername(req),
-                search: req.query.search,
-                bagsRes: resSearch
+    getSearch();
+    async function getSearch() {
+        console.log(req.query);
+        const bagSearchQuery = `
+SELECT tas.Id_Tas ,tas.namaTas,tas.Foto
+FROM tas 
+INNER JOIN sub_kategori ON sub_kategori.Id_Subkategori=tas.Id_Subkategori
+INNER JOIN kategori ON kategori.Id_Kategori=sub_kategori.Id_Kategori
+INNER JOIN merk ON merk.Id_Merk=tas.Id_Tas
+WHERE namaTas LIKE ? 
+AND sub_kategori.Nama_Subkategori LIKE ? 
+AND kategori.Nama_Kategori LIKE ? 
+AND tas.Warna LIKE ?
+AND merk.Nama_Merk LIKE ?`;
+        const search = '%' + req.query.search + '%';
+        const warna = req.query.warna!==''? req.query.warna: '%';
+        const kategori= req.query.category!==''? req.query.category: '%';
+        const subkategori= req.query.subcategory!==''? req.query.subcategory: '%';
+        const merk=req.query.brand!==''? req.query.brand: '%';
+        const searchParam=[search,subkategori,kategori,warna,merk];
+        const searchQuery=await new Promise ((resolve,reject)=>{pool.query(bagSearchQuery, searchParam, (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
             });
-        }
-    });
+        });
+        const catQuery=await new Promise ((resolve,reject)=>{pool.query('SELECT * FROM `kategori`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const subcatQuery=await new Promise ((resolve,reject)=>{pool.query('SELECT * FROM `sub_kategori`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const warnaQuery=await new Promise ((resolve,reject)=>{pool.query('SELECT DISTINCT `Warna` FROM `tas` ORDER BY `Warna`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const brandQuery=await new Promise ((resolve,reject)=>{pool.query('SELECT * FROM `merk`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        res.render('searchresults', {
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+            search: req.query.search,
+            bagsRes: searchQuery,
+            brand: req.query.brand,
+            category:req.query.category,
+            subcategory:req.query.subcategory,
+            warna:req.query.warna,
+            colors: warnaQuery,
+            categories: catQuery,
+            subcategories: subcatQuery,
+            brands:brandQuery
+        });
+        console.log(searchParam);
+    }
 });
 
 app.get('/addReview', (req, res) => {
