@@ -387,6 +387,7 @@ app.get('/profile/edit', (req, res) => {
     });
 });
 
+
 app.post('/updateProfileData', (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
@@ -395,15 +396,23 @@ app.post('/updateProfileData', (req, res) => {
     const newPassword = req.body.newPass;
     const newPasswordValidation = req.body.newPassValidation;
 
+    // Define the returnEmail and returnName functions
+    function returnEmail(req) {
+        return req.body.email;
+    }
+
+    function returnName(req) {
+        return req.body.name;
+    }
+
     // Perform validation checks
     const usernameQuery = "SELECT Username FROM account WHERE Username = ?";
     const emailQuery = "SELECT E_mail FROM account WHERE E_mail = ?";
-    const passwordQuery = "SELECT Password FROM account WHERE Password = ?";
+    const passwordQuery = "SELECT Password FROM account WHERE Username = ?";
 
     // Check if the username already exists
     pool.query(usernameQuery, [username], (error, usernameResults) => {
         if (error) {
-            // Handle the error
             console.error(error);
             res.redirect('/profile/edit');
         } else if (usernameResults.length > 0) {
@@ -419,7 +428,6 @@ app.post('/updateProfileData', (req, res) => {
             // Check if the email is already in use
             pool.query(emailQuery, [email], (error, emailResults) => {
                 if (error) {
-                    // Handle the error
                     console.error(error);
                     res.redirect('/profile/edit');
                 } else if (emailResults.length > 0) {
@@ -433,19 +441,27 @@ app.post('/updateProfileData', (req, res) => {
                     });
                 } else {
                     // Check if the new password is different from the old password
-                    pool.query(passwordQuery, [oldPassword], (error, passwordResults) => {
+                    pool.query(passwordQuery, [returnUsername(req)], (error, passwordResults) => {
                         if (error) {
-                            // Handle the error
                             console.error(error);
                             res.redirect('/profile/edit');
-                        } else if (passwordResults.length > 0 && newPassword === oldPassword) {
-                            // New password is the same as the old password
+                        } else if (passwordResults.length === 0 || passwordResults[0].Password !== oldPassword) {
+                            // Old password does not match
                             res.render('components/accountMenu/editProfile', {
                                 status: validateLoginStatus(req),
                                 username: returnUsername(req),
                                 email: returnEmail(req),
                                 name: returnName(req),
-                                errorMessage: 'New password must be different from the old password.'
+                                errorMessage: 'Old password is incorrect.'
+                            });
+                        } else if (newPassword !== newPasswordValidation) {
+                            // New password and confirmation do not match
+                            res.render('components/accountMenu/editProfile', {
+                                status: validateLoginStatus(req),
+                                username: returnUsername(req),
+                                email: returnEmail(req),
+                                name: returnName(req),
+                                errorMessage: 'New password and confirmation do not match.'
                             });
                         } else {
                             // Update the profile data independently
@@ -453,29 +469,29 @@ app.post('/updateProfileData', (req, res) => {
 
                             if (username) {
                                 updateQueries.push({
-                                    query: "UPDATE account SET Username = ? WHERE /* Add condition to identify the row to update */",
-                                    params: [username]
+                                    query: "UPDATE account SET Username = ? WHERE Username = ?",
+                                    params: [username, returnUsername(req)]
                                 });
                             }
 
                             if (newPassword) {
                                 updateQueries.push({
-                                    query: "UPDATE account SET Password = ? WHERE /* Add condition to identify the row to update */",
-                                    params: [newPassword]
+                                    query: "UPDATE account SET Password = ? WHERE Username = ?",
+                                    params: [newPassword, returnUsername(req)]
                                 });
                             }
 
                             if (email) {
                                 updateQueries.push({
-                                    query: "UPDATE account SET E_mail = ? WHERE /* Add condition to identify the row to update */",
-                                    params: [email]
+                                    query: "UPDATE account SET E_mail = ? WHERE Username = ?",
+                                    params: [email, returnUsername(req)]
                                 });
                             }
 
                             if (name) {
                                 updateQueries.push({
-                                    query: "UPDATE account SET Nama_Lengkap = ? WHERE /* Add condition to identify the row to update */",
-                                    params: [name]
+                                    query: "UPDATE account SET Nama_Lengkap = ? WHERE Username = ?",
+                                    params: [name, returnUsername(req)]
                                 });
                             }
 
@@ -489,14 +505,24 @@ app.post('/updateProfileData', (req, res) => {
                                 updateQueries.forEach(({ query, params }) => {
                                     pool.query(query, params, (error, results) => {
                                         if (error) {
-                                            // Handle the error
                                             console.error(error);
                                         } else {
                                             completedUpdates++;
 
                                             if (completedUpdates === updateQueries.length) {
-                                                // All updates completed
-                                                res.redirect('/profile');
+                                                res.render('components/accountMenu/editProfile', {
+                                                    status: validateLoginStatus(req),
+                                                    username: returnUsername(req),
+                                                    email: returnEmail(req),
+                                                    name: returnName(req),
+                                                    errorMessage: 'Account updated, your data will be updated after re-login.'
+                                                }, () => {
+                                                    // Logout the user and redirect to the login page
+                                                    res.render('login', { errorMsg: 'Silahkan login kembali dengan data akun baru.', success: true });
+                                                    setTimeout(() => {
+                                                        res.redirect('/logout');
+                                                    }, 1000);
+                                                });
                                             }
                                         }
                                     });
@@ -509,6 +535,8 @@ app.post('/updateProfileData', (req, res) => {
         }
     });
 });
+
+
 
 
 app.get('/searchresults', (req, res) => {
@@ -716,52 +744,6 @@ app.post('/signup', (req, res) => {
     }
 });
 
-// app.post('/updateProfileData', function (req, res) {
-//     const idAccount = req.cookies.id_account;
-//     const newUsername = req.body.username;
-//     const newEmail = req.body.email;
-//     const newName = req.body.name;
-//     const oldPassword = req.body.oldPass;
-//     const newPassword = req.body.newPass;
-
-//     // First, check if the old password is correct
-//     const passwordCheckQuery = 'SELECT Password FROM account WHERE Id_Account = ?';
-
-//     pool.query(passwordCheckQuery, [idAccount], function (err, results) {
-//         if (err) {
-//             console.error(err);
-//             // return res.status(500).send('An error occurred while checking the old password.');
-//         }
-//         // Ensure that a row was found for the provided account ID
-//         if (results.length === 0) {
-//             // return res.status(400).send('Account not found.');
-//         }
-//         // Extract the stored password from the query results
-//         const storedPassword = results[0].Password;
-//         // Compare the provided old password with the stored password
-//         if (oldPassword !== storedPassword) {
-//             return res.status(401).send('Invalid old password.');
-//         }
-//         else {
-//             // If the old password is correct, update the profile data in the database
-//             const sql = `UPDATE account SET Username=?, E_mail=?, Nama_Lengkap=?, Password=? WHERE Id_Account=?`;
-//             const values = [newUsername, newEmail, newName, newPassword, idAccount];
-
-//             // Execute the SQL query to update the profile data
-//             pool.query(sql, values, function (err, result) {
-//                 if (err) {
-//                     // Handle the error appropriately
-//                     console.error(err);
-//                     res.status(500).send('An error occurred while updating the profile data.');
-//                 } else {
-//                     // Profile data updated successfully
-//                     res.redirect('/profile'); // Redirect to the profile page or any other desired destination
-//                 }
-//             });
-//         }
-//     });
-// });
-
 app.post('/addBagEntry', (req, res) => {
     const bagName = req.body['bag-name'];
     const category = req.body.category;
@@ -793,7 +775,6 @@ app.post('/addBagEntry', (req, res) => {
 
         // Subcategory is valid, proceed with the bag entry insertion
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        console.log('this is here');
         doThing();
         async function doThing() {
             let brandId, desigId;
@@ -845,9 +826,10 @@ app.post('/addBagEntry', (req, res) => {
                             console.log(error);
                             res.status(500).send('Error retrieving bag data.');
                         } else {
-                            console.log('Bag entry added successfully.');
-                            console.log('Bag Data:', bagData);
-                            res.status(200).send('Bag entry added successfully.');
+                            // console.log('Bag entry added successfully.');
+                            // console.log('Bag Data:', bagData);
+                            // res.status(200).send('Bag entry added successfully.');
+                            res.redirect('adminDashboard');
                         }
                     });
                 }
