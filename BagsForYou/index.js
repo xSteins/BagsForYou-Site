@@ -107,8 +107,8 @@ app.get('/', (req, res) => {
     const nama_lengkap = req.session.nama_lengkap;
     const is_admin = req.session.is_admin;
 
-    let statusValidation = validateAccountType(is_admin);
-    let usernameValidation = validateUsername(username);
+    let statusValidation = validateLoginStatus(req);
+    let usernameValidation = returnUsername(req);
 
     res.render('home', {
         status: validateLoginStatus(req),
