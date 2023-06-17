@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BagsForYou - View ${ username } Follower.</title>
+    <title>BagsForYou - View your Following</title>
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/default-styling.css">
     <link rel="stylesheet" href="/css/profile-styling.css">
@@ -16,60 +16,42 @@
 </head>
 
 <body>
-    <%- include('../navigation/header-user') %>
-        <div id="following" class="profile-container-account">
-            <div class="user-information" id="self-profile">
-                <div class="username-data-container">
-                    <h2 class="username-tag">Username</h2>
-                    <a href="/profile/edit">Edit</a>
-                </div>
-                <div class="following-follower-container">
-                    <p><strong>10</strong> <a href="/profile/follower" class="follower-info">Follower</a></p>
-                    <p><strong>1</strong> <a href="/profile/following" class="following-info">Following</a> </p>
-                </div>
-            </div>
-            <div class="foll-list">
-                <!-- href link herisikan data mengacu pada db dimana :
-            localhost:/account/accountusername, rencana pakai username saja untuk display data akun tersebut. -->
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-                <div class="account-foll">
-                    <p class="account-name">Rex-lapis</p>
-                    <a href="">Unfollow</a>
-                </div>
-            </div>
-        </div>
-        <%- include('../navigation/footer') %>
+    <!-- COMPONENT HEADER UTAMA -->
+    <%switch(status){ case 'admin' :%>
+        <%- include('../navigation/header-admin') %>
+            <% break; case 'user' :%>
+                <%- include('../navigation/header-user') %>
+                    <% break; case 'anon' :%>
+                        <%- include('../navigation/header') %>
+                            <% break; }%>
+                                <!-- END OF HEADER -->
+                                <div id="following" class="profile-container-account">
+                                    <div class="user-information" id="self-profile">
+                                        <div class="username-data-container">
+                                            <a href="/profile" class="apaajabiargaitem">
+                                                <h2 class="username-tag"><%- username %></h2>
+                                            </a>
+                                            <a href="/profile/edit">Edit</a>
+                                        </div>
+                                        <div class="following-follower-container">
+                                            <p><strong>10</strong> <a href="/profile/self/follower"
+                                                    class="follower-info">Follower</a></p>
+                                            <p><strong>1</strong> <a href="/profile/self/following"
+                                                    class="following-info">Following</a> </p>
+                                        </div>
+                                    </div>
+                                    <div class="foll-list">
+                                        <% following.forEach((user)=> { %>
+                                            <div class="account-foll">
+                                                <p class="account-name">
+                                                    <%= user %>
+                                                </p>
+                                                <button>Follow</button>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                </div>
+                                <%- include('../navigation/footer') %>
 </body>
 
 </html>

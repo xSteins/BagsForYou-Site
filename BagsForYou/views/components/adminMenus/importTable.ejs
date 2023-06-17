@@ -2,9 +2,9 @@
     <h1>Import Table</h1>
     <h3>Upload / export bags data</h3>
 
-    <form action="" class="admin-form-menu">
-        <label for="bagsData">Insert bag data here :</label>
-        <button value="" id="exportFileButton">Export to CSV</button>
+    <form action="/exportTable" class="admin-form-menu">
+        <label for="bagsData">Insert bag data here:</label>
+        <button type="submit" id="exportFileButton">Export bagsData</button>
         <input type="file" name="bagsData" id="importTable">
         <input type="submit" value="Upload File" id="uploadFileButton">
     </form>

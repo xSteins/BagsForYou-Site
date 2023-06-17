@@ -1,3 +1,12 @@
+button {
+  padding: 0.4rem;
+  color: white;
+  background-color: black;
+  border: 1px solid white;
+  border-radius: 0.5rem;
+  margin-right: 0;
+}
+
 .main-menu {
   /* min-height: fit-content; */
   max-height: 82vh;
@@ -113,7 +122,7 @@ input#importTable {
 }
 
 .admin-form-menu .dimension-container .dimension {
-  max-width: 47px;
+  max-width: 105px;
 }
 
 .admin-form-menu button,
@@ -139,4 +148,9 @@ input#importTable {
   background-color: #ffffff;
   color: black;
   cursor: pointer;
+}
+
+.admin-form-menu textarea {
+  max-width: 470px;
+  max-height: 600px;
 }

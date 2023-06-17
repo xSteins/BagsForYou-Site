@@ -4,7 +4,7 @@ import session from 'cookie-session';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
-
+import csv from 'csv-parser';
 
 
 const app = express();
@@ -61,7 +61,7 @@ import multer from 'multer';
 // Set storage configuration for multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'tas-img'); // Specify the destination directory
+        cb(null, 'tes'); // Specify the destination directory
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
@@ -80,21 +80,22 @@ app.listen(port, () => {
 });
 
 function validateLoginStatus(req) {
+    const isAdmin = Number(req.cookies.is_admin);
     if (!req.cookies.username) {
         return 'anon';
-    } else {
-        const isAdmin = Number(req.cookies.is_admin);
+    }
+    else {
         if (isAdmin === 1) {
             return 'admin';
-        } else {
+        }
+        else {
             return 'user';
         }
     }
 }
 
-function validateUsername(req) {
-    console.log('Cookie - username:', req.cookies.username)
-    console.log(req.cookies);
+function returnUsername(req) {
+    console.log(req.cookies)
     return req.cookies.username;
 }
 
@@ -111,25 +112,99 @@ app.get('/', (req, res) => {
 
     res.render('home', {
         status: validateLoginStatus(req),
-        username: validateUsername(req),
+        username: returnUsername(req),
     });
 });
 
 
 app.get('/profile/self/follower', (req, res) => {
-    res.render('components/accountMenu/follower', {
-        username: validateUsername(req),
+    const followerQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
+    const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Account` = ?";
+    const accountLoggedIn = req.cookies.id_account;
+
+    pool.query(followerQuery, [accountLoggedIn], (err, results) => {
+        if (err) {
+            // Handle the error appropriately
+            console.error(err);
+        } else {
+            const followers = results.map((row) => row.Username);
+
+            pool.query(followingQuery, [accountLoggedIn], (err, results) => {
+                if (err) {
+                    // Handle the error appropriately
+                    console.error(err);
+                } else {
+                    const followingCount = results[0].followingCount;
+
+                    res.render('components/accountMenu/follower', {
+                        followers,
+                        followingCount,
+                        status: validateLoginStatus(req),
+                        username: returnUsername(req),
+                    });
+                }
+            });
+        }
+    });
+
+
+});
+
+
+app.get('/profile/self/following', (req, res) => {
+    const followingQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
+    const accountLoggedIn = req.cookies.id_account;
+
+    pool.query(followingQuery, [accountLoggedIn], (err, results) => {
+        if (err) {
+            // Handle the error appropriately
+            console.error(err);
+        } else {
+            const following = results.map((row) => row.Username);
+
+            res.render('components/accountMenu/following', {
+                following,
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+            });
+        }
     });
 });
 
+// index.js
+
+// index.js
 app.get('/profile', (req, res) => {
-    res.render('components/accountMenu/profile-self', {
-        username: validateUsername(req),
+    const id_account = req.cookies.id_account;
+    const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
+
+    pool.query(getReviewObj, id_account, (error, results) => {
+        if (error) {
+            console.log(error);
+        } else if (results.length > 0) {
+            const reviews = results;
+            res.render('components/accountMenu/profile-self', {
+                postResult: reviews,
+                reviews: reviews,
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+            });
+        } else {
+            res.render('components/accountMenu/profile-self', {
+                postResult: null,
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+            });
+        }
     });
 });
+
+
+
 app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
@@ -137,14 +212,16 @@ app.get('/searchresults', (req, res) => {
     console.log(req.query.search);
     const bagSearchQuery =
         'SELECT `Id_Tas`,`namaTas` FROM `tas` WHERE `namaTas` LIKE ?';
-    const searchParam='%'+req.query.search+'%';
+    const searchParam = '%' + req.query.search + '%';
     pool.query(bagSearchQuery, searchParam, (error, results) => {
         if (error) {
             console.log(error);
         } else {
-            const resSearch=results;
+            const resSearch = results;
             console.log(resSearch);
-            res.render('searchresults',{
+            res.render('searchresults', {
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
                 search: req.query.search,
                 bagsRes: resSearch
             });
@@ -154,13 +231,15 @@ app.get('/searchresults', (req, res) => {
 
 app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
 app.get('/adminDashboard', (req, res) => {
     res.render('adminDashboard', {
-        username: validateUsername(req),
+        status: validateLoginStatus(req),
+        username: returnUsername(req),
     });
 });
 
@@ -203,8 +282,6 @@ app.post('/login', (req, res) => {
         }
     });
 });
-
-// console.log(cookie);
 
 app.post('/signup', (req, res) => {
     const username = req.body.username;
@@ -296,12 +373,6 @@ app.post('/signup', (req, res) => {
 //     });
 // });
 
-// Function to validate if the selected subcategory belongs to the selected category
-
-function isSubcategoryValid(categoryId, subcategoryId) {
-    const subcategoryOptions = subcategories[categoryId];
-    return subcategoryOptions.some(option => option.id === parseInt(subcategoryId));
-}
 app.post('/addBagEntry', (req, res) => {
     const bagName = req.body['bag-name'];
     const category = req.body.category;
@@ -334,43 +405,43 @@ app.post('/addBagEntry', (req, res) => {
         // Subcategory is valid, proceed with the bag entry insertion
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
         console.log('this is here');
-        doThing();
-        async function doThing(){
-            let brandId,desigId;
-            const brandIdQuery= await new Promise((resolve,reject)=>{
-                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?',bagBrand,(error,results)=>{
-                    if(error){
+        getBrandDesignerId();
+        async function getBrandDesignerId() {
+            let brandId, desigId;
+            const brandIdQuery = await new Promise((resolve, reject) => {
+                pool.query('SELECT `Id_Merk` FROM `merk` WHERE Nama_Merk=?', bagBrand, (error, results) => {
+                    if (error) {
                         console.log(error);
                         res.status(500).send('Error finding brand.');
                         reject(error);
                     }
-                    else{
+                    else {
                         // console.log(results.RowDataPacket);
                         resolve(JSON.parse(JSON.stringify(results)));
                     }
                 });
             });
-        
+
             // console.log('test2');
-            brandId=brandIdQuery[0].Id_Merk;
-            if(bagDesigner===''){
-                desigId=null;
+            brandId = brandIdQuery[0].Id_Merk;
+            if (bagDesigner === '') {
+                desigId = null;
             }
-            else{
-                const desigIdQuery= await new Promise((resolve,reject)=>{
-                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?',bagDesigner,(error,results)=>{
-                        if(error){
+            else {
+                const desigIdQuery = await new Promise((resolve, reject) => {
+                    pool.query('SELECT `Id_Designer` FROM `designer` WHERE Nama_Designer=?', bagDesigner, (error, results) => {
+                        if (error) {
                             console.log(error);
                             res.status(500).send('Error finding designer.');
                             reject(error);
                         }
-                        else{
+                        else {
                             // console.log(results.RowDataPacket);
                             resolve(JSON.parse(JSON.stringify(results)));
                         }
                     });
                 });
-                desigId=desigIdQuery[0].Id_Designer;
+                desigId = desigIdQuery[0].Id_Designer;
             }
             const insertParams = [bagName, bagDescription, color, dimensions, brandId, desigId, subcategory];
             pool.query(insertQuery, insertParams, (error, results) => {
@@ -404,14 +475,55 @@ app.get('/logout', (req, res) => {
     res.clearCookie('is_admin');
     res.redirect('/');
 });
-app.get('/bag/:number',(req,res)=>{
-    const getBag ='SEARCH * FROM `tas` WHERE `Id_Tas` = ?';
-    pool.query(getBag, req.params.number, (error, results) => {
-        if (error) {
-            console.log(error);
-        } else {
-            
-        }
-    });
-    res.render('components/bagsData/bagPost');
+app.get('/bag/:number', (req, res) => {
+    getBag();
+    async function getBag() {
+        const getBagQuery = 'SELECT `tas`.* ,`kategori`.`Nama_Kategori`,sub_kategori.Nama_Subkategori FROM `tas` INNER JOIN `sub_kategori` ON `sub_kategori`.`Id_Subkategori`=`tas`.`Id_Subkategori` INNER JOIN `kategori`ON `sub_kategori`.`Id_Kategori`=`kategori`.`Id_Kategori` WHERE `Id_Tas` = ?';
+        const getbagInfo = await new Promise((resolve, reject) => {
+            pool.query(getBagQuery, req.params.number, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error finding bag.');
+                    reject(error);
+                }
+                else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        let bag = getbagInfo[0];
+        const getReviewQuery = 'SELECT `review`.*,`account`.`Username` FROM `review` INNER JOIN `account` ON `review`.`Id_Account`=`account`.`Id_Account`WHERE `Id_Tas` = ?';
+        const getReviewInfo = await new Promise((resolve, reject) => {
+            pool.query(getReviewQuery, req.params.number, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error finding review.');
+                    reject(error);
+                }
+                else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        let reviews = getReviewInfo;
+        const getAvgStar = await new Promise((resolve, reject) => {
+            pool.query('SELECT AVG(`Bintang`)AS AvgBintang FROM `review` WHERE `Id_Tas`=?', req.params.number, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error finding avg stars.');
+                    reject(error);
+                }
+                else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const avgStar = getAvgStar[0].AvgBintang;
+        res.render('components/bagsData/bagPost', {
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+            bag: bag,
+            reviews: reviews
+        });
+    }
 })

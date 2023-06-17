@@ -10,14 +10,16 @@
         <div class="site-nav">
             <a href="/adminDashboard" class="site-links">Dashboard</a>
             <a href="/" class="site-links">Search</a>
-            
+            <a href="/addReview" class="site-links">Add Review</a>
         </div>
         <div class="links-container flex">
             <div id="username" class="account-menu">
                 <span class="material-symbols-outlined">
                     alternate_email
                 </span>
-                <a href="" class="account-box"><%- username %></a>
+                <a href="" class="account-box" id="admin-username">
+                    <%- username %>
+                </a>
             </div>
             <div id="profile-box" class="account-menu">
                 <span class="material-symbols-rounded">
