@@ -42,49 +42,82 @@
                                             <div class="filter-menu">
                                                 <div class="filter-section">
                                                     <h3>Category:</h3>
-                                                    <select id="category-dropdown" class="category-dropdown">
-                                                        <option value="">Select category</option>
-                                                        <option value="backpacks">Backpacks</option>
-                                                        <option value="shoulder-bags">Shoulder Bags</option>
-                                                        <option value="tote-bags">Tote Bags</option>
+                                                    <select id="category-dropdown" name="category"
+                                                        class="category-dropdown">
+                                                        <%if(!category){%>
+                                                            <option value="" selected hidden>Select category</option>
+                                                            <%} else{%>
+                                                                <option value="<%=category%>" selected hidden>
+                                                                    <%=category%>
+                                                                </option>
+                                                                <%}%>
+                                                                    <option value="">None</option>
+                                                                    <%for(const cat of categories){%>
+                                                                        <option value="<%=cat.Nama_Kategori%>">
+                                                                            <%=cat.Nama_Kategori%>
+                                                                        </option>
+                                                                        <%}%>
                                                     </select>
                                                 </div>
 
                                                 <div class="filter-section">
                                                     <h3>Subcategory:</h3>
-                                                    <select id="subcategory-dropdown" class="subcategory-dropdown">
-                                                        <option value="">Select subcategory</option>
-                                                        <option value="casual-backpacks">Casual Backpacks</option>
-                                                        <option value="laptop-backpacks">Laptop Backpacks</option>
-                                                        <option value="travel-backpacks">Travel Backpacks</option>
+                                                    <select id="subcategory-dropdown" name="subcategory"
+                                                        class="subcategory-dropdown">
+                                                        <%if(!subcategory){%>
+                                                            <option value="" selected hidden>Select subcategory</option>
+                                                            <%} else{%>
+                                                                <option value="<%=category%>" selected hidden>
+                                                                    <%=subcategory%>
+                                                                </option>
+                                                                <%}%>
+                                                                    <option value="">None</option>
+                                                                    <%for(const scat of subcategories){%>
+                                                                        <option value="<%=scat.Nama_Subkategori%>">
+                                                                            <%=scat.Nama_Subkategori%>
+                                                                        </option>
+                                                                        <%}%>
                                                     </select>
                                                 </div>
 
                                                 <div class="filter-section">
                                                     <h3>Color:</h3>
-                                                    <select id="color-dropdown" class="color-dropdown">
-                                                        <option value="">Select color</option>
-                                                        <option value="black">Black</option>
-                                                        <option value="blue">Blue</option>
-                                                        <option value="gray">Gray</option>
-                                                        <option value="brown">Brown</option>
-                                                        <option value="red">Red</option>
-                                                        <option value="green">Green</option>
-                                                        <option value="pink">Pink</option>
-                                                        <option value="purple">Purple</option>
-                                                        <option value="yellow">Yellow</option>
-                                                        <option value="orange">Orange</option>
+                                                    <select id="color-dropdown" name="warna" class="color-dropdown">
+                                                        <%if(!warna){%>
+                                                            <option value="" selected hidden>Select color</option>
+                                                            <%} else{%>
+                                                                <option value="<%=warna%>" selected hidden>
+                                                                    <%=warna%>
+                                                                </option>
+                                                                <%}%>
+                                                                    <option value="">None</option>
+
+                                                                    <%for(const color of colors){%>
+                                                                        <option value="<%=color.Warna%>">
+                                                                            <%=color.Warna%>
+                                                                        </option>
+                                                                        <%}%>
+
                                                     </select>
                                                 </div>
 
 
                                                 <div class="filter-section">
                                                     <h3>Brand:</h3>
-                                                    <select id="brand-dropdown" class="brand-dropdown">
-                                                        <option value="">Select brand</option>
-                                                        <option value="brand1">Brand 1</option>
-                                                        <option value="brand2">Brand 2</option>
-                                                        <option value="brand3">Brand 3</option>
+                                                    <select id="brand-dropdown" name="brand" class="brand-dropdown">
+                                                        <%if(!brand){%>
+                                                            <option value="" selected hidden>Select brand</option>
+                                                            <%} else{%>
+                                                                <option value="<%=brand%>" selected hidden>
+                                                                    <%=brand%>
+                                                                </option>
+                                                                <%}%>
+                                                                    <option value="">None</option>
+                                                                    <%for(const brn of brands){%>
+                                                                        <option value="<%=brn.Nama_Merk%>">
+                                                                            <%=brn.Nama_Merk%>
+                                                                        </option>
+                                                                        <%}%>
                                                     </select>
                                                 </div>
 

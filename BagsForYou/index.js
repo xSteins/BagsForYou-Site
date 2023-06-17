@@ -387,6 +387,101 @@ app.get('/profile/edit', (req, res) => {
     });
 });
 
+app.get('/searchresults', (req, res) => {
+    getSearch();
+    async function getSearch() {
+        console.log(req.query);
+        const bagSearchQuery = `
+SELECT tas.Id_Tas ,tas.namaTas,tas.Foto
+FROM tas 
+INNER JOIN sub_kategori ON sub_kategori.Id_Subkategori=tas.Id_Subkategori
+INNER JOIN kategori ON kategori.Id_Kategori=sub_kategori.Id_Kategori
+INNER JOIN merk ON merk.Id_Merk=tas.Id_Tas
+WHERE namaTas LIKE ? 
+AND sub_kategori.Nama_Subkategori LIKE ? 
+AND kategori.Nama_Kategori LIKE ? 
+AND tas.Warna LIKE ?
+AND merk.Nama_Merk LIKE ?`;
+        const search = '%' + req.query.search + '%';
+        const warna = req.query.warna ? req.query.warna : '%';
+        const subkategori = req.query.subcategory ? req.query.subcategory : '%';
+        let kategori = req.query.category ? req.query.category : '%';
+        if (req.query.subcategory) {
+            const currCat = await new Promise((resolve, reject) => {
+                pool.query('SELECT * FROM `sub_kategori` INNER JOIN `kategori`ON `kategori`.`Id_Kategori`=`sub_kategori`.`Id_Kategori` WHERE `sub_kategori`.`Nama_Subkategori`=?', req.query.subcategory, (error, results) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        resolve(JSON.parse(JSON.stringify(results)));
+                    }
+                });
+            });
+            kategori = currCat[0].Nama_Kategori;
+        }
+        const merk = req.query.brand ? req.query.brand : '%';
+        const searchParam = [search, subkategori, kategori, warna, merk];
+        const searchQuery = await new Promise((resolve, reject) => {
+            pool.query(bagSearchQuery, searchParam, (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const catQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM `kategori`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const subcatQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM `sub_kategori`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const warnaQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT DISTINCT `Warna` FROM `tas` ORDER BY `Warna`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const brandQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM `merk`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        res.render('searchresults', {
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+            search: req.query.search,
+            bagsRes: searchQuery,
+            brand: req.query.brand,
+            category: kategori === '%' ? '' : kategori,
+            subcategory: req.query.subcategory,
+            warna: req.query.warna,
+            colors: warnaQuery,
+            categories: catQuery,
+            subcategories: subcatQuery,
+            brands: brandQuery
+        });
+        console.log(searchParam);
+    }
+});
 
 app.post('/updateProfileData', (req, res) => {
     const username = req.body.username;
@@ -810,6 +905,7 @@ app.post('/addBagEntry', (req, res) => {
                     res.status(500).send('Error adding bag entry.');
                 } else {
                     const bagId = results.insertId;
+                    console.log(bagId);
                     const selectQuery = 'SELECT * FROM `tas` WHERE `Id_Tas` = ?';
                     pool.query(selectQuery, [bagId], (error, bagData) => {
                         if (error) {
@@ -947,16 +1043,57 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/bag/:number', (req, res) => {
-    const getBag = 'SEARCH * FROM `tas` WHERE `Id_Tas` = ?';
-    pool.query(getBag, req.params.number, (error, results) => {
-        if (error) {
-            console.log(error);
-        } else {
-
-        }
-    });
-    res.render('components/bagsData/bagPost', {
-        status: validateLoginStatus(req),
-        username: returnUsername(req),
-    });
+    getBag();
+    async function getBag() {
+        const getBagQuery = 'SELECT `tas`.* ,`kategori`.`Nama_Kategori`,sub_kategori.Nama_Subkategori FROM `tas` INNER JOIN `sub_kategori` ON `sub_kategori`.`Id_Subkategori`=`tas`.`Id_Subkategori` INNER JOIN `kategori`ON `sub_kategori`.`Id_Kategori`=`kategori`.`Id_Kategori` WHERE `Id_Tas` = ?';
+        const getbagInfo = await new Promise((resolve, reject) => {
+            pool.query(getBagQuery, req.params.number, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error finding bag.');
+                    reject(error);
+                }
+                else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        let bag = getbagInfo[0];
+        const getReviewQuery = 'SELECT `review`.*,`account`.`Username` FROM `review` INNER JOIN `account` ON `review`.`Id_Account`=`account`.`Id_Account`WHERE `Id_Tas` = ?';
+        const getReviewInfo = await new Promise((resolve, reject) => {
+            pool.query(getReviewQuery, req.params.number, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error finding review.');
+                    reject(error);
+                }
+                else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        let reviews = getReviewInfo;
+        const getAvgStar = await new Promise((resolve, reject) => {
+            pool.query('SELECT ROUND(AVG(`Bintang`),1)AS AvgBintang FROM `review` WHERE `Id_Tas`=?', req.params.number, (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error finding avg stars.');
+                    reject(error);
+                }
+                else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const avgStar = getAvgStar[0].AvgBintang;
+        console.log(avgStar);
+        res.render('components/bagsData/bagPost', {
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+            bag: bag,
+            reviews: reviews,
+            average: avgStar,
+            displayStar: Math.floor(avgStar)
+        });
+    }
 })
