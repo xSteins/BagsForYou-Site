@@ -37,34 +37,24 @@
                                                     <%=bag.namaTas%>
                                                 </h2>
                                                 <div class="judul-star">
-                                                    <svg id="star1" xmlns="http://www.w3.org/2000/svg" height="24"
-                                                        viewBox="0 -960 960 960" width="24" fill="#ffd400"
-                                                        stroke="black">
-                                                        <path
-                                                            d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                    </svg>
-                                                    <svg id="star2" xmlns="http://www.w3.org/2000/svg" height="24"
-                                                        viewBox="0 -960 960 960" width="24" fill="#ffd400"
-                                                        stroke="black">
-                                                        <path
-                                                            d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                    </svg>
-                                                    <svg id="star3" xmlns="http://www.w3.org/2000/svg" height="24"
-                                                        viewBox="0 -960 960 960" width="24" fill="#ffd400"
-                                                        stroke="black">
-                                                        <path
-                                                            d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                    </svg>
-                                                    <svg id="star4" xmlns="http://www.w3.org/2000/svg" height="24"
-                                                        viewBox="0 -960 960 960" width="24" stroke="black">
-                                                        <path
-                                                            d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                    </svg>
-                                                    <svg id="star5" xmlns="http://www.w3.org/2000/svg" height="24"
-                                                        viewBox="0 -960 960 960" width="24" stroke="black">
-                                                        <path
-                                                            d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                    </svg>
+                                                    <%for(let i=0;i<5;i++){%>
+                                                        <%if(displayStar>0){%>
+                                                            <%displayStar--;%>
+                                                            <svg id="star3" xmlns="http://www.w3.org/2000/svg" height="24"
+                                                                viewBox="0 -960 960 960" width="24" fill="#ffd400"
+                                                                stroke="black">
+                                                                <path
+                                                                    d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
+                                                            </svg>
+                                                        <%}else{%>
+                                                            <svg id="star4" xmlns="http://www.w3.org/2000/svg" height="24"
+                                                                viewBox="0 -960 960 960" width="24" stroke="black">
+                                                                <path
+                                                                    d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
+                                                            </svg>
+                                                        <%}%>
+                                                    <%}%>
+                                                    <%=average%>
                                                 </div>
                                             </div>
                                         </div>
@@ -94,6 +84,22 @@
                                                         </p>
                                                         <button class="reviewFollowButton">Follow</button>
                                                     </div>
+                                                    <%for(let i=0;i<5;i++){%>
+                                                        <%if(review.Bintang-1>i){%>
+                                                            <svg id="star3" xmlns="http://www.w3.org/2000/svg" height="24"
+                                                                viewBox="0 -960 960 960" width="24" fill="#ffd400"
+                                                                stroke="black">
+                                                                <path
+                                                                    d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
+                                                            </svg>
+                                                        <%}else{%>
+                                                            <svg id="star4" xmlns="http://www.w3.org/2000/svg" height="24"
+                                                                viewBox="0 -960 960 960" width="24" stroke="black">
+                                                                <path
+                                                                    d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
+                                                            </svg>
+                                                        <%}%>
+                                                    <%}%>
                                                     <p class="review-text">
                                                         <%=review.Isi_Review%>
                                                     </p>
