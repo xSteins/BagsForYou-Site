@@ -1,40 +1,135 @@
-<div class="stats">
-    <h2>Site Statistics</h2>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<div class="stat" id="stat">
+    <h2>All stats</h2>
     <div class="stats-row">
+        <!-- Follower Count -->
         <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
-        </div>
-        <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
-        </div>
-        <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
-        </div>
-        <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
-        </div>
-        <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
+            <canvas id="followerChart"></canvas>
         </div>
 
+        <!-- Bag count for each brand -->
+        <div class="stat-items">
+            <canvas id="brandChart"></canvas>
+        </div>
     </div>
     <div class="stats-row">
+        <!-- Total Bags -->
         <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
+            <p>
+                <%= data.totalBags %>
+            </p>
+            <h2>Total Bags</h2>
         </div>
+
+        <!-- Total Categories -->
         <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
+            <p>
+                <%= data.totalCategories %>
+            </p>
+            <h2>Total Categories</h2>
         </div>
+
+        <!-- Total Subcategories -->
         <div class="stat-items">
-            <h2>123123</h2>
-            <h4>Searched Bags</h4>
+            <p>
+                <%= data.totalSubcategories %>
+            </p>
+            <h2>Total Subcategories</h2>
+        </div>
+
+        <!-- Total Designers -->
+        <div class="stat-items">
+            <p>
+                <%= data.totalDesigners %>
+            </p>
+            <h2>Total Designers</h2>
+        </div>
+        <!-- Total Reviews -->
+        <div class="stat-items">
+            <p>
+                <%= data.totalReviews %>
+            </p>
+            <h2>Total Reviews</h2>
+        </div>
+    </div>
+    <div class="stats-row">
+        <!-- Average Review Value -->
+        <div class="stat-items">
+            <p>
+                <%= data.averageReviewValue %>
+            </p>
+            <h2>Average Review Value</h2>
+        </div>
+        <!-- Lowest Rating -->
+        <div class="stat-items">
+            <p>
+                <%= data.lowestRating %>
+            </p>
+            <h2>Lowest Rating</h2>
+        </div>
+
+        <!-- Total Accounts -->
+        <div class="stat-items">
+            <p>
+                <%= data.totalAccounts %>
+            </p>
+            <h2>Total Accounts</h2>
         </div>
     </div>
 </div>
+<script>
+
+    // Follower Count
+    const followerChart = document.getElementById('followerChart');
+    const usernames = JSON.parse('<%- JSON.stringify(data.followerData.usernames) %>');
+    const followerCounts = JSON.parse('<%- JSON.stringify(data.followerData.followerCounts) %>');
+
+    new Chart(followerChart, {
+        type: 'bar',
+        data: {
+            labels: usernames,
+            datasets: [{
+                label: 'Follower Count',
+                data: followerCounts,
+                borderWidth: 1,
+                backgroundColor: '#3549ff',
+                scaleFontColor: "#000000",
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+
+    // Bag count for each brand
+    const brandChart = document.getElementById('brandChart');
+    const brands = JSON.parse('<%- JSON.stringify(data.bagData.brands) %>');
+    const bagCounts = JSON.parse('<%- JSON.stringify(data.bagData.bagCounts) %>');
+
+    new Chart(brandChart, {
+        type: 'bar',
+        data: {
+            labels: brands,
+            datasets: [{
+                label: 'Bag count for each brand',
+                data: bagCounts,
+                borderWidth: 1,
+                backgroundColor: '#3549ff',
+                scaleFontColor: "#000000",
+            }],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+</script>
