@@ -106,10 +106,10 @@ app.get('/', (req, res) => {
     });
 });
 
-
 app.get('/profile/self/follower', (req, res) => {
     const followerQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
     const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Account` = ?";
+
     const accountLoggedIn = req.cookies.id_account;
 
     pool.query(followerQuery, [accountLoggedIn], (err, results) => {
@@ -124,11 +124,12 @@ app.get('/profile/self/follower', (req, res) => {
                     // Handle the error appropriately
                     console.error(err);
                 } else {
+                    console.log(results[0]);
                     const followingCount = results[0].followingCount;
-
                     res.render('components/accountMenu/follower', {
                         followers,
                         followingCount,
+                        followerCount,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
                     });
@@ -136,9 +137,8 @@ app.get('/profile/self/follower', (req, res) => {
             });
         }
     });
-
-
 });
+
 
 
 app.get('/profile/self/following', (req, res) => {
@@ -152,18 +152,28 @@ app.get('/profile/self/following', (req, res) => {
         } else {
             const following = results.map((row) => row.Username);
 
-            res.render('components/accountMenu/following', {
-                following,
-                status: validateLoginStatus(req),
-                username: returnUsername(req),
+            const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Follower` = ?";
+            pool.query(followerQuery, [accountLoggedIn], (err, results) => {
+                if (err) {
+                    // Handle the error appropriately
+                    console.error(err);
+                } else {
+                    const followerCount = results[0].followerCount;
+
+                    res.render('components/accountMenu/following', {
+                        following,
+                        followerCount,
+                        status: validateLoginStatus(req),
+                        username: returnUsername(req),
+                    });
+                }
             });
         }
     });
 });
 
-// index.js
 
-// index.js
+
 app.get('/profile', (req, res) => {
     const id_account = req.cookies.id_account;
     const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
@@ -195,8 +205,91 @@ app.get('/profile/edit', (req, res) => {
     res.render('components/accountMenu/editProfile', {
         status: validateLoginStatus(req),
         username: returnUsername(req),
+        errorMessage: null
     });
 });
+
+app.post('/updateProfileData', (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const name = req.body.name;
+    const oldPassword = req.body.oldPass;
+    const newPassword = req.body.newPass;
+    const newPasswordValidation = req.body.newPassValidation;
+
+    // Perform validation checks
+    const usernameQuery = "SELECT Username FROM account WHERE Username = ?";
+    const emailQuery = "SELECT E_mail FROM account WHERE E_mail = ?";
+    const passwordQuery = "SELECT Password FROM account WHERE Password = ?";
+
+    // Check if the username already exists
+    pool.query(usernameQuery, [username], (error, results) => {
+        if (error) {
+            // Handle the error
+            console.error(error);
+            res.redirect('/profile/edit');
+        } else if (results.length > 0) {
+            // Username already exists
+            res.render('components/accountMenu/editProfile', {
+                status: validateLoginStatus(req),
+                username: returnUsername(req),
+                email: returnEmail(req),
+                name: returnName(req),
+                errorMessage: 'Username already exists.'
+            });
+        } else {
+            // Check if the email is already in use
+            pool.query(emailQuery, [email], (error, results) => {
+                if (error) {
+                    // Handle the error
+                    console.error(error);
+                    res.redirect('/profile/edit');
+                } else if (results.length > 0) {
+                    // Email already in use
+                    res.render('components/accountMenu/editProfile', {
+                        status: validateLoginStatus(req),
+                        username: returnUsername(req),
+                        email: returnEmail(req),
+                        name: returnName(req),
+                        errorMessage: 'Email is already in use.'
+                    });
+                } else {
+                    // Check if the new password is different from the old password
+                    pool.query(passwordQuery, [oldPassword], (error, results) => {
+                        if (error) {
+                            // Handle the error
+                            console.error(error);
+                            res.redirect('/profile/edit');
+                        } else if (results.length > 0 && newPassword === oldPassword) {
+                            // New password is the same as the old password
+                            res.render('components/accountMenu/editProfile', {
+                                status: validateLoginStatus(req),
+                                username: returnUsername(req),
+                                email: returnEmail(req),
+                                name: returnName(req),
+                                errorMessage: 'New password must be different from the old password.'
+                            });
+                        } else {
+                            // All checks passed, update the profile data
+                            const updateQuery = "UPDATE account SET Username = ?, Password = ?, E_mail = ?, Nama_Lengkap = ? WHERE ?";
+
+                            pool.query(updateQuery, [username, newPassword, email, name, /* Add the condition to identify the row to update */], (error, results) => {
+                                if (error) {
+                                    // Handle the error
+                                    console.error(error);
+                                } else {
+                                    // Profile data updated successfully
+                                    res.redirect('/profile');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
+
 
 app.get('/searchresults', (req, res) => {
     console.log(req.query.search);
