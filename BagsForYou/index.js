@@ -510,19 +510,9 @@ app.post('/updateProfileData', (req, res) => {
                                             completedUpdates++;
 
                                             if (completedUpdates === updateQueries.length) {
-                                                res.render('components/accountMenu/editProfile', {
-                                                    status: validateLoginStatus(req),
-                                                    username: returnUsername(req),
-                                                    email: returnEmail(req),
-                                                    name: returnName(req),
-                                                    errorMessage: 'Account updated, your data will be updated after re-login.'
-                                                }, () => {
-                                                    // Logout the user and redirect to the login page
-                                                    res.render('login', { errorMsg: 'Silahkan login kembali dengan data akun baru.', success: true });
-                                                    setTimeout(() => {
-                                                        res.redirect('/logout');
-                                                    }, 1000);
-                                                });
+                                                setTimeout(() => {
+                                                    res.redirect('/logout');
+                                                }, 1000);
                                             }
                                         }
                                     });
@@ -947,8 +937,6 @@ app.get('/exportTable', (req, res) => {
 });
 
 
-
-
 app.get('/logout', (req, res) => {
     res.clearCookie('id_account');
     res.clearCookie('username');
@@ -957,6 +945,7 @@ app.get('/logout', (req, res) => {
     res.clearCookie('is_admin');
     res.redirect('/');
 });
+
 app.get('/bag/:number', (req, res) => {
     const getBag = 'SEARCH * FROM `tas` WHERE `Id_Tas` = ?';
     pool.query(getBag, req.params.number, (error, results) => {
