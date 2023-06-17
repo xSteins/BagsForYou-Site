@@ -182,24 +182,22 @@ input {
   margin-left: 2rem;
 }
 
-.grid-profile-edit button,
+/* .grid-profile-edit button,
 input[type='submit'] {
   max-width: fit-content;
-  background-color: white;
   border: 1px solid black;
   border-radius: 3px;
   margin-bottom: 1ch;
-}
+} */
 
 .grid-profile-edit button:hover,
 input[type='submit']:hover {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
 }
 
-.grid-profile-edit input[type='password'],
-input[type='submit'] {
-  font-weight: 500;
+.grid-profile-edit input {
+  /* font-weight: 500; */
   max-width: 20ch;
   margin-bottom: 0.4rem;
 }

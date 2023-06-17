@@ -16,10 +16,10 @@ input[type='submit']:hover {
 button,
 input[type='submit'] {
   padding: 0.4rem;
-  color: rgb(255, 255, 255);
   background-color: rgb(0, 0, 0);
   border: 1px solid rgb(0, 0, 0);
-  border-radius: 0.5rem;
+  color: white;
+  border-radius: 3px;
   margin-right: 0;
 }
 strong {
