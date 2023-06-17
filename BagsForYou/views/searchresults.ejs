@@ -43,7 +43,7 @@
                                                 <div class="filter-section">
                                                     <h3>Category:</h3>
                                                     <select id="category-dropdown" name="category" class="category-dropdown">
-                                                        <%if(category===''){%>
+                                                        <%if(!category){%>
                                                         <option value="" selected hidden>Select category</option>
                                                         <%} else{%>
                                                         <option value="<%=category%>" selected hidden><%=category%></option>
@@ -58,20 +58,23 @@
                                                 <div class="filter-section">
                                                     <h3>Subcategory:</h3>
                                                     <select id="subcategory-dropdown" name="subcategory" class="subcategory-dropdown">
-                                                        <%if(category===''){%>
+                                                        <%if(!subcategory){%>
                                                         <option value="" selected hidden>Select subcategory</option>
                                                         <%} else{%>
                                                         <option value="<%=category%>" selected hidden><%=subcategory%></option>
                                                         <%}%>
                                                         <option value="">None</option>
+                                                        <%for(const scat of subcategories){%>
+                                                        <option value="<%=scat.Nama_Subkategori%>"><%=scat.Nama_Subkategori%></option>
+                                                        <%}%>
                                                     </select>
                                                 </div>
 
                                                 <div class="filter-section">
                                                     <h3>Color:</h3>
                                                     <select id="color-dropdown" name="warna" class="color-dropdown">
-                                                        <%if(warna===''){%>
-                                                        <option value="">Select color</option>
+                                                        <%if(!warna){%>
+                                                        <option value="" selected hidden>Select color</option>
                                                         <%} else{%>
                                                         <option value="<%=warna%>" selected hidden><%=warna%></option>
                                                         <%}%>
@@ -88,7 +91,7 @@
                                                 <div class="filter-section">
                                                     <h3>Brand:</h3>
                                                     <select id="brand-dropdown" name="brand" class="brand-dropdown">
-                                                        <%if(category===''|| category==='none'){%>
+                                                        <%if(!brand){%>
                                                         <option value="" selected hidden>Select brand</option>
                                                         <%} else{%>
                                                         <option value="<%=brand%>" selected hidden><%=brand%></option>
