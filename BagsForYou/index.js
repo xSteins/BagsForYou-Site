@@ -72,8 +72,6 @@ const storage = multer.diskStorage({
 // Create multer instance with the storage configuration
 const upload = multer({ storage: storage });
 
-
-
 app.listen(port, () => {
     console.log('App started');
     console.log(`Server running on http://localhost:${port}`);
@@ -93,18 +91,198 @@ function validateLoginStatus(req) {
         }
     }
 }
-
 function returnUsername(req) {
     console.log(req.cookies)
     return req.cookies.username;
 }
 
-app.get('/', (req, res) => {
-    res.render('home', {
-        status: validateLoginStatus(req),
-        username: returnUsername(req),
-    });
+function fetchBrandBagList() {
+    return new Promise((resolve, reject) => {
+        const query = `
+        SELECT merk.Nama_Merk AS Merk, COUNT(tas.Id_Tas) AS 'Jumlah Tas'
+        FROM merk
+        LEFT JOIN tas ON tas.Id_Merk = merk.Id_Merk
+        GROUP BY merk.Id_Merk, merk.Nama_Merk
+        HAVING COUNT(tas.Id_Tas) > 0
+    `;
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+
+            const brands = results.map((row) => row.Merk);
+            const bagCounts = results.map((row) => row['Jumlah Tas']);
+            resolve({ brands, bagCounts });
+        });
+    })
+}
+
+function fetchTotalBags() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) AS TotalBags FROM tas';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].TotalBags);
+        });
+    })
+}
+
+function fetchTotalCategories() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(Id_Kategori) AS TotalCategories FROM kategori';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].TotalCategories);
+        });
+    })
+}
+
+function fetchTotalDesigners() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) AS TotalDesigners FROM designer';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].TotalDesigners);
+        });
+    })
+}
+
+function fetchTotalReviews() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) AS TotalReviews FROM review';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].TotalReviews);
+        });
+    })
+}
+
+function fetchAverageReviewValue() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT AVG(Bintang) AS AverageReviewValue FROM review';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].AverageReviewValue);
+        });
+    })
+}
+
+function fetchLowestRating() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT MIN(Bintang) AS LowestRating FROM review';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].LowestRating);
+        });
+    })
+}
+
+function fetchTotalSubcategories() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(*) AS TotalSubcategories FROM sub_kategori';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].TotalSubcategories);
+        });
+    })
+}
+
+function fetchTotalAccounts() {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT COUNT(Id_Account) AS TotalAccounts FROM account';
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+            resolve(results[0].TotalAccounts);
+        });
+    })
+}
+
+function fetchFollowerCount() {
+    return new Promise((resolve, reject) => {
+        pool.query(
+            'SELECT a.Username, COUNT(f.Id_Follower) AS FollowerCount FROM follow AS f INNER JOIN account AS a ON f.Id_Account = a.Id_Account GROUP BY f.Id_Account, a.Username',
+            (error, results) => {
+                if (error) {
+                    console.error(error);
+                    reject(error);
+                    return;
+                }
+                const usernames = results.map((row) => row.Username);
+                const followerCounts = results.map((row) => row.FollowerCount);
+                resolve({ usernames, followerCounts });
+            }
+        );
+    })
+}
+
+app.get('/', async (req, res) => {
+    try {
+        const data = {};
+        const totalBags = await fetchTotalBags();
+        data.totalBags = totalBags;
+        const totalCategories = await fetchTotalCategories();
+        data.totalCategories = totalCategories;
+        const totalSubcategories = await fetchTotalSubcategories();
+        data.totalSubcategories = totalSubcategories;
+        const totalDesigners = await fetchTotalDesigners();
+        data.totalDesigners = totalDesigners;
+        const totalReviews = await fetchTotalReviews();
+        data.totalReviews = totalReviews;
+
+        res.render('home', {
+            data: data, // Pass the data object
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 });
+
 
 app.get('/profile/self/follower', (req, res) => {
     const followerQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
@@ -223,12 +401,12 @@ app.post('/updateProfileData', (req, res) => {
     const passwordQuery = "SELECT Password FROM account WHERE Password = ?";
 
     // Check if the username already exists
-    pool.query(usernameQuery, [username], (error, results) => {
+    pool.query(usernameQuery, [username], (error, usernameResults) => {
         if (error) {
             // Handle the error
             console.error(error);
             res.redirect('/profile/edit');
-        } else if (results.length > 0) {
+        } else if (usernameResults.length > 0) {
             // Username already exists
             res.render('components/accountMenu/editProfile', {
                 status: validateLoginStatus(req),
@@ -239,12 +417,12 @@ app.post('/updateProfileData', (req, res) => {
             });
         } else {
             // Check if the email is already in use
-            pool.query(emailQuery, [email], (error, results) => {
+            pool.query(emailQuery, [email], (error, emailResults) => {
                 if (error) {
                     // Handle the error
                     console.error(error);
                     res.redirect('/profile/edit');
-                } else if (results.length > 0) {
+                } else if (emailResults.length > 0) {
                     // Email already in use
                     res.render('components/accountMenu/editProfile', {
                         status: validateLoginStatus(req),
@@ -255,12 +433,12 @@ app.post('/updateProfileData', (req, res) => {
                     });
                 } else {
                     // Check if the new password is different from the old password
-                    pool.query(passwordQuery, [oldPassword], (error, results) => {
+                    pool.query(passwordQuery, [oldPassword], (error, passwordResults) => {
                         if (error) {
                             // Handle the error
                             console.error(error);
                             res.redirect('/profile/edit');
-                        } else if (results.length > 0 && newPassword === oldPassword) {
+                        } else if (passwordResults.length > 0 && newPassword === oldPassword) {
                             // New password is the same as the old password
                             res.render('components/accountMenu/editProfile', {
                                 status: validateLoginStatus(req),
@@ -270,18 +448,60 @@ app.post('/updateProfileData', (req, res) => {
                                 errorMessage: 'New password must be different from the old password.'
                             });
                         } else {
-                            // All checks passed, update the profile data
-                            const updateQuery = "UPDATE account SET Username = ?, Password = ?, E_mail = ?, Nama_Lengkap = ? WHERE ?";
+                            // Update the profile data independently
+                            const updateQueries = [];
 
-                            pool.query(updateQuery, [username, newPassword, email, name, /* Add the condition to identify the row to update */], (error, results) => {
-                                if (error) {
-                                    // Handle the error
-                                    console.error(error);
-                                } else {
-                                    // Profile data updated successfully
-                                    res.redirect('/profile');
-                                }
-                            });
+                            if (username) {
+                                updateQueries.push({
+                                    query: "UPDATE account SET Username = ? WHERE /* Add condition to identify the row to update */",
+                                    params: [username]
+                                });
+                            }
+
+                            if (newPassword) {
+                                updateQueries.push({
+                                    query: "UPDATE account SET Password = ? WHERE /* Add condition to identify the row to update */",
+                                    params: [newPassword]
+                                });
+                            }
+
+                            if (email) {
+                                updateQueries.push({
+                                    query: "UPDATE account SET E_mail = ? WHERE /* Add condition to identify the row to update */",
+                                    params: [email]
+                                });
+                            }
+
+                            if (name) {
+                                updateQueries.push({
+                                    query: "UPDATE account SET Nama_Lengkap = ? WHERE /* Add condition to identify the row to update */",
+                                    params: [name]
+                                });
+                            }
+
+                            if (updateQueries.length === 0) {
+                                // No updates requested
+                                res.redirect('/profile');
+                            } else {
+                                // Execute update queries
+                                let completedUpdates = 0;
+
+                                updateQueries.forEach(({ query, params }) => {
+                                    pool.query(query, params, (error, results) => {
+                                        if (error) {
+                                            // Handle the error
+                                            console.error(error);
+                                        } else {
+                                            completedUpdates++;
+
+                                            if (completedUpdates === updateQueries.length) {
+                                                // All updates completed
+                                                res.redirect('/profile');
+                                            }
+                                        }
+                                    });
+                                });
+                            }
                         }
                     });
                 }
@@ -319,12 +539,56 @@ app.get('/addReview', (req, res) => {
     });
 });
 
-app.get('/adminDashboard', (req, res) => {
-    res.render('adminDashboard', {
-        status: validateLoginStatus(req),
-        username: returnUsername(req),
-    });
+async function fetchRecentBags() {
+    const query = `
+        SELECT r.Id_Review, r.Id_Account, t.Id_Tas, t.namaTas, m.Nama_Merk, d.Nama_Designer
+        FROM review r
+        INNER JOIN tas t ON r.Id_Tas = t.Id_Tas
+        INNER JOIN merk m ON t.Id_Merk = m.Id_Merk
+        INNER JOIN designer d ON t.Id_Designer = d.Id_Designer
+        ORDER BY r.Id_Review DESC
+        LIMIT 3
+    `;
+    // Execute the query and return the result
+    const result = await pool.query(query);
+    return result;
+}
+
+app.get('/adminDashboard', async (req, res) => {
+    try {
+        const data = {};
+        const followerData = await fetchFollowerCount();
+        data.followerData = followerData;
+        const bagData = await fetchBrandBagList();
+        data.bagData = bagData;
+        const totalBags = await fetchTotalBags();
+        data.totalBags = totalBags;
+        const totalCategories = await fetchTotalCategories();
+        data.totalCategories = totalCategories;
+        const totalDesigners = await fetchTotalDesigners();
+        data.totalDesigners = totalDesigners;
+        const totalReviews = await fetchTotalReviews();
+        data.totalReviews = totalReviews;
+        const averageReviewValue = await fetchAverageReviewValue();
+        data.averageReviewValue = averageReviewValue;
+        const lowestRating = await fetchLowestRating();
+        data.lowestRating = lowestRating;
+        const totalSubcategories = await fetchTotalSubcategories();
+        data.totalSubcategories = totalSubcategories;
+        const totalAccounts = await fetchTotalAccounts();
+        data.totalAccounts = totalAccounts;
+        res.render('adminDashboard', {
+            data,
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
 });
+
+
 
 // Error message tidak diisi dulu (kosong)
 app.get('/signup', (req, res) => {

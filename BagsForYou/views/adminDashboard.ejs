@@ -57,32 +57,61 @@
                                     const adjust = document.getElementById('revreq');
                                     const importTable = document.getElementById('importForm');
 
+
                                     function showAddBagItem() {
-                                        bagitem.classList.remove('hidden');
-                                        importForm.classList.add('hidden');
-                                        catsub.classList.add('hidden');
-                                        adjust.classList.add('hidden');
+                                        document.getElementById('addBagItem').classList.remove('hidden');
+                                        document.getElementById('addCategoryForm').classList.add('hidden');
+                                        document.getElementById('revreq').classList.add('hidden');
+                                        document.getElementById('importForm').classList.add('hidden');
                                     }
 
                                     function showCatSubHidden() {
-                                        bagitem.classList.add('hidden');
-                                        importForm.classList.add('hidden');
-                                        adjust.classList.add('hidden');
-                                        catsub.classList.remove('hidden');
+                                        document.getElementById('addBagItem').classList.add('hidden');
+                                        document.getElementById('addCategoryForm').classList.remove('hidden');
+                                        document.getElementById('revreq').classList.add('hidden');
+                                        document.getElementById('importForm').classList.add('hidden');
                                     }
 
                                     function showRevereq() {
-                                        bagitem.classList.add('hidden');
-                                        catsub.classList.add('hidden');
-                                        importForm.classList.add('hidden');
-                                        adjust.classList.remove('hidden');
+                                        document.getElementById('addBagItem').classList.add('hidden');
+                                        document.getElementById('addCategoryForm').classList.add('hidden');
+                                        document.getElementById('revreq').classList.remove('hidden');
+                                        document.getElementById('importForm').classList.add('hidden');
                                     }
 
                                     function showImportExport() {
-                                        bagitem.classList.add('hidden');
-                                        catsub.classList.add('hidden');
-                                        importForm.classList.remove('hidden');
+                                        document.getElementById('addBagItem').classList.add('hidden');
+                                        document.getElementById('addCategoryForm').classList.add('hidden');
+                                        document.getElementById('revreq').classList.add('hidden');
+                                        document.getElementById('importForm').classList.remove('hidden');
                                     }
+
+                                    function showStats() {
+                                        document.getElementById('addBagItem').classList.add('hidden');
+                                        document.getElementById('addCategoryForm').classList.add('hidden');
+                                        document.getElementById('revreq').classList.add('hidden');
+                                        document.getElementById('importForm').classList.add('hidden');
+                                    }
+
+                                    document.getElementById('addItem').addEventListener('click', function () {
+                                        showAddBagItem();
+                                    });
+
+                                    document.getElementById('addCategory').addEventListener('click', function () {
+                                        showCatSubHidden();
+                                    });
+
+                                    document.getElementById('adjustReview').addEventListener('click', function () {
+                                        showRevereq();
+                                    });
+
+                                    document.getElementById('importTable').addEventListener('click', function () {
+                                        showImportExport();
+                                    });
+
+                                    document.getElementById('showStats').addEventListener('click', function () {
+                                        showStats();
+                                    });
 
                                     document.getElementById('addItem').addEventListener('click', function () {
                                         showAddBagItem();
