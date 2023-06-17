@@ -246,6 +246,7 @@ footer .container {
 
 .boxicon-submit:hover {
   background-color: #6b8bff; /* Change the border color to #0038ff on hover */
+  border: 3px solid black;
 }
 
 .boxicon-submit {
@@ -400,12 +401,16 @@ footer .container {
 }
 
 /* Stats widget styling */
-
 .stats {
-  background-color: #eeeeeed3;
+  margin-top: 1rem;
   border-radius: 3px;
   padding: 0.5rem 1rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  /* background-color: antiquewhite; */
+  width: 100%;
+  overflow-y: scroll;
 }
 
 .stats:first-child {
@@ -413,28 +418,39 @@ footer .container {
 }
 
 .stats-row {
-  margin: 0.5rem auto;
-  display: grid;
-  grid-template-columns: repeat(5, max-content);
+  /* background-color: #000000; */
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: row;
   gap: 1rem;
-  justify-items: center;
+  justify-content: center;
   align-items: center;
 }
 
 .stats-row:last-child {
   padding: 0;
-  grid-template-columns: repeat(3, max-content);
+  grid-template-columns: repeat(5, max-content);
 }
 
 /* border-radius = padding + 1 */
 .stat-items {
+  background-color: rgb(195, 255, 222);
   border: 3px solid black;
-  line-height: 0.5;
+  line-height: 1.2;
   border-radius: 0.6rem;
-  padding: 0.5rem;
+  padding: 0 1rem;
 }
+
 .stat-items h2 {
+  font-size: 20px;
+  font-weight: 700;
   margin-bottom: 1.2rem;
+}
+
+.stat-items p {
+  font-weight: 600;
+  font-size: 35px;
+  text-align: center;
 }
 
 /* bagposts styling */

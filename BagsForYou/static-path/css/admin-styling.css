@@ -6,6 +6,9 @@ button {
   border-radius: 0.5rem;
   margin-right: 0;
 }
+.stat-items canvas {
+  width: 380px;
+}
 
 .main-menu {
   /* min-height: fit-content; */
