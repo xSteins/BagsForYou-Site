@@ -186,7 +186,7 @@ header {
 /*  */
 
 footer {
-  position: inherit;
+  position: absolute;
   grid-template-columns: 20vw 80vw;
   grid-template-rows: max-content;
   padding: 1rem;
