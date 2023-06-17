@@ -92,7 +92,7 @@ function validateLoginStatus(req) {
     }
 }
 function returnUsername(req) {
-    console.log(req.cookies)
+    // console.log(req.cookies)
     return req.cookies.username;
 }
 
@@ -549,34 +549,76 @@ async function fetchRecentBags() {
         ORDER BY r.Id_Review DESC
         LIMIT 3
     `;
-    // Execute the query and return the result
     const result = await pool.query(query);
     return result;
 }
 
+// display recently added bag review
+function fetchRecentlyAddedData() {
+    return new Promise((resolve, reject) => {
+        const query = `
+        SELECT tas.Id_Tas, tas.namaTas, tas.Foto, account.Username, merk.Nama_Merk, designer.Nama_Designer
+        FROM tas
+        INNER JOIN review ON tas.Id_Tas = review.Id_Tas
+        INNER JOIN account ON review.Id_Account = account.Id_Account
+        INNER JOIN merk ON merk.Id_Merk = tas.Id_Merk
+        INNER JOIN designer ON designer.Id_Designer = tas.Id_Designer
+        ORDER BY review.Tanggal_Review DESC
+        LIMIT 3
+      `;
+
+        pool.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                reject(error);
+                return;
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+
+
 app.get('/adminDashboard', async (req, res) => {
     try {
         const data = {};
+
         const followerData = await fetchFollowerCount();
         data.followerData = followerData;
+
         const bagData = await fetchBrandBagList();
         data.bagData = bagData;
+
         const totalBags = await fetchTotalBags();
         data.totalBags = totalBags;
+
         const totalCategories = await fetchTotalCategories();
         data.totalCategories = totalCategories;
+
         const totalDesigners = await fetchTotalDesigners();
         data.totalDesigners = totalDesigners;
+
         const totalReviews = await fetchTotalReviews();
         data.totalReviews = totalReviews;
+
         const averageReviewValue = await fetchAverageReviewValue();
         data.averageReviewValue = averageReviewValue;
+
         const lowestRating = await fetchLowestRating();
         data.lowestRating = lowestRating;
+
         const totalSubcategories = await fetchTotalSubcategories();
         data.totalSubcategories = totalSubcategories;
+
         const totalAccounts = await fetchTotalAccounts();
         data.totalAccounts = totalAccounts;
+
+        const recentlyAddedData = await fetchRecentlyAddedData();
+        // console.log(recentlyAddedData)
+        data.recentlyAddedData = recentlyAddedData;
+
         res.render('adminDashboard', {
             data,
             status: validateLoginStatus(req),

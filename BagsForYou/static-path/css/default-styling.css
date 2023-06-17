@@ -5,6 +5,10 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
 }
+/* body {
+  background-color: rgba(0, 0, 0, 0.816);
+} */
+
 button:hover,
 input[type='submit']:hover {
   color: black;
@@ -25,9 +29,9 @@ input[type='submit'] {
 strong {
   font-weight: 600;
 }
-body {
+/* body {
   overflow-y: hidden;
-}
+} */
 
 .flex {
   display: flex;
@@ -182,11 +186,11 @@ header {
 /*  */
 
 footer {
+  position: inherit;
   grid-template-columns: 20vw 80vw;
   grid-template-rows: max-content;
   padding: 1rem;
   margin-top: 1rem;
-  position: absolute;
   bottom: 0;
   width: 100%;
   background-color: #191919;
@@ -284,7 +288,7 @@ footer .container {
 
 #addBagSearch .searchbar-container input[type='text'] {
   height: 2rem;
-  width: 20ch;
+  width: 36ch;
   border: 3px solid black;
   border-radius: 0;
   outline: none;
@@ -312,6 +316,7 @@ footer .container {
 }
 
 .main-display-container {
+  background-color: aliceblue;
   border: 2px solid black;
   border-radius: 3px;
   padding: 1rem;

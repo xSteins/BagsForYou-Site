@@ -1,12 +1,14 @@
-body {
+/* body {
   background-color: rgba(0, 0, 0, 0.816);
-}
-
+} */
+/* #edit-profile-container {
+  border: 2px solid rgb(255, 3, 3);
+} */
 .profile-container,
 .profile-container-account {
   max-width: 600px;
   padding: 2rem;
-  background-color: #ebebeb;
+  background-color: aliceblue;
   border: 1px solid black;
   margin: 0 auto;
   display: flex;
