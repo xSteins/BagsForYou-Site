@@ -73,12 +73,17 @@
                                         <% followers.forEach((follower)=> { %>
 
                                             <div class="account-foll">
-                                                <a href="/profile/<%= follower.Id_Account %>" style="all: unset;">
-                                                    <p class="account-name">
-                                                        <%= follower.Username %>
-                                                    </p>
-                                                </a>
-                                                <button>Follow</button>
+                                                <%if(follower.Username===username){%>
+                                                    <a href="/profile/self" style="all: unset;">
+                                                        <%}else{%>
+                                                            <a href="/profile/<%= follower.Id_Account %>"
+                                                                style="all: unset;">
+                                                                <%}%>
+                                                                    <p class="account-name">
+                                                                        <%= follower.Username %>
+                                                                    </p>
+                                                            </a>
+                                                            <!-- <button>Follow</button> -->
                                             </div>
 
                                             <% }) %>
