@@ -280,6 +280,8 @@ app.get('/', async (req, res) => {
 });
 
 
+
+
 app.get('/profile/self/follower', (req, res) => {
     const followerQuery = "SELECT a.`Username`,a.`Id_Account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
     const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";

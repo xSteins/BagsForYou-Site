@@ -9,5 +9,93 @@
             </button>
         </form>
     </div>
-    <%- include('stat-user') %>
+    <div class="stats">
+        <h2>Site Statistics</h2>
+        <div class="stats-row">
+            <!-- Total Bags -->
+            <div class="stat-items">
+                <p>
+                    <%= data.totalBags %>
+                </p>
+                <h2>Total Bags</h2>
+            </div>
+            <!-- Total Categories -->
+            <div class="stat-items">
+                <p>
+                    <%= data.totalCategories %>
+                </p>
+                <h2>Total Categories</h2>
+            </div>
+            <!-- Total Subcategories -->
+            <div class="stat-items">
+                <p>
+                    <%= data.totalSubcategories %>
+                </p>
+                <h2>Total Subcategories</h2>
+            </div>
+
+            <!-- <div class="stat-items">
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="stat-items">
+                <canvas id="subcategoryChart"></canvas>
+            </div> -->
+        </div>
+    </div>
 </section>
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const categoryCtx = document.getElementById('categoryChart');
+        const subcategoryCtx = document.getElementById('subcategoryChart');
+
+        try {
+            const response = await fetch('/data'); // Fetch the data from the server
+            const data = await response.json();
+
+            // Category Chart
+            new Chart(categoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.topTenByCategory.names,
+                    datasets: [{
+                        label: 'Top Ten Bags by Category',
+                        data: data.topTenByCategory.counts,
+                        borderWidth: 1,
+                        backgroundColor: '#c1d6e6',
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+
+            // Subcategory Chart
+            new Chart(subcategoryCtx, {
+                type: 'bar',
+                data: {
+                    labels: data.topTenBySubcategory.names,
+                    datasets: [{
+                        label: 'Top Ten Bags by Subcategory',
+                        data: data.topTenBySubcategory.counts,
+                        borderWidth: 1,
+                        backgroundColor: '#c1d6e6',
+                    }],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+</script> -->
