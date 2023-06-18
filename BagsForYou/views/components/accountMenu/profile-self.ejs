@@ -35,13 +35,9 @@
                                             <a href="/profile/edit">Edit</a>
                                         </div>
                                         <div class="following-follower-container">
-                                            <p><strong>
-                                                    <%=follow[0]%>
-                                                </strong> <a href="/profile/self/follower"
+                                            <p><strong><%=follow[0]%></strong> <a href="/profile/self/follower"
                                                     class="follower-info">Follower</a></p>
-                                            <p><strong>
-                                                    <%=follow[1]%>
-                                                </strong> <a href="/profile/self/following"
+                                            <p><strong><%=follow[1]%></strong> <a href="/profile/self/following"
                                                     class="following-info">Following</a> </p>
                                         </div>
                                     </div>
@@ -86,6 +82,7 @@
                                                 <% } %>
                                     </div>
                                 </div>
+                                <%- include('../navigation/footer') %>
 </body>
 
 </html>

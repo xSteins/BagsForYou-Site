@@ -28,19 +28,15 @@
                                 <div id="profile-main" class="profile-container-account">
                                     <div class="user-information" id="self-profile">
                                         <div class="username-data-container">
-
-                                            <h2 class="username-tag"><%- usernamePage %></h2>
-
+                                            
+                                                <h2 class="username-tag"><%- usernamePage %></h2>
+                                            
                                             <!-- <a href="/profile/edit">Edit</a> -->
                                         </div>
                                         <div class="following-follower-container">
-                                            <p><strong>
-                                                    <%=follow[0]%>
-                                                </strong> <a href="/profile/<%=accountId%>/follower"
+                                            <p><strong><%=follow[0]%></strong> <a href="/profile/<%=accountId%>/follower"
                                                     class="follower-info">Follower</a></p>
-                                            <p><strong>
-                                                    <%=follow[1]%>
-                                                </strong> <a href="/profile/<%=accountId%>/following"
+                                            <p><strong><%=follow[1]%></strong> <a href="/profile/<%=accountId%>/following"
                                                     class="following-info">Following</a> </p>
                                         </div>
                                     </div>
@@ -85,7 +81,7 @@
                                                 <% } %>
                                     </div>
                                 </div>
-
+        
 </body>
 
 </html>
