@@ -1,5 +1,5 @@
 import express from 'express';
-import path, { resolve } from 'path';
+import path from 'path';
 import session from 'cookie-session';
 import crypto from 'crypto';
 import cookieParser from 'cookie-parser';
@@ -267,10 +267,6 @@ app.get('/', async (req, res) => {
         data.totalCategories = totalCategories;
         const totalSubcategories = await fetchTotalSubcategories();
         data.totalSubcategories = totalSubcategories;
-        const totalDesigners = await fetchTotalDesigners();
-        data.totalDesigners = totalDesigners;
-        const totalReviews = await fetchTotalReviews();
-        data.totalReviews = totalReviews;
 
         res.render('home', {
             data: data, // Pass the data object
@@ -400,7 +396,7 @@ app.get('/profile', (req, res) => {
                 getFollow().then(x => {
                     const followInfo = x;
                     res.render('components/accountMenu/profile-self', {
-                        postResult: null,
+                        postResult: reviews,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
                         follow: followInfo
@@ -418,102 +414,6 @@ app.get('/profile/edit', (req, res) => {
         username: returnUsername(req),
         errorMessage: null
     });
-});
-
-app.get('/searchresults', (req, res) => {
-    getSearch();
-    async function getSearch() {
-        console.log(req.query);
-        const bagSearchQuery = `
-SELECT tas.Id_Tas ,tas.namaTas,tas.Foto
-FROM tas 
-INNER JOIN sub_kategori ON sub_kategori.Id_Subkategori=tas.Id_Subkategori
-INNER JOIN kategori ON kategori.Id_Kategori=sub_kategori.Id_Kategori
-INNER JOIN merk ON merk.Id_Merk=tas.Id_Tas
-WHERE namaTas LIKE ? 
-AND sub_kategori.Nama_Subkategori LIKE ? 
-AND kategori.Nama_Kategori LIKE ? 
-AND tas.Warna LIKE ?
-AND merk.Nama_Merk LIKE ?`;
-        const search = '%' + req.query.search + '%';
-        const warna = req.query.warna ? req.query.warna : '%';
-        const subkategori = req.query.subcategory ? req.query.subcategory : '%';
-        let kategori = req.query.category ? req.query.category : '%';
-        if (req.query.subcategory) {
-            const currCat = await new Promise((resolve, reject) => {
-                pool.query('SELECT * FROM `sub_kategori` INNER JOIN `kategori`ON `kategori`.`Id_Kategori`=`sub_kategori`.`Id_Kategori` WHERE `sub_kategori`.`Nama_Subkategori`=?', req.query.subcategory, (error, results) => {
-                    if (error) {
-                        console.log(error);
-                    } else {
-                        resolve(JSON.parse(JSON.stringify(results)));
-                    }
-                });
-            });
-            kategori = currCat[0].Nama_Kategori;
-        }
-        const merk = req.query.brand ? req.query.brand : '%';
-        const searchParam = [search, subkategori, kategori, warna, merk];
-        const searchQuery = await new Promise((resolve, reject) => {
-            pool.query(bagSearchQuery, searchParam, (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resolve(JSON.parse(JSON.stringify(results)));
-                }
-            });
-        });
-        const catQuery = await new Promise((resolve, reject) => {
-            pool.query('SELECT * FROM `kategori`', (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resolve(JSON.parse(JSON.stringify(results)));
-                }
-            });
-        });
-        const subcatQuery = await new Promise((resolve, reject) => {
-            pool.query('SELECT * FROM `sub_kategori`', (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resolve(JSON.parse(JSON.stringify(results)));
-                }
-            });
-        });
-        const warnaQuery = await new Promise((resolve, reject) => {
-            pool.query('SELECT DISTINCT `Warna` FROM `tas` ORDER BY `Warna`', (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resolve(JSON.parse(JSON.stringify(results)));
-                }
-            });
-        });
-        const brandQuery = await new Promise((resolve, reject) => {
-            pool.query('SELECT * FROM `merk`', (error, results) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resolve(JSON.parse(JSON.stringify(results)));
-                }
-            });
-        });
-        res.render('searchresults', {
-            status: validateLoginStatus(req),
-            username: returnUsername(req),
-            search: req.query.search,
-            bagsRes: searchQuery,
-            brand: req.query.brand,
-            category: kategori === '%' ? '' : kategori,
-            subcategory: req.query.subcategory,
-            warna: req.query.warna,
-            colors: warnaQuery,
-            categories: catQuery,
-            subcategories: subcatQuery,
-            brands: brandQuery
-        });
-        console.log(searchParam);
-    }
 });
 
 app.post('/updateProfileData', (req, res) => {
@@ -653,6 +553,104 @@ app.post('/updateProfileData', (req, res) => {
         }
     });
 });
+
+app.get('/searchresults', (req, res) => {
+    getSearch();
+    async function getSearch() {
+        console.log(req.query);
+        const bagSearchQuery = `
+SELECT tas.Id_Tas ,tas.namaTas,tas.Foto
+FROM tas 
+INNER JOIN sub_kategori ON sub_kategori.Id_Subkategori=tas.Id_Subkategori
+INNER JOIN kategori ON kategori.Id_Kategori=sub_kategori.Id_Kategori
+INNER JOIN merk ON merk.Id_Merk=tas.Id_Tas
+WHERE namaTas LIKE ? 
+AND sub_kategori.Nama_Subkategori LIKE ? 
+AND kategori.Nama_Kategori LIKE ? 
+AND tas.Warna LIKE ?
+AND merk.Nama_Merk LIKE ?`;
+        const search = '%' + req.query.search + '%';
+        const warna = req.query.warna ? req.query.warna : '%';
+        const subkategori = req.query.subcategory ? req.query.subcategory : '%';
+        let kategori = req.query.category ? req.query.category : '%';
+        if (req.query.subcategory) {
+            const currCat = await new Promise((resolve, reject) => {
+                pool.query('SELECT * FROM `sub_kategori` INNER JOIN `kategori`ON `kategori`.`Id_Kategori`=`sub_kategori`.`Id_Kategori` WHERE `sub_kategori`.`Nama_Subkategori`=?', req.query.subcategory, (error, results) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        resolve(JSON.parse(JSON.stringify(results)));
+                    }
+                });
+            });
+            kategori = currCat[0].Nama_Kategori;
+        }
+        const merk = req.query.brand ? req.query.brand : '%';
+        const searchParam = [search, subkategori, kategori, warna, merk];
+        const searchQuery = await new Promise((resolve, reject) => {
+            pool.query(bagSearchQuery, searchParam, (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const catQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM `kategori`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const subcatQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM `sub_kategori`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const warnaQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT DISTINCT `Warna` FROM `tas` ORDER BY `Warna`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        const brandQuery = await new Promise((resolve, reject) => {
+            pool.query('SELECT * FROM `merk`', (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        res.render('searchresults', {
+            status: validateLoginStatus(req),
+            username: returnUsername(req),
+            search: req.query.search,
+            bagsRes: searchQuery,
+            brand: req.query.brand,
+            category: kategori === '%' ? '' : kategori,
+            subcategory: req.query.subcategory,
+            warna: req.query.warna,
+            colors: warnaQuery,
+            categories: catQuery,
+            subcategories: subcatQuery,
+            brands: brandQuery
+        });
+        // console.log(searchParam);
+    }
+});
+
+
 
 app.get('/searchresults', (req, res) => {
     console.log(req.query.search);
@@ -997,7 +995,7 @@ app.post('/addCategory', (req, res) => {
 });
 
 // Multer upload instance ada diatas
-// Import "tas" from CSV file
+// TODO IMPORT TABLE, EXPORT TABLE IS WORKING!
 app.post('/importTable', upload.single('bagsData'), (req, res) => {
     const filePath = req.file.path;
 
@@ -1008,7 +1006,6 @@ app.post('/importTable', upload.single('bagsData'), (req, res) => {
         INSERT INTO tas (namaTas, Deskripsi, Warna, Dimensi)
         VALUES ('${row.namaTas}', '${row.Deskripsi}', '${row.Warna}', '${row.Dimensi}')
       `;
-
             pool.query(query, (error) => {
                 if (error) {
                     console.error(error);
@@ -1022,7 +1019,6 @@ app.post('/importTable', upload.single('bagsData'), (req, res) => {
                     console.error(error);
                 }
             });
-
             return res.status(200).json({ message: 'Import successful' });
         });
 });
