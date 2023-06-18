@@ -118,7 +118,7 @@ app.get('/', (req, res) => {
 
 
 app.get('/profile/self/follower', (req, res) => {
-    const followerQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
+    const followerQuery = "SELECT a.`Username`,a.`Id_Account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
     const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";
     const accountLoggedIn = req.cookies.id_account;
 
@@ -127,7 +127,7 @@ app.get('/profile/self/follower', (req, res) => {
             // Handle the error appropriately
             console.error(err);
         } else {
-            const followers = results.map((row) => row.Username);
+            const followers = results;
 
             pool.query(followingQuery, [accountLoggedIn], (err, results) => {
                 if (err) {
@@ -141,6 +141,7 @@ app.get('/profile/self/follower', (req, res) => {
                         followingCount,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
+                        usernamePage:returnUsername(req)
                     });
                 }
             });
@@ -152,7 +153,7 @@ app.get('/profile/self/follower', (req, res) => {
 
 
 app.get('/profile/self/following', (req, res) => {
-    const followingQuery = "SELECT a.`Username` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
+    const followingQuery = "SELECT a.`Username`,a.`Id_account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
     const accountLoggedIn = req.cookies.id_account;
     const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
     pool.query(followingQuery, [accountLoggedIn], (err, results) => {
@@ -160,7 +161,7 @@ app.get('/profile/self/following', (req, res) => {
             // Handle the error appropriately
             console.error(err);
         } else {
-            const following = results.map((row) => row.Username);
+            const following = results;
 
             pool.query(followerQuery, [accountLoggedIn], (err, results) => {
                 if (err) {
@@ -168,11 +169,13 @@ app.get('/profile/self/following', (req, res) => {
                     console.error(err);
                 } else {
                     const followerCount = results[0].followerCount;
+                    console.log(following);
                     res.render('components/accountMenu/following', {
                         following,
                         followerCount,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
+                        usernamePage:returnUsername(req)
                     });
                 }
             });
@@ -683,3 +686,185 @@ WHERE namaTas LIKE ? `;
         // console.log(searchParam);
     }
 })
+
+app.get('/profile/:number/follower', (req, res) => {
+    const followerQuery = "SELECT a.`Username`, a.`Id_Account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Follower` = a.`Id_Account` WHERE f.`Id_Account` = ?";
+    const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";
+    const accountLoggedIn = req.cookies.id_account;
+
+    pool.query(followerQuery, req.params.number, (err, results) => {
+        if (err) {
+            // Handle the error appropriately
+            console.error(err);
+        } else {
+            const followers = results;
+
+            pool.query(followingQuery, req.params.number, (err, results) => {
+                if (err) {
+                    // Handle the error appropriately
+                    console.error(err);
+                } else {
+                    const followingCount = results[0].followingCount;
+
+                    getUsername();
+                    async function getUsername(){
+                        const getUsernameQuery="SELECT * FROM `account` WHERE `Id_Account` = ?";
+                        const getUsername= await new Promise((resolve,reject)=>{
+                            pool.query(getUsernameQuery,req.params.number,(error,results)=>{
+                                if(error){
+                                    console.log(error);
+                                    res.status(500).send('Error finding username.');
+                                    reject(error);
+                                }
+                                else{
+                                    resolve(JSON.parse(JSON.stringify(results)));
+                                }
+                            });
+                        });
+                        console.log(followers);
+                        res.render('components/accountMenu/follower', {
+                            followers,
+                            followingCount,
+                            status: validateLoginStatus(req),
+                            usernamePage: getUsername[0].Username,
+                            username: returnUsername(req),
+                            idPage:getUsername[0].Id_Account
+                        });
+                    }
+                }
+            });
+        }
+    });
+});
+
+
+app.get('/profile/:number/following', (req, res) => {
+    const followingQuery = "SELECT a.`Username`,a.`Id_Account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
+    const accountLoggedIn = req.cookies.id_account;
+    const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
+    pool.query(followingQuery, req.params.number, (err, results) => {
+        if (err) {
+            // Handle the error appropriately
+            console.error(err);
+        } else {
+            const following = results;
+
+            pool.query(followerQuery, req.params.number, (err, results) => {
+                if (err) {
+                    // Handle the error appropriately
+                    console.error(err);
+                } else {
+                    const followerCount = results[0].followerCount;
+                    
+                    getUsername();
+                    async function getUsername(){
+                        const getUsernameQuery="SELECT * FROM `account` WHERE `Id_Account` = ?";
+                        const getUsername= await new Promise((resolve,reject)=>{
+                            pool.query(getUsernameQuery,req.params.number,(error,results)=>{
+                                if(error){
+                                    console.log(error);
+                                    res.status(500).send('Error finding username.');
+                                    reject(error);
+                                }
+                                else{
+                                    resolve(JSON.parse(JSON.stringify(results)));
+                                }
+                            });
+                        });
+                        console.log(following[0].Id_Account);
+                        res.render('components/accountMenu/following', {
+                            following,
+                            usernamePage: getUsername[0].Username,
+                            followerCount,
+                            status: validateLoginStatus(req),
+                            username: returnUsername(req),
+                            idPage:getUsername[0].Id_Account
+                        });
+                    }
+                    
+                }
+            });
+        }
+    });
+});
+
+
+app.get('/profile/:number', (req, res) => {
+    const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
+
+    pool.query(getReviewObj, req.params.number, (error, results) => {
+        if (error) {
+            console.log(error);
+        } 
+        else{
+            async function getFollow(){
+                const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
+                const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";
+                const getUsernameQuery="SELECT `Username` FROM `account` WHERE `Id_Account` = ?";
+                const getfollowerCount= await new Promise((resolve,reject)=>{
+                    pool.query(followerQuery,req.params.number,(error,results)=>{
+                        if(error){
+                            console.log(error);
+                            res.status(500).send('Error finding bag.');
+                            reject(error);
+                        }
+                        else{
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                const getfollowingCount= await new Promise((resolve,reject)=>{
+                    pool.query(followingQuery,req.params.number,(error,results)=>{
+                        if(error){
+                            console.log(error);
+                            res.status(500).send('Error finding bag.');
+                            reject(error);
+                        }
+                        else{
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                const getUsername= await new Promise((resolve,reject)=>{
+                    pool.query(getUsernameQuery,req.params.number,(error,results)=>{
+                        if(error){
+                            console.log(error);
+                            res.status(500).send('Error finding username.');
+                            reject(error);
+                        }
+                        else{
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                return [getfollowerCount[0].followerCount,getfollowingCount[0].followingCount,getUsername[0].Username];
+            }
+            if (results.length > 0) {
+                const reviews = results;
+                getFollow().then(x=>{
+                    const followInfo=x;
+                    res.render('components/accountMenu/profile-other', {
+                        postResult: reviews,
+                        reviews: reviews,
+                        status: validateLoginStatus(req),
+                        usernamePage: followInfo[2],
+                        username: returnUsername(req),
+                        follow:followInfo,
+                        accountId:req.params.number
+                    });
+                });
+            } else {
+                getFollow().then(x=>{
+                    const followInfo=x;
+                    res.render('components/accountMenu/profile-other', {
+                        postResult: null,
+                        status: validateLoginStatus(req),
+                        usernamePage: followInfo[2],
+                        username: returnUsername(req),
+                        follow:followInfo
+                    });
+                });
+            }
+        }
+    });
+});

@@ -28,24 +28,54 @@
                                 <div id="following" class="profile-container-account">
                                     <div class="user-information" id="self-profile">
                                         <div class="username-data-container">
-                                            <a href="/profile" class="apaajabiargaitem">
-                                                <h2 class="username-tag"><%- username %></h2>
-                                            </a>
-                                            <a href="/profile/edit">Edit</a>
+                                            <%if(usernamePage===username){%>
+                                                <a href="/profile" class="apaajabiargaitem">
+                                                    
+                                                    <h2 class="username-tag"><%- username %></h2>
+                                                    
+                                                </a>
+                                                <%}else{%>
+                                                <a href="/profile" class="apaajabiargaitem">
+    
+                                                    <h2 class="username-tag"><%- usernamePage %></h2>
+                                                </a>
+                                                <%}%>
+                                                
+                                                <%if(usernamePage===username){%>
+                                                <a href="/profile/edit">Edit</a>
+                                                <%}%>
                                         </div>
                                         <div class="following-follower-container">
-                                            <p><strong><%=followerCount%></strong> <a href="/profile/self/follower"
+                                            <%if(usernamePage===username){%>
+                                            <p><strong>
+                                                    <%= followerCount %>
+                                                </strong> <a href="/profile/self/follower"
                                                     class="follower-info">Followers</a></p>
-                                            <p><strong><%=following.length%></strong> <a href="/profile/self/following"
+                                            <p><strong>
+                                                    <%= following.length %>
+                                                </strong> <a href="/profile/self/following"
                                                     class="following-info">Following</a> </p>
+                                            <%}else{%>
+                                            <p><strong>
+                                                    <%= followerCount %>
+                                                </strong> <a href="/profile/<%=idPage%>/follower"
+                                                    class="follower-info">Followers</a></p>
+                                            <p><strong>
+                                                    <%= following.length %>
+                                                </strong> <a href="/profile/<%=idPage%>/following"
+                                                    class="following-info">Following</a> </p>
+                                            <%}%>
                                         </div>
                                     </div>
                                     <div class="foll-list">
                                         <% following.forEach((user)=> { %>
+                                            
                                             <div class="account-foll">
+                                                <a href="/profile/<%= user.Id_Account %>" style="all: unset;">
                                                 <p class="account-name">
-                                                    <%= user %>
+                                                    <%= user.Username %>
                                                 </p>
+                                                </a>
                                                 <button>Follow</button>
                                             </div>
                                             <% }) %>
