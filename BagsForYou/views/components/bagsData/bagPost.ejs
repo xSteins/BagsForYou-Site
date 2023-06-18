@@ -82,7 +82,9 @@
                                                         <p class="userReviewName">
                                                             <%=review.Username%>
                                                         </p>
-                                                        <button class="reviewFollowButton">Follow</button>
+                                                        <a href="/profile/<%=review.Id_Account%>" style="all: unset;">
+                                                        <button class="reviewProfileButton">Profile</button>
+                                                        </a>
                                                     </div>
                                                     <%for(let i=0;i<5;i++){%>
                                                         <%if(review.Bintang>i){%>
