@@ -30,6 +30,15 @@
                                         <div class="username-data-container">
                                             
                                                 <h2 class="username-tag"><%- usernamePage %></h2>
+                                                <%if(followStatus){%>
+                                                    <a href="/unfollow/<%=accountId%>" style="all: unset;">
+                                                    <button class="fbutton" data-accountId="<%=accountId%>" data-type="0">Unfollow</button>
+                                                    </a>
+                                                <%}else{%>
+                                                    <a href="/follow/<%=accountId%>" style="all: unset;">
+                                                    <button class="fbutton" data-accountId="<%=accountId%>" data-type="1">Follow</button>
+                                                    </a>
+                                                <%}%>
                                             
                                             <!-- <a href="/profile/edit">Edit</a> -->
                                         </div>
@@ -40,9 +49,7 @@
                                                     class="following-info">Following</a> </p>
                                         </div>
                                     </div>
-                                    <!-- profile-self.ejs -->
-
-                                    <!-- profile-self.ejs -->
+                                    
                                     <div class="review-box">
                                         <% if (postResult===null) { %>
                                             <div class="empty-data">
@@ -80,8 +87,7 @@
                                                 </div>
                                                 <% } %>
                                     </div>
-                                </div>
-        
+                                </div> 
 </body>
 
 </html>

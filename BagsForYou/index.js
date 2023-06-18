@@ -317,7 +317,7 @@ app.get('/profile/self/follower', (req, res) => {
 });
 
 app.get('/profile/self/following', (req, res) => {
-    const followingQuery = "SELECT a.`Username`,a.`Id_account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
+    const followingQuery = "SELECT a.`Username`,a.`Id_Account` FROM `follow` AS f INNER JOIN `account` AS a ON f.`Id_Account` = a.`Id_Account` WHERE f.`Id_Follower` = ?";
     const accountLoggedIn = req.cookies.id_account;
     const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
     pool.query(followingQuery, [accountLoggedIn], (err, results) => {
@@ -1232,7 +1232,7 @@ app.get('/profile/:number/follower', (req, res) => {
                                 }
                             });
                         });
-                        console.log(followers);
+                        // console.log(followers);
                         res.render('components/accountMenu/follower', {
                             followers,
                             followingCount,
@@ -1282,7 +1282,6 @@ app.get('/profile/:number/following', (req, res) => {
                                 }
                             });
                         });
-                        console.log(following[0].Id_Account);
                         res.render('components/accountMenu/following', {
                             following,
                             usernamePage: getUsername[0].Username,
@@ -1302,7 +1301,7 @@ app.get('/profile/:number/following', (req, res) => {
 
 app.get('/profile/:number', (req, res) => {
     const getReviewObj = 'SELECT DISTINCT(`Id_Review`), `Isi_Review`, `Bintang`, `Id_Account`, `tas`.`namaTas`, `tas`.`Foto` FROM `review` INNER JOIN `tas` WHERE Id_Account = ?';
-
+    const accountLoggedIn = req.cookies.id_account;
     pool.query(getReviewObj, req.params.number, (error, results) => {
         if (error) {
             console.log(error);
@@ -1348,12 +1347,27 @@ app.get('/profile/:number', (req, res) => {
                         }
                     });
                 });
-                return [getfollowerCount[0].followerCount, getfollowingCount[0].followingCount, getUsername[0].Username];
+                const check = await new Promise((resolve, reject) => {
+                    const checkFol = "SELECT * FROM `follow` WHERE `Id_Account`=? AND `Id_Follower`=?";
+                    pool.query(checkFol, [req.params.number, accountLoggedIn], (error, results) => {
+                        if (error) {
+                            console.log(error);
+                            res.status(500).send('Error finding username.');
+                            reject(error);
+                        }
+                        else {
+                            resolve(JSON.parse(JSON.stringify(results)));
+                        }
+                    });
+                });
+                // console.log(check); console.log([accountLoggedIn,req.params.number]);
+                return [getfollowerCount[0].followerCount, getfollowingCount[0].followingCount, getUsername[0].Username, check.length];
             }
             if (results.length > 0) {
                 const reviews = results;
                 getFollow().then(x => {
                     const followInfo = x;
+                    // console.log(followInfo[3]>0?true:false);
                     res.render('components/accountMenu/profile-other', {
                         postResult: reviews,
                         reviews: reviews,
@@ -1361,7 +1375,8 @@ app.get('/profile/:number', (req, res) => {
                         usernamePage: followInfo[2],
                         username: returnUsername(req),
                         follow: followInfo,
-                        accountId: req.params.number
+                        accountId: req.params.number,
+                        followStatus: followInfo[3] > 0 ? true : false
                     });
                 });
             } else {
@@ -1372,10 +1387,55 @@ app.get('/profile/:number', (req, res) => {
                         status: validateLoginStatus(req),
                         usernamePage: followInfo[2],
                         username: returnUsername(req),
-                        follow: followInfo
+                        follow: followInfo,
+                        followStatus: followInfo[3] > 0 ? true : false
                     });
                 });
             }
         }
     });
+});
+
+app.get('/unfollow/:number', (req, res) => {
+    const accountLoggedIn = req.cookies.id_account;
+    async function getUnFollow() {
+        const addFollowerQuery = "DELETE FROM `follow` WHERE `Id_Account`=? AND `Id_Follower`=?";
+        const followAdd = await new Promise((resolve, reject) => {
+            pool.query(addFollowerQuery, [req.params.number, accountLoggedIn], (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error following.');
+                    reject(error);
+                }
+                else {
+                    resolve('success');
+                }
+            });
+
+        });
+        res.redirect('/profile/' + req.params.number);
+    }
+    getUnFollow();
+});
+
+app.get('/follow/:number', (req, res) => {
+    const accountLoggedIn = req.cookies.id_account;
+    async function getFollow() {
+        const addFollowerQuery = "INSERT INTO `follow`(`Id_Account`,`Id_Follower`) VALUES (?,?)";
+        const followAdd = await new Promise((resolve, reject) => {
+            pool.query(addFollowerQuery, [req.params.number, accountLoggedIn], (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(500).send('Error following.');
+                    reject(error);
+                }
+                else {
+                    resolve('success');
+                }
+            });
+
+        });
+        res.redirect('/profile/' + req.params.number);
+    }
+    getFollow();
 });
