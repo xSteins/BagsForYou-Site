@@ -292,6 +292,7 @@ section.hero {
   padding: 0 2rem; */
   padding: 0.5rem 2rem;
   display: flex;
+  justify-content: center;
 }
 .left-column {
   padding-right: 1rem;
