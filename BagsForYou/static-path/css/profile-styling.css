@@ -82,8 +82,8 @@
   overflow-y: auto;
   width: 100%;
   padding: 0 1rem;
-  min-height: 405px;
-  max-height: 405px;
+  min-height: 375px;
+  max-height: 375px;
 
   /* Media query for screens bigger than 1600px by 900px */
 }

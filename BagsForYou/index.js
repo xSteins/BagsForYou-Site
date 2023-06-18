@@ -304,7 +304,7 @@ app.get('/profile/self/follower', (req, res) => {
                         followingCount,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
-                        usernamePage:returnUsername(req)
+                        usernamePage: returnUsername(req)
                     });
                 }
             });
@@ -337,7 +337,7 @@ app.get('/profile/self/following', (req, res) => {
                         followerCount,
                         status: validateLoginStatus(req),
                         username: returnUsername(req),
-                        usernamePage:returnUsername(req)
+                        usernamePage: returnUsername(req)
                     });
                 }
             });
@@ -1182,16 +1182,16 @@ app.get('/profile/:number/follower', (req, res) => {
                     const followingCount = results[0].followingCount;
 
                     getUsername();
-                    async function getUsername(){
-                        const getUsernameQuery="SELECT * FROM `account` WHERE `Id_Account` = ?";
-                        const getUsername= await new Promise((resolve,reject)=>{
-                            pool.query(getUsernameQuery,req.params.number,(error,results)=>{
-                                if(error){
+                    async function getUsername() {
+                        const getUsernameQuery = "SELECT * FROM `account` WHERE `Id_Account` = ?";
+                        const getUsername = await new Promise((resolve, reject) => {
+                            pool.query(getUsernameQuery, req.params.number, (error, results) => {
+                                if (error) {
                                     console.log(error);
                                     res.status(500).send('Error finding username.');
                                     reject(error);
                                 }
-                                else{
+                                else {
                                     resolve(JSON.parse(JSON.stringify(results)));
                                 }
                             });
@@ -1203,7 +1203,7 @@ app.get('/profile/:number/follower', (req, res) => {
                             status: validateLoginStatus(req),
                             usernamePage: getUsername[0].Username,
                             username: returnUsername(req),
-                            idPage:getUsername[0].Id_Account
+                            idPage: getUsername[0].Id_Account
                         });
                     }
                 }
@@ -1230,18 +1230,18 @@ app.get('/profile/:number/following', (req, res) => {
                     console.error(err);
                 } else {
                     const followerCount = results[0].followerCount;
-                    
+
                     getUsername();
-                    async function getUsername(){
-                        const getUsernameQuery="SELECT * FROM `account` WHERE `Id_Account` = ?";
-                        const getUsername= await new Promise((resolve,reject)=>{
-                            pool.query(getUsernameQuery,req.params.number,(error,results)=>{
-                                if(error){
+                    async function getUsername() {
+                        const getUsernameQuery = "SELECT * FROM `account` WHERE `Id_Account` = ?";
+                        const getUsername = await new Promise((resolve, reject) => {
+                            pool.query(getUsernameQuery, req.params.number, (error, results) => {
+                                if (error) {
                                     console.log(error);
                                     res.status(500).send('Error finding username.');
                                     reject(error);
                                 }
-                                else{
+                                else {
                                     resolve(JSON.parse(JSON.stringify(results)));
                                 }
                             });
@@ -1253,10 +1253,10 @@ app.get('/profile/:number/following', (req, res) => {
                             followerCount,
                             status: validateLoginStatus(req),
                             username: returnUsername(req),
-                            idPage:getUsername[0].Id_Account
+                            idPage: getUsername[0].Id_Account
                         });
                     }
-                    
+
                 }
             });
         }
@@ -1270,73 +1270,73 @@ app.get('/profile/:number', (req, res) => {
     pool.query(getReviewObj, req.params.number, (error, results) => {
         if (error) {
             console.log(error);
-        } 
-        else{
-            async function getFollow(){
+        }
+        else {
+            async function getFollow() {
                 const followerQuery = "SELECT COUNT(*) AS followerCount FROM `follow` WHERE `Id_Account` = ?";
                 const followingQuery = "SELECT COUNT(*) AS followingCount FROM `follow` WHERE `Id_Follower` = ?";
-                const getUsernameQuery="SELECT `Username` FROM `account` WHERE `Id_Account` = ?";
-                const getfollowerCount= await new Promise((resolve,reject)=>{
-                    pool.query(followerQuery,req.params.number,(error,results)=>{
-                        if(error){
+                const getUsernameQuery = "SELECT `Username` FROM `account` WHERE `Id_Account` = ?";
+                const getfollowerCount = await new Promise((resolve, reject) => {
+                    pool.query(followerQuery, req.params.number, (error, results) => {
+                        if (error) {
                             console.log(error);
                             res.status(500).send('Error finding bag.');
                             reject(error);
                         }
-                        else{
+                        else {
                             resolve(JSON.parse(JSON.stringify(results)));
                         }
                     });
                 });
-                const getfollowingCount= await new Promise((resolve,reject)=>{
-                    pool.query(followingQuery,req.params.number,(error,results)=>{
-                        if(error){
+                const getfollowingCount = await new Promise((resolve, reject) => {
+                    pool.query(followingQuery, req.params.number, (error, results) => {
+                        if (error) {
                             console.log(error);
                             res.status(500).send('Error finding bag.');
                             reject(error);
                         }
-                        else{
+                        else {
                             resolve(JSON.parse(JSON.stringify(results)));
                         }
                     });
                 });
-                const getUsername= await new Promise((resolve,reject)=>{
-                    pool.query(getUsernameQuery,req.params.number,(error,results)=>{
-                        if(error){
+                const getUsername = await new Promise((resolve, reject) => {
+                    pool.query(getUsernameQuery, req.params.number, (error, results) => {
+                        if (error) {
                             console.log(error);
                             res.status(500).send('Error finding username.');
                             reject(error);
                         }
-                        else{
+                        else {
                             resolve(JSON.parse(JSON.stringify(results)));
                         }
                     });
                 });
-                return [getfollowerCount[0].followerCount,getfollowingCount[0].followingCount,getUsername[0].Username];
+                return [getfollowerCount[0].followerCount, getfollowingCount[0].followingCount, getUsername[0].Username];
             }
             if (results.length > 0) {
                 const reviews = results;
-                getFollow().then(x=>{
-                    const followInfo=x;
+                getFollow().then(x => {
+                    const followInfo = x;
                     res.render('components/accountMenu/profile-other', {
                         postResult: reviews,
                         reviews: reviews,
                         status: validateLoginStatus(req),
                         usernamePage: followInfo[2],
                         username: returnUsername(req),
-                        follow:followInfo,
-                        accountId:req.params.number
+                        follow: followInfo,
+                        accountId: req.params.number
                     });
                 });
             } else {
-                getFollow().then(x=>{
-                    const followInfo=x;
+                getFollow().then(x => {
+                    const followInfo = x;
                     res.render('components/accountMenu/profile-other', {
                         postResult: null,
                         status: validateLoginStatus(req),
                         usernamePage: followInfo[2],
                         username: returnUsername(req),
-                        follow:followInfo
+                        follow: followInfo
                     });
                 });
             }
