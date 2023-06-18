@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { response } from 'express';
 import path, { resolve } from 'path';
 import session from 'cookie-session';
 import crypto from 'crypto';
@@ -95,7 +95,7 @@ function validateLoginStatus(req) {
 }
 
 function returnUsername(req) {
-    console.log(req.cookies)
+    // console.log(req.cookies)
     return req.cookies.username;
 }
 
@@ -260,7 +260,7 @@ app.get('/profile/edit', (req, res) => {
 app.get('/searchresults', (req, res) => {
     getSearch();
     async function getSearch() {
-        console.log(req.query);
+        // console.log(req.query);
         const bagSearchQuery = `
 SELECT tas.Id_Tas ,tas.namaTas,tas.Foto
 FROM tas 
@@ -343,7 +343,7 @@ AND merk.Nama_Merk LIKE ?`;
             subcategories: subcatQuery,
             brands:brandQuery
         });
-        console.log(searchParam);
+        // console.log(searchParam);
     }
 });
 
@@ -351,6 +351,19 @@ app.get('/addReview', (req, res) => {
     res.render('components/accountMenu/addBagReview', {
         status: validateLoginStatus(req),
         username: returnUsername(req),
+    });
+});
+app.post('/addReview', (req, res) => {
+    console.log(req.body);
+    const addReviewQuery='INSERT INTO `review` (`Isi_Review`,`Bintang`,`Tanggal_Review`,`Id_Account`,`Id_Tas`) VALUES (?,?,(SELECT CURDATE()),(SELECT `Id_Account`FROM `account` WHERE `Username`=?),(SELECT `Id_Tas`FROM `tas` WHERE `namaTas`=?));'
+    const addReviewQueryParam=[req.body.reviewdescription,req.body.rate,req.body.username,req.body.bagname];
+    pool.query(addReviewQuery, addReviewQueryParam, (error, results) => {
+        if (error) {
+            console.log(error);
+        }
+        else{
+            console.log('review added');
+        }
     });
 });
 
@@ -522,7 +535,6 @@ app.post('/addBagEntry', (req, res) => {
 
         // Subcategory is valid, proceed with the bag entry insertion
         const insertQuery = 'INSERT INTO `tas`(`namaTas`, `Deskripsi`, `Warna`, `Dimensi`, `Id_Merk`, `Id_Designer`, `Id_Subkategori`) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        console.log('this is here');
         getBrandDesignerId();
         async function getBrandDesignerId() {
             let brandId, desigId;
@@ -638,7 +650,7 @@ app.get('/bag/:number', (req, res) => {
             });
         });
         const avgStar = getAvgStar[0].AvgBintang;
-        console.log(avgStar);
+        // console.log(avgStar);
         res.render('components/bagsData/bagPost', {
             status: validateLoginStatus(req),
             username: returnUsername(req),
@@ -647,5 +659,27 @@ app.get('/bag/:number', (req, res) => {
             average: avgStar,
             displayStar: Math.floor(avgStar)
         });
+    }
+})
+app.get('/reviewSearch/:search', (req, res) => {
+    getSearchRev();
+    async function getSearchRev() {
+        console.log(req.params);
+        const bagSearchQueryRev = `
+SELECT tas.Id_Tas ,tas.namaTas,tas.Foto
+FROM tas 
+WHERE namaTas LIKE ? `;
+        const searchRev = req.params.search==='none'?'%':'%' + req.params.search + '%';
+        const searchQuery=await new Promise ((resolve,reject)=>{
+            pool.query(bagSearchQueryRev, searchRev, (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resolve(JSON.parse(JSON.stringify(results)));
+                }
+            });
+        });
+        res.json(searchQuery);
+        // console.log(searchParam);
     }
 })
