@@ -148,7 +148,9 @@ header {
   align-items: center;
   padding-left: 0.4rem;
   padding-right: 0.4rem;
+  overflow: hidden;
 }
+
 .account-menu span {
   margin-right: 1rem;
 }
@@ -487,33 +489,25 @@ section.hero {
 /* bagposts styling */
 #result-container {
   display: flex;
-  width: 80vw;
-  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
 }
 
 .container-all {
   display: flex;
   justify-content: space-between;
 }
-/* .container-left {
-  overflow-y: scroll;
-} */
-.container-left,
-.container-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+
+.container-left {
   align-items: center;
-  background-color: rgb(240, 240, 240);
-  max-width: 40vw;
-  max-height: 80vh;
-  padding: 1rem 0.5rem;
+  height: 86vh;
+  /* padding: 3rem; */
 }
 
 .title-container {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  /* justify-content: space-evenly; */
 }
 
 .bagdetail-title {
@@ -537,12 +531,12 @@ section.hero {
   overflow-y: scroll;
 }
 .container-left {
-  background-color: rgb(255, 188, 188);
+  background-color: rgb(206, 206, 218);
+  padding: 2rem;
+  border-left: 3px solid #2e2e2e;
 }
 .container-left .detail {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
+  padding: 2rem 0;
 }
 
 .container-left .detail p {
@@ -550,11 +544,14 @@ section.hero {
 }
 
 .container-right {
+  border-left: 3px solid #2e2e2e;
+  border-right: 3px solid #2e2e2e;
+  border-radius: 3px;
   max-width: 60vw;
-  background-color: rgb(188, 188, 228);
+  background-color: rgb(206, 206, 218);
 }
 .reviewUser {
-  max-height: 80vh;
+  max-height: 86vh;
   overflow-y: scroll;
 }
 
@@ -563,8 +560,7 @@ section.hero {
   border: 2px solid black;
   border-radius: 3px;
   margin: 1rem;
-  max-height: 80%;
-  padding: 1rem 2rem;
+  padding: 1rem;
 }
 
 .account-review-container {
