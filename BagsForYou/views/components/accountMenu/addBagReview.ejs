@@ -27,10 +27,7 @@
                                 <!-- END OF HEADER -->
                                 <div id="addBagReview" class="centered-container">
                                     <a href="/" id="close-window-link">Back</a>
-                                    <!-- 
-                TODO :
-                CONNECT EVENTLISTENER BAWAH KE DB UNTUK DISPLAY SEARCH RESULTS
-             -->
+
                                     <div class="main-display-container">
                                         <h2>Search your desired bag to review :</h2>
                                         <div id="addBagSearch">
@@ -55,9 +52,9 @@
 
                                         <form action="/addReview" method="POST" class="" id="formAddBagReview">
                                             <label for="bag-name">Bag Name :</label>
-                                            <input type="text" id="bag-name" name="bagname" readOnly
-                                                value="Pilih Tas">
-                                            <input type="text" id="usernameReview" hidden name="username" value="<%- username %>">
+                                            <input type="text" id="bag-name" name="bagname" readOnly value="Pilih Tas">
+                                            <input type="text" id="usernameReview" hidden name="username"
+                                                value="<%- username %>">
                                             <label for="stars">Stars :</label>
                                             <div class="rate">
                                                 <input type="radio" id="star5" name="rate" value="5" />
@@ -68,13 +65,9 @@
                                                 <label for="star3" title="text">3 stars</label>
                                                 <input type="radio" id="star2" name="rate" value="2" />
                                                 <label for="star2" title="text">2 stars</label>
-                                                <input type="radio" id="star1" name="rate" value="1" checked/>
+                                                <input type="radio" id="star1" name="rate" value="1" checked />
                                                 <label for="star1" title="text">1 star</label>
                                             </div>
-
-                                            <!-- Opsional! -->
-                                            <!-- <label for=bag-image>Bag Image :</label>
-                    <input type="file" accept=".png,.jpg" id="bag-image" name="bag-image"> -->
 
                                             <label for="review-description">Review Description:</label>
                                             <textarea id="review-description" name="reviewdescription"></textarea>
@@ -91,53 +84,54 @@
                                     const resultContainer = document.querySelector('#searchForReviewResults');
                                     const formReviewContainer = document.querySelector('#formAddBagReview');
                                     const searchText = document.querySelector('#search-main');
-                                    const subButt=formReviewContainer.querySelector('input[type=submit]');
-                                        subButt.addEventListener('click',(e)=>{
-                                            e.preventDefault();
-                                            console.log(formReviewContainer.querySelector("#bag-name").value==='Pilih Tas');
-                                            if(formReviewContainer.querySelector("#bag-name").value==='Pilih Tas'){
-                                                alert("Pilih tas belum terisi");
-                                            }
-                                            else if(formReviewContainer.querySelector("textarea").value.length===0){
-                                                alert("Review belum terisi");
-                                            }
-                                            else{
-                                                document.querySelector('form').submit();
-                                            }
-                                            
-                                        })
-                                    
-                                    searchButton.addEventListener('click',async () => {
+                                    const subButt = formReviewContainer.querySelector('input[type=submit]');
+                                    subButt.addEventListener('click', (e) => {
+                                        e.preventDefault();
+                                        console.log(formReviewContainer.querySelector("#bag-name").value === 'Pilih Tas');
+                                        if (formReviewContainer.querySelector("#bag-name").value === 'Pilih Tas') {
+                                            alert("Pilih tas belum terisi");
+                                        }
+                                        else if (formReviewContainer.querySelector("textarea").value.length === 0) {
+                                            alert("Review belum terisi");
+                                        }
+                                        else {
+                                            document.querySelector('form').submit();
+                                            alert("Review sudah berhasil ditambahkan");
+                                        }
+
+                                    })
+
+                                    searchButton.addEventListener('click', async () => {
                                         resultContainer.classList.remove('hidden');
                                         formReviewContainer.classList.add('hidden');
-                                        
-                                        try{
-                                            
-                                            const searchParam=!searchText.value?'none':searchText.value
+
+                                        try {
+
+                                            const searchParam = !searchText.value ? 'none' : searchText.value
                                             console.log(searchParam);
-                                            const response=await fetch('reviewSearch/'+searchParam);
-                                            const bags=await response.json();
+                                            const response = await fetch('reviewSearch/' + searchParam);
+                                            const bags = await response.json();
                                             console.log(bags);
                                             console.log(bags[0]);
                                             console.log(bags[0].namaTas);
-                                            const results=[];
-                                            let bagElement,image,name,reviewLink;
-                                            for(const bag of bags){
+                                            const results = [];
+                                            let bagElement, image, name, reviewLink;
+                                            for (const bag of bags) {
                                                 //container
-                                                bagElement=document.createElement('div');
-                                                bagElement.setAttribute('class','result-item-forReview');
+                                                bagElement = document.createElement('div');
+                                                bagElement.setAttribute('class', 'result-item-forReview');
                                                 // gambar
-                                                image=document.createElement('img');
-                                                image.src=bag.Foto;
+                                                image = document.createElement('img');
+                                                image.src = bag.Foto;
                                                 // nama tas
-                                                name=document.createElement('h4');
-                                                name.textContent=bag.namaTas;
+                                                name = document.createElement('h4');
+                                                name.textContent = bag.namaTas;
                                                 // review link
                                                 reviewLink = document.createElement('a');
-                                                reviewLink.setAttribute('href','#');
-                                                reviewLink.setAttribute('data-review-link','true');
-                                                reviewLink.setAttribute('data-bag-name',bag.namaTas);
-                                                reviewLink.textContent='Review This Bag';
+                                                reviewLink.setAttribute('href', '#');
+                                                reviewLink.setAttribute('data-review-link', 'true');
+                                                reviewLink.setAttribute('data-bag-name', bag.namaTas);
+                                                reviewLink.textContent = 'Review This Bag';
                                                 bagElement.appendChild(image);
                                                 bagElement.appendChild(name);
                                                 bagElement.appendChild(reviewLink);
@@ -150,16 +144,16 @@
                                                     e.preventDefault();
                                                     searchForReviewResults.classList.add('hidden');
                                                     formReviewContainer.classList.remove('hidden');
-                                                    
-                                                    formReviewContainer.querySelector('#bag-name').value=link.getAttribute('data-bag-name');
+
+                                                    formReviewContainer.querySelector('#bag-name').value = link.getAttribute('data-bag-name');
                                                 });
                                             });
-                                        }catch{
+                                        } catch {
 
                                         }
                                     })
 
-                                    
+
 
                                     const cancelReviewButton = document.querySelector('#cancelReview');
 

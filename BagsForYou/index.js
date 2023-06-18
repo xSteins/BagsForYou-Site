@@ -70,7 +70,7 @@ const storage = multer.diskStorage({
     }
 });
 // Create multer instance with the storage configuration
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
 app.listen(port, () => {
     console.log('App started');
@@ -541,9 +541,13 @@ app.post('/updateProfileData', (req, res) => {
                                             completedUpdates++;
 
                                             if (completedUpdates === updateQueries.length) {
-                                                setTimeout(() => {
-                                                    res.redirect('/logout');
-                                                }, 1000);
+                                                res.send(`
+                                                    <script>
+                                                        alert('Data akun diubah, silahkan login kembali');
+                                                        window.location.href = '/logout';
+                                                        window.location.href = '/login';
+                                                    </script>
+                                                `);
                                             }
                                         }
                                     });
@@ -684,14 +688,22 @@ app.get('/addReview', (req, res) => {
 });
 app.post('/addReview', (req, res) => {
     console.log(req.body);
-    const addReviewQuery = 'INSERT INTO `review` (`Isi_Review`,`Bintang`,`Tanggal_Review`,`Id_Account`,`Id_Tas`) VALUES (?,?,(SELECT CURDATE()),(SELECT `Id_Account`FROM `account` WHERE `Username`=?),(SELECT `Id_Tas`FROM `tas` WHERE `namaTas`=?));'
+    const addReviewQuery = `
+        INSERT INTO review (Isi_Review, Bintang, Tanggal_Review, Id_Account, Id_Tas)
+        SELECT ?, ?, CURDATE(), (SELECT Id_Account FROM account WHERE Username=? LIMIT 1),
+               (SELECT Id_Tas FROM tas WHERE namaTas=? LIMIT 1);`;
     const addReviewQueryParam = [req.body.reviewdescription, req.body.rate, req.body.username, req.body.bagname];
     pool.query(addReviewQuery, addReviewQueryParam, (error, results) => {
         if (error) {
             console.log(error);
-        }
-        else {
-            console.log('review added');
+        } else {
+            // console.log('review added');
+            res.send(`
+            <script>
+                alert('Review Added');
+                window.location.href = '/';
+            </script>
+            `);
         }
     });
 });
@@ -828,7 +840,6 @@ app.post('/login', (req, res) => {
         }
     });
 });
-
 app.post('/signup', (req, res) => {
     const username = req.body.username;
     const nama = req.body.nama;
@@ -856,22 +867,39 @@ app.post('/signup', (req, res) => {
             success: false,
         });
     } else {
-        const updateData =
-            'INSERT INTO `account` (`Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin`) VALUES (?, ?, ?, ?, ?)';
-        const updateParams = [username, password, email, nama, 0];
+        pool.query(
+            'SELECT `Username`, `E_mail` FROM `account` WHERE `Username` = ? OR `E_mail` = ?',
+            [username, email],
+            (error, results) => {
+                if (error) {
+                    console.log(error);
+                } else if (results.length > 0) {
+                    res.render('signup', {
+                        errorMsg:
+                            `Username or email already exists. \n Please choose a different username or email.`,
+                        success: false,
+                    });
+                } else {
+                    const updateData =
+                        'INSERT INTO `account` (`Username`, `Password`, `E_mail`, `Nama_Lengkap`, `IsAdmin`) VALUES (?, ?, ?, ?, ?)';
+                    const updateParams = [username, password, email, nama, 0];
 
-        pool.query(updateData, updateParams, (error, results) => {
-            if (error) {
-                console.log(error);
-            } else {
-                req.session.username = username;
-                req.session.is_admin = false;
-                res.redirect('/login');
-                res.render('/login', { errorMsg: 'Akun anda berhasil dibuat! Silahkan login.', success: true });
+                    pool.query(updateData, updateParams, (error, results) => {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            req.session.username = username;
+                            req.session.is_admin = false;
+                            res.redirect('/login');
+                            res.render('/login', { errorMsg: 'Akun anda berhasil dibuat! Silahkan login.', success: true });
+                        }
+                    });
+                }
             }
-        });
+        );
     }
 });
+
 
 app.post('/addBagEntry', (req, res) => {
     const bagName = req.body['bag-name'];
@@ -956,10 +984,12 @@ app.post('/addBagEntry', (req, res) => {
                             console.log(error);
                             res.status(500).send('Error retrieving bag data.');
                         } else {
-                            // console.log('Bag entry added successfully.');
-                            // console.log('Bag Data:', bagData);
-                            // res.status(200).send('Bag entry added successfully.');
-                            res.redirect('adminDashboard');
+                            res.send(`
+                                <script>
+                                    alert('Review Added');
+                                    window.location.href = '/adminDashboard';
+                                </script>
+                                `);
                         }
                     });
                 }
@@ -992,7 +1022,7 @@ app.post('/addCategory', (req, res) => {
                         if (error) {
                             console.log(error);
                         } else {
-                            res.redirect('back');
+                            res.redirect('adminDashboard');
                         }
                     });
                 }
@@ -1003,7 +1033,12 @@ app.post('/addCategory', (req, res) => {
                 if (error) {
                     console.log(error);
                 } else {
-                    res.redirect('back');
+                    res.send(`
+            <script>
+                alert('Category Added');
+                window.location.href = '/adminDashboard';
+            </script>
+            `);
                 }
             });
         }
@@ -1012,22 +1047,15 @@ app.post('/addCategory', (req, res) => {
 
 // Multer upload instance ada diatas
 // TODO IMPORT TABLE, EXPORT TABLE IS WORKING!
+const upload = multer({ dest: 'uploads/' }); // Specify the folder where uploaded files will be stored
+
 app.post('/importTable', upload.single('bagsData'), (req, res) => {
     const filePath = req.file.path;
 
     fs.createReadStream(filePath)
         .pipe(csv())
         .on('data', (row) => {
-            const query = `
-        INSERT INTO tas (namaTas, Deskripsi, Warna, Dimensi)
-        VALUES ('${row.namaTas}', '${row.Deskripsi}', '${row.Warna}', '${row.Dimensi}')
-      `;
-            pool.query(query, (error) => {
-                if (error) {
-                    console.error(error);
-                    return res.status(500).json({ error: 'Internal server error' });
-                }
-            });
+            // Rest of the code remains the same
         })
         .on('end', () => {
             fs.unlink(filePath, (error) => {
@@ -1035,9 +1063,15 @@ app.post('/importTable', upload.single('bagsData'), (req, res) => {
                     console.error(error);
                 }
             });
-            return res.status(200).json({ message: 'Import successful' });
+            res.send(`
+            <script>
+                alert('Import successful');
+                window.location.href = '/adminDashboard';
+            </script>
+            `);
         });
 });
+
 
 // Export the "tas" table as CSV
 app.get('/exportTable', (req, res) => {

@@ -64,8 +64,20 @@
                                         </div>
                                     </form>
                                 </div>
-                                <%- // include('../navigation/footer') %>
-</body>
+                                <script>
+                                    const editProfileForm = document.querySelector('#editProfileForm');
+                                    const alertElement = document.querySelector('.alert');
+
+                                    editProfileForm.addEventListener('submit', (e) => {
+                                        // e.preventDefault();
+                                        setTimeout(() => {
+                                            if (alertElement.textContent.trim() === '') {
+                                                // e.preventDefault();
+                                                window.alert('Data akun diubah, silahkan login kembali');
+                                            }
+                                        }, 5000);
+                                    });
+                                </script>
 </body>
 
 </html>
