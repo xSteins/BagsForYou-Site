@@ -31,15 +31,21 @@
 
                                                 </a>
                                                 <%}else{%>
-                                                    <a href="/profile" class="apaajabiargaitem">
+                                                    <a href="/profile/<%=idPage%>" class="apaajabiargaitem">
 
-                                                        <h2 class="username-tag"><%- usernamePage %></h2>
+                                                        <h2 class="username-tag"><%- username %></h2>
+
                                                     </a>
-                                                    <%}%>
+                                                    <%}else{%>
+                                                        <a href="/profile" class="apaajabiargaitem">
 
-                                                        <%if(usernamePage===username){%>
-                                                            <a href="/profile/edit">Edit</a>
-                                                            <%}%>
+                                                            <h2 class="username-tag"><%- usernamePage %></h2>
+                                                        </a>
+                                                        <%}%>
+
+                                                            <%if(usernamePage===username){%>
+                                                                <a href="/profile/edit">Edit</a>
+                                                                <%}%>
                                         </div>
                                         <div class="following-follower-container">
                                             <%if(usernamePage===username){%>
