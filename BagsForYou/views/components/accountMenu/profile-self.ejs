@@ -35,9 +35,9 @@
                                             <a href="/profile/edit">Edit</a>
                                         </div>
                                         <div class="following-follower-container">
-                                            <p><strong>10</strong> <a href="/profile/self/follower"
+                                            <p><strong><%=follow[0]%></strong> <a href="/profile/self/follower"
                                                     class="follower-info">Follower</a></p>
-                                            <p><strong>1</strong> <a href="/profile/self/following"
+                                            <p><strong><%=follow[1]%></strong> <a href="/profile/self/following"
                                                     class="following-info">Following</a> </p>
                                         </div>
                                     </div>
@@ -55,7 +55,7 @@
                                                 <div class="self-post">
                                                     <% reviews.forEach(review=> { %>
                                                         <div class="review-post">
-                                                            <img src="<%= review.Foto %>" alt=""
+                                                            <img src="../<%= review.Foto %>" alt=""
                                                                 class="bag-picture-review">
                                                             <div class="review-information">
                                                                 <h2>
@@ -81,63 +81,8 @@
                                                 </div>
                                                 <% } %>
                                     </div>
-
-
-
-
-                                    <!-- <div class="review-box">
-                                        <div class="empty-data hidden">
-                                            <h3>It's a bit empty here.. </h3>
-                                            <p>Add new review?</p>
-                                            <a href="/addReview">Start reviewing</a>
-                                        </div>
-                                        <div class="self-post">
-                                            <div class="review-post">
-                                                <img src="https://fakeimg.pl/100x100/a896ff/" alt=""
-                                                    class="bag-picture-review">
-                                                <div class="review-information">
-                                                    <h2>Eiger overlander adventure bag 55L</h2>
-                                                    <div id="star-for-bag">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                                            viewBox="0 -960 960 960" width="18" id="star1"
-                                                            fill="#ffd700" stroke="black" stroke-width="20">
-                                                            <path
-                                                                d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                        </svg>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                                            viewBox="0 -960 960 960" width="18" id="star1"
-                                                            fill="#ffd700" stroke="black" stroke-width="20">
-                                                            <path
-                                                                d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                        </svg>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                                            viewBox="0 -960 960 960" width="18" id="star1"
-                                                            fill="#ffd700" stroke="black" stroke-width="20">
-                                                            <path
-                                                                d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                        </svg>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                                            viewBox="0 -960 960 960" width="18" id="star1"
-                                                            fill="#ffd700" stroke="black" stroke-width="20">
-                                                            <path
-                                                                d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                        </svg>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" height="18"
-                                                            viewBox="0 -960 960 960" width="18" id="star1"
-                                                            stroke="black" stroke-width="20">
-                                                            <path
-                                                                d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
-                                                        </svg>
-                                                    </div>
-                                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                                        Temporibus, deleniti.</p>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div> -->
                                 </div>
-                                <%- // include('../navigation/footer') %>
+                                <%- include('../navigation/footer') %>
 </body>
 
 </html>

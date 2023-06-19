@@ -28,57 +28,61 @@
                                 <div id="following" class="profile-container-account">
                                     <div class="user-information" id="self-profile">
                                         <div class="username-data-container">
-                                            <a href="/profile" class="apaajabiargaitem">
-                                                <h2 class="username-tag"><%- username %></h2>
-                                            </a>
-                                            <a href="/profile/edit">Edit</a>
+                                            <%if(usernamePage===username){%>
+                                                <a href="/profile" class="apaajabiargaitem">
+                                                    
+                                                    <h2 class="username-tag"><%- username %></h2>
+                                                    
+                                                </a>
+                                                <%}else{%>
+                                                <a href="/profile/<%=idPage%>" class="apaajabiargaitem">
+    
+                                                    <h2 class="username-tag"><%- usernamePage %></h2>
+                                                </a>
+                                                <%}%>
+                                                
+                                                <%if(usernamePage===username){%>
+                                                <a href="/profile/edit">Edit</a>
+                                                <%}%>
                                         </div>
                                         <div class="following-follower-container">
-                                            <p><strong>10</strong> <a href="/profile/self/follower"
-                                                    class="follower-info">Follower</a></p>
-                                            <p><strong>1</strong> <a href="/profile/self/following"
+                                            <%if(usernamePage===username){%>
+                                            <p><strong>
+                                                    <%= followerCount %>
+                                                </strong> <a href="/profile/self/follower"
+                                                    class="follower-info">Followers</a></p>
+                                            <p><strong>
+                                                    <%= following.length %>
+                                                </strong> <a href="/profile/self/following"
                                                     class="following-info">Following</a> </p>
+                                            <%}else{%>
+                                            <p><strong>
+                                                    <%= followerCount %>
+                                                </strong> <a href="/profile/<%=idPage%>/follower"
+                                                    class="follower-info">Followers</a></p>
+                                            <p><strong>
+                                                    <%= following.length %>
+                                                </strong> <a href="/profile/<%=idPage%>/following"
+                                                    class="following-info">Following</a> </p>
+                                            <%}%>
                                         </div>
                                     </div>
                                     <div class="foll-list">
-                                        <!-- href link herisikan data mengacu pada db dimana :
-            localhost:/account/accountusername, rencana pakai username saja untuk display data akun tersebut. -->
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
-                                        <div class="account-foll">
-                                            <p class="account-name">Rex-lapis</p>
-                                            <a href="">Unfollow</a>
-                                        </div>
+                                        <% following.forEach((user)=> { %>
+                                            
+                                            <div class="account-foll">
+                                                <%if(user.Username===username){%>
+                                                <a href="/profile" style="all: unset;">
+                                                <%}else{%>
+                                                <a href="/profile/<%= user.Id_Account %>" style="all: unset;">
+                                                <%}%>
+                                                <p class="account-name">
+                                                    <%= user.Username %>
+                                                </p>
+                                                </a>
+                                                <!-- <button>Follow</button> -->
+                                            </div>
+                                            <% }) %>
                                     </div>
                                 </div>
                                 <%- include('../navigation/footer') %>

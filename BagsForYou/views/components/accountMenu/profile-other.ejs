@@ -16,11 +16,78 @@
 </head>
 
 <body>
-    <%- include('../navigation/header-user') %>
-        <div id="profile-other" class="profile-container">
-
-        </div>
-        <%- include('components/navigation/footer') %>
+    <!-- COMPONENT HEADER UTAMA -->
+    <%switch(status){ case 'admin' :%>
+        <%- include('../navigation/header-admin') %>
+            <% break; case 'user' :%>
+                <%- include('../navigation/header-user') %>
+                    <% break; case 'anon' :%>
+                        <%- include('../navigation/header') %>
+                            <% break; }%>
+                                <!-- END OF HEADER -->
+                                <div id="profile-main" class="profile-container-account">
+                                    <div class="user-information" id="self-profile">
+                                        <div class="username-data-container">
+                                            
+                                                <h2 class="username-tag"><%- usernamePage %></h2>
+                                                <%if(followStatus){%>
+                                                    <a href="/unfollow/<%=accountId%>" style="all: unset;">
+                                                    <button class="fbutton" data-accountId="<%=accountId%>" data-type="0">Unfollow</button>
+                                                    </a>
+                                                <%}else{%>
+                                                    <a href="/follow/<%=accountId%>" style="all: unset;">
+                                                    <button class="fbutton" data-accountId="<%=accountId%>" data-type="1">Follow</button>
+                                                    </a>
+                                                <%}%>
+                                            
+                                            <!-- <a href="/profile/edit">Edit</a> -->
+                                        </div>
+                                        <div class="following-follower-container">
+                                            <p><strong><%=follow[0]%></strong> <a href="/profile/<%=accountId%>/follower"
+                                                    class="follower-info">Follower</a></p>
+                                            <p><strong><%=follow[1]%></strong> <a href="/profile/<%=accountId%>/following"
+                                                    class="following-info">Following</a> </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="review-box">
+                                        <% if (postResult===null) { %>
+                                            <div class="empty-data">
+                                                <h3>It's a bit empty here..</h3>
+                                                <p>Add new review?</p>
+                                                <a href="/addReview">Start reviewing</a>
+                                            </div>
+                                            <% } else { %>
+                                                <div class="self-post">
+                                                    <% reviews.forEach(review=> { %>
+                                                        <div class="review-post">
+                                                            <img src="../<%= review.Foto %>" alt=""
+                                                                class="bag-picture-review">
+                                                            <div class="review-information">
+                                                                <h2>
+                                                                    <%= review.namaTas %>
+                                                                </h2>
+                                                                <div id="star-for-bag">
+                                                                    <% for (let i=0; i < review.Bintang; i++) { %>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                                            height="18" viewBox="0 -960 960 960"
+                                                                            width="18" id="star1" fill="#ffd700"
+                                                                            stroke="black" stroke-width="20">
+                                                                            <path
+                                                                                d="m233-80 65-281L80-550l288-25 112-265 112 265 288 25-218 189 65 281-247-149L233-80Z" />
+                                                                        </svg>
+                                                                        <% } %>
+                                                                </div>
+                                                                <p>
+                                                                    <%= review.Isi_Review %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <% }) %>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                </div> 
 </body>
 
 </html>

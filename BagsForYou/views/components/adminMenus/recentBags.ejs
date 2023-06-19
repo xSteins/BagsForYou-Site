@@ -1,79 +1,40 @@
 <div class="recent flex">
     <h2>Recently Added :</h2>
-    <div class="rec-bag flex">
-        <img src="/img-placeholder/placeholderbag.jpg" alt="">
-        <table>
-            <tr>
-                <td>RevewID:</td>
-                <td>6182101010</td>
-            </tr>
-            <tr>
-                <td>UserID:</td>
-                <td>u202204022</td>
-            </tr>
-            <tr>
-                <td>Bag Name:</td>
-                <td>Adventure 65L</td>
-            </tr>
-            <tr>
-                <td>Brand:</td>
-                <td>Eiger</td>
-            </tr>
-            <tr>
-                <td>Designer:</td>
-                <td>PT. Eiger</td>
-            </tr>
-        </table>
-    </div>
-    <div class="rec-bag flex">
-        <img src="/img-placeholder/placeholderbag.jpg" alt="">
-        <table>
-            <tr>
-                <td>RevewID:</td>
-                <td>6182101010</td>
-            </tr>
-            <tr>
-                <td>UserID:</td>
-                <td>u202204022</td>
-            </tr>
-            <tr>
-                <td>Bag Name:</td>
-                <td>Adventure 65L</td>
-            </tr>
-            <tr>
-                <td>Brand:</td>
-                <td>Eiger</td>
-            </tr>
-            <tr>
-                <td>Designer:</td>
-                <td>PT. Eiger</td>
-            </tr>
-        </table>
-    </div>
-    <div class="rec-bag flex">
-        <img src="/img-placeholder/placeholderbag.jpg" alt="">
-        <table>
-            <tr>
-                <td>RevewID:</td>
-                <td>6182101010</td>
-            </tr>
-            <tr>
-                <td>UserID:</td>
-                <td>u202204022</td>
-            </tr>
-            <tr>
-                <td>Bag Name:</td>
-                <td>Adventure 65L</td>
-            </tr>
-            <tr>
-                <td>Brand:</td>
-                <td>Eiger</td>
-            </tr>
-            <tr>
-                <td>Designer:</td>
-                <td>PT. Eiger</td>
-            </tr>
-        </table>
-    </div>
-
+    <% data.recentlyAddedData.forEach((row)=> { %>
+        <div class="rec-bag flex">
+            <img src="<%= row.Foto %>" alt="">
+            <table>
+                <tr>
+                    <td>Review ID:</td>
+                    <td>
+                        <%= row.Id_Tas %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>User ID:</td>
+                    <td>
+                        <%= row.Username %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bag Name:</td>
+                    <td>
+                        <%= row.namaTas %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Brand:</td>
+                    <td>
+                        <%= row.Nama_Merk %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Designer:</td>
+                    <td>
+                        <%= row.Nama_Designer %>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <% }); %>
 </div>

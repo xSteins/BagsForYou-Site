@@ -65,10 +65,10 @@ p {
   gap: 1rem;
   /* gap: 0.5rem; */
 }
-label,
+/* label,
 input {
   font-size: larger;
-}
+} */
 label {
   grid-column: 1;
   font-weight: 600;

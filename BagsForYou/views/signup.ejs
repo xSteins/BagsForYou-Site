@@ -16,7 +16,9 @@
             <div class="form-title">
                 <h1 class="brandName form-brand">BagsForYou</h1>
                 <h2>SIGN UP</h2>
-                <p class="alert" id="alert"></p>
+                <p class="alert" id="alert">
+                    <%= errorMsg %>
+                </p>
             </div>
             <form action="/signup" method="POST" id="signUpForm">
                 <label for="username">Username :</label>

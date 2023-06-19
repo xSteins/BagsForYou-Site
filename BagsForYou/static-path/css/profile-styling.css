@@ -1,12 +1,14 @@
-body {
+/* body {
   background-color: rgba(0, 0, 0, 0.816);
-}
-
+} */
+/* #edit-profile-container {
+  border: 2px solid rgb(255, 3, 3);
+} */
 .profile-container,
 .profile-container-account {
   max-width: 600px;
   padding: 2rem;
-  background-color: #ebebeb;
+  background-color: aliceblue;
   border: 1px solid black;
   margin: 0 auto;
   display: flex;
@@ -80,8 +82,8 @@ body {
   overflow-y: auto;
   width: 100%;
   padding: 0 1rem;
-  min-height: 405px;
-  max-height: 405px;
+  min-height: 375px;
+  max-height: 375px;
 
   /* Media query for screens bigger than 1600px by 900px */
 }
@@ -182,24 +184,22 @@ input {
   margin-left: 2rem;
 }
 
-.grid-profile-edit button,
+/* .grid-profile-edit button,
 input[type='submit'] {
   max-width: fit-content;
-  background-color: white;
   border: 1px solid black;
   border-radius: 3px;
   margin-bottom: 1ch;
-}
+} */
 
 .grid-profile-edit button:hover,
 input[type='submit']:hover {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: black;
 }
 
-.grid-profile-edit input[type='password'],
-input[type='submit'] {
-  font-weight: 500;
+.grid-profile-edit input {
+  /* font-weight: 500; */
   max-width: 20ch;
   margin-bottom: 0.4rem;
 }
